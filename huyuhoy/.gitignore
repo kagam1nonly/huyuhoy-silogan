@@ -1,0 +1,26 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Python virtual environments
+venv/
+env/
+.venv/
+.venv3/
+.venv2/
+.pyvenv/
+.venv/
+pip-wheel-metadata/
+
+# IDE-specific files and directories (adjust as needed)
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Test and coverage directories
+.coverage
+.tox/
+htmlcov/
