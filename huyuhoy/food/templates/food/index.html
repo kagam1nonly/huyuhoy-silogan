@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% load static %}
-    <link rel="icon" type="image/png" href="{% static 'imgs/huyuhoy-logo.jpg' %}">
     <title>Huyuhoy's Silogan</title>
+    <link rel="icon" type="image/png" href="{% static 'imgs/huyuhoy-logo.jpg' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'food/css/style.css' %}">
     <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
 </head>
 <body>
     <section id="header">
-        <a href="{% url 'index' %}">
+        <a href="{% url 'index' %}" class="header-logo">
             <img src="{% static '/food/imgs/huyuhoy-logo.jpg' %}" class="logo" alt="Huyuhoy logo">
         </a> 
         <div>
@@ -20,12 +20,6 @@
                 <li><a class="active" href="{% url 'index' %}"><i class="lni lni-home"></i></a></li>
                 <li><a href="#cart"><i class="lni lni-cart"></i></a></li>
                 <li><a href="{% url 'login' %}">Log in/Sign up</a></li>
-                <!-- {% if user.is_authenticated %} -->
-                <!-- Display "Profile" link when user is logged in -->
-                <!-- <li><a href="#profile">Profile</a></li>
-                {% else %} -->
-                <!-- Display "Log in/Sign up" link when user is not logged in -->
-                <!-- {% endif %} -->
             </ul>
         </div>
     </section>

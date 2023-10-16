@@ -1,23 +1,24 @@
-.main-wrapper {
+/* Reset some default margins and paddings */
+body, h1, h2, h3, p, ol, li, ul {
     margin: 0;
     padding: 0;
+}
+
+/* Main container */
+.main-wrapper {
+    display: flex;
     justify-content: space-between;
     align-items: flex-start;
     position: relative;
+    margin: 0;
+    padding: 0;
 }
 
-div {
-    display: flex;
-}
-
-.row {
-    flex-direction: row;
-    justify-content: flex-start; /* Start a new row when needed */
-}
-
+/* Container for product cards */
 .container-fluid {
     display: flex;
-    flex-wrap: wrap; 
+    flex-wrap: wrap;
+    justify-content: flex-start;
 }
 
 .product-card {
@@ -26,20 +27,7 @@ div {
     margin: 10px;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
     background-color: #fff;
-    text-align: center;
-    transition: transform 0.2s;
-    width: calc(33.33% - 20px); 
-    height: 275px;
-}
-
-
-.product-card {
-    border: 1px solid #ccc;
-    padding: 15px;
-    margin: 10px;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-    background-color: #fff;
-    text-align: center;
+    text-align: flex-start;
     transition: transform 0.2s;
     width: 220px;
     height: 275px;
@@ -48,41 +36,29 @@ div {
     justify-content: center;
 }
 
-.product-card:last-child {
-    margin-right: 0;
-}
-
+/* Image styling */
 .product-image {
-    width: 100px; 
-    height: 100px; 
+    width: 100px;
+    height: 100px;
     border: 1px solid #ccc;
-    object-fit: cover; 
+    object-fit: cover;
     margin: 0 auto;
 }
 
-.sisilog-image {
-    margin-top: 10px; 
-}
-
+/* Title styling */
 .product-title {
     color: black;
     font-size: 18px;
     margin-top: 10px;
+    text-align: center;
 }
 
+/* Radio button styling */
 .product-radio {
     margin-top: 10px;
 }
 
-.product-radio:hover {
-}
-
-.product-card:hover {
-    transform: scale(1.05);
-    cursor: pointer;
-
-}
-
+/* Button styling */
 .btn {
     display: flex;
     justify-content: center;
@@ -107,32 +83,50 @@ div {
     cursor: pointer;
 }
 
+.product-card:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+/* Container for order summary */
 .order-total {
     position: absolute;
-    top: 0;
-    right: 0;
-    background-color: #fff;
-    padding: 160px 100px;
-    z-index: 999; /* Ensure it's above other content */
+    right: 100px;
+    margin: 10px;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    text-align: start;
+    width: 30%;
 }
 
 .order-total h3 {
-    position: absolute;
     margin: 0;
-    top: 50px;
-    right: 30px;
-}
-
-.order-total span {
-    position: absolute;
-    margin: 0;
-    top: 300px;
-    right: 105px;
+    font-size: 24px;
 }
 
 .order-total ul {
-    position: absolute;
-    margin: 0;
-    top: 100px;
-    right: 60px;
+    list-style: none;
+    padding: 0;
 }
+
+.order-total li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.order-total .del {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.cart-image {
+    width: 30%;
+}
+

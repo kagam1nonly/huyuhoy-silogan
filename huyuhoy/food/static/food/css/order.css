@@ -1,0 +1,146 @@
+/*Cart Navbar*/
+
+.cart-container {
+    position: fixed;
+    top: 80px;
+    left: calc(100% - 550px);
+    width: 550px;
+    background-color: rgb(252, 246, 222);
+    height: 50vh;
+    transition: 0.3s ease;
+    z-index: 1001;
+    display: none; /* Hide the cart-container by default */
+}
+
+.cart-container .show-cart {
+    display: block; /* Show the cart container */
+}
+
+.cart-container .cart-content {
+    margin: 30px;
+    height: 85%;
+}
+.cart-content .first-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.cart-content h1 {
+    font-weight: 100;
+    margin: 0;
+    padding: 5px 0;
+    display: flex;
+}
+
+.cart-container .cart-content .first-row i.lni.lni-close {
+    font-size: 28px;
+    padding-top: 10px;
+}
+
+.cart-container .product {
+    padding: 16px 0;
+    font-size: 28px;
+}
+
+.cart-container .cart-total {
+    display: flex;
+    justify-content: space-between;
+    margin: 30px 0;
+    font-size: 28px;
+}
+
+.view-button {
+    justify-content: center;
+    align-items: center;
+    background-color: #F5B335;
+    padding: 15.5px;
+    width: calc(100% - 30px); /* Set the width to 100% minus padding */
+    display: flex;
+    text-align: center;
+    text-decoration: none;
+    color: black;
+}
+
+.view-button span {
+    font-family: "Circular Std", san-serif;
+    padding-top: 2px;
+    color: #202020;
+    line-height: 120%;
+    font-weight: 900;
+}
+
+a[href="#cart"].active {
+    /* Add your desired styles for the active state here */
+    /* For example, you can change the color or background */
+    color: #ff0000; /* Change to your desired color */
+    /* Add other styles as needed */
+}
+
+/* Styles for the Delete button in the cart navbar */
+.cart-container .cart-content .product .cart-list li .del {
+    /* Add your desired styles here */
+    background-color: red; /* Change to your desired color */
+    color: white; /* Change to your desired text color */
+    margin: 0 5px; /* Adjust margin for spacing */
+    padding: 5px 10px; /* Adjust padding for button size */
+}
+
+/* Adjust alignment for the Delete button */
+.cart-container .cart-content .product .cart-list li .del {
+    vertical-align: middle; /* Align the button vertically */
+}
+
+/* Updated CSS */
+.order-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.order-header {
+    width: 100%;
+    padding: 0 20px;
+}
+
+.order-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.order-column {
+    text-align: center;
+    border: 1px solid #ccc;
+    padding: 10px;
+    flex: 1; /* Allow columns to grow equally */
+    width: 200px; /* Adjust width to content */
+}
+
+.order-total {
+    text-align: center;
+    align-items: center;
+    font-size: 28px;
+    margin: 10px 0; 
+    width: 250px;
+}
+
+.order-content img {
+    width: 15%; /* Define the maximum width for the images */
+}
+
+/* Style for the submit button */
+.submit-button {
+    display: inline-block;
+    padding: 10px 20px; /* Adjust the padding to your preference */
+    background-color: #4CAF50; /* Set the background color */
+    color: #fff; /* Text color */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Smooth background color transition */
+    margin-top: 20px; /* Add space above the button */
+}
+
+.submit-button:hover {
+    background-color: #45a049; /* Change the background color on hover */
+}

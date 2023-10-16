@@ -9,6 +9,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('login/', views.login_view, name='login'),
     path('meal/', views.meal_view, name='meal'),
+    path('order/', views.order_view, name='order'),
     path('food/', include('food.urls', namespace='food')),
 ]
 

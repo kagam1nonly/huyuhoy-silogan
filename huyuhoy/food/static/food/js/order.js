@@ -1,44 +1,107 @@
-// Reset total to 0 on page load or refresh
+// Initialize total as a number
 localStorage.setItem('total', 0);
 
 var pcart = document.querySelector('#pcart');
 var ptotal = document.querySelector('#ptotal');
-var total = localStorage.getItem('total');
 
-
-function addMeal(mid) {
+function addMeal(mid, mealImageURL) {
     mealId = '#meal' + mid;
-    var name = document.querySelector(mealId).innerHTML;
+    var name = document.querySelector(mealId).textContent;
     var radios = document.getElementsByName(mid);
     var selectedRadio = Array.from(radios).find(radio => radio.checked);
-    
-    // Check if a radio button is selected
+
     if (selectedRadio) {
         var price = parseFloat(selectedRadio.value) || 0;
     }
 
     var orders = JSON.parse(localStorage.getItem('orders')) || [];
-    var cartSize = orders.length;
-    // Saving item and total in localStorage
-    orders[cartSize] = [name, price];
+
+    // Store a unique identifier along with the item details
+    var uniqueId = Date.now().toString();
+    orders.push({ id: uniqueId, name, price, mealImageURL });
+
     localStorage.setItem('orders', JSON.stringify(orders));
-    
-    total = parseFloat(total) + price;
+
+    localStorage.setItem('cartCount', orders.length);
+
+    var total = parseFloat(localStorage.getItem('total')) || 0;
+    total += price;
     localStorage.setItem('total', total);
 
-    // Updating number of items in cart
-    ptotal.innerHTML = 'Total: ' + '₱ ' + total;
-    pcart.innerHTML += '<li>' + name + '<br>₱ ' + price + '</li>';
+    updateCartCount();
+
+    // Update the cart content immediately
+    shoppingCart();
 }
 
 function shoppingCart() {
     var orders = JSON.parse(localStorage.getItem('orders')) || [];
-    var total = localStorage.getItem('total');
-    var cartSize = orders.length;
-    pcart.innerHTML = '';
+    var total = parseFloat(localStorage.getItem('total')) || 0;
 
-    for (let i = 0; i < cartSize; i++) {
-        pcart.innerHTML += '<li>' + orders[i][0] + '<br>₱ ' + orders[i][1] + '</li>';
+    if (pcart && ptotal) {
+        pcart.innerHTML = '';
+
+        orders.forEach(item => {
+            if (item && typeof item === 'object') {
+                const { id, name, price, mealImageURL } = item;
+
+                const itemElement = document.createElement('li');
+                itemElement.innerHTML = `
+                    <img src="${mealImageURL}" alt="${name}" class="cart-image">
+                    ${name} ₱${price} 
+                    <button class="del" data-uniqueId="${id}">x</button>
+                `;
+
+                itemElement.querySelector('.del').addEventListener('click', () => {
+                    removeMeal(id);
+                });
+
+                pcart.appendChild(itemElement);
+            } else {
+                console.error('Invalid item:', item);
+            }
+        });
+
+        ptotal.innerHTML = 'Total: ₱' + total;
+        updateCartCount();
     }
-    ptotal.innerHTML = 'Total: ' + '₱ ' + total;
 }
+
+function removeMeal(uniqueId) {
+    var orders = JSON.parse(localStorage.getItem('orders')) || [];
+    var total = parseFloat(localStorage.getItem('total')) || 0;
+
+    // Find the item with the matching unique identifier and remove it
+    var itemIndex = orders.findIndex(item => item.id === uniqueId);
+
+    if (itemIndex !== -1) {
+        total -= orders[itemIndex].price;
+        orders.splice(itemIndex, 1);
+        localStorage.setItem('orders', JSON.stringify(orders));
+        localStorage.setItem('total', total);
+
+        // Update the cart count
+        localStorage.setItem('cartCount', orders.length);
+
+        // Update the cart display after removing the meal
+        shoppingCart();
+    }
+}
+
+function updateCartCount() {
+    var cartCount = localStorage.getItem('cartCount') || 0;
+    document.getElementById('cartCount').textContent = cartCount;
+}
+
+// Initialize cart count on page load
+updateCartCount();
+
+// Call shoppingCart on page load to display initial cart content
+shoppingCart();
+
+document.getElementById('pcart').addEventListener('click', function (event) {
+    if (event.target && event.target.classList.contains('del')) {
+        var uniqueId = event.target.getAttribute('data-uniqueId');
+        removeMeal(uniqueId);
+    }
+});

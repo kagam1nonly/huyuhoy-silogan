@@ -3,7 +3,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% load static %}
-
     <link rel="icon" type="image/png" href="{% static 'imgs/huyuhoy-logo.jpg' %}">
     <title>Huyuhoy's Silogan</title>
     <link rel="stylesheet" type="text/css" href="{% static '/food/css/style.css' %}">
@@ -15,7 +14,7 @@
 </head>
 <body>
     <section id="header">
-        <a href="{% url 'index' %}">
+        <a href="{% url 'index' %}" class="header-logo">
             <img src="{% static '/food/imgs/huyuhoy-logo.jpg' %}" class="logo" alt="Huyuhoy logo">
         </a> 
         <div>

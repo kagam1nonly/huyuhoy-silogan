@@ -1,68 +1,68 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% load static %}
-    <title>Huyuhoy's Meal</title>
-    <link rel="icon" type="image/png" href="{% static 'imgs/huyuhoy-logo.jpg' %}">
-    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
-    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="{% static '/food/css/style.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static '/food/css/meal.css' %}">
-</head>
-<body>
-    <section id="header">
-        <a href="{% url 'index' %}">
-            <img src="{% static '/food/imgs/huyuhoy-logo.jpg' %}" class="logo" alt="Huyuhoy logo">
-        </a> 
-        <div>
-            <ul id="navbar">
-                <li><a class="active" href="{% url 'index' %}"><i class="lni lni-home"></i></a></li>
-                <li><a href="#cart"><i class="lni lni-cart"></i><span id="cartCount">0</span></a></li>
-                <li><a href="{% url 'login' %}">Log in/Sign up</a></li>
-            </ul>
-        </div>
-    </section>
-    <div class="main-wrapper">
-        <div class="container-fluid">
-            <div class="row">
-                {% for meal in meals %}
-                <div class="product-card">
-                    <img class="product-image" src="{{ meal.pImage.url }}" alt="{{ meal.name }}">
-                    <h4 class="product-title" id="meal{{meal.id}}">{{ meal.name }}</h4>
-                    <div class="product-radio">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="radio" name="{{ meal.id }}" value="{{ meal.withRice }}" unchecked>
-                            ₱ {{ meal.withRice }} <span> With Rice </span>
+    <!-- Meal.html -->
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% load static %}
+        <title>Huyuhoy's Meal</title>
+        <link rel="icon" type="image/png" href="{% static 'imgs/huyuhoy-logo.jpg' %}">
+        <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
+        <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="{% static '/food/css/style.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static '/food/css/meal.css' %}">
+    </head>
+    <body>
+        <section id="header">
+            <a href="{% url 'index' %}" class="header-logo">
+                <img src="{% static '/food/imgs/huyuhoy-logo.jpg' %}" class="logo" alt="Huyuhoy logo">
+            </a> 
+            <div>
+                <ul id="navbar">
+                    <li><a class="active" href="{% url 'index' %}"><i class="lni lni-home"></i></a></li>
+                    <li><a href="#cart"><i class="lni lni-cart"></i><span id="cartCount">0</span></a></li>
+                    <li><a href="{% url 'login' %}">Log in/Sign up</a></li>
+                </ul>
+            </div>
+        </section>
+        <div class="main-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    {% for meal in meals %}
+                    <div class="product-card">
+                        <img class="product-image" src="{{ meal.pImage.url }}" alt="{{ meal.name }}">
+                        <h4 class="product-title" id="meal{{meal.id}}">{{ meal.name }}</h4>
+                        <div class="product-radio">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="{{ meal.id }}" value="{{ meal.withRice }}" unchecked>
+                                ₱ {{ meal.withRice }} <span> With Rice </span>
+                            </label>
+                        </div>
+                        <div class="product-radio">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="{{ meal.id }}" value="{{ meal.withOutRice }}" unchecked>
+                                ₱ {{ meal.withOutRice }} <span> With Out Rice </span>
                         </label>
                     </div>
-                    <div class="product-radio">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="radio" name="{{ meal.id }}" value="{{ meal.withOutRice }}" unchecked>
-                            ₱ {{ meal.withOutRice }} <span> With Out Rice </span>
-                       </label>
-                   </div>
-                   <div>
-                        <button class="btn" onclick="addMeal('{{meal.id}}')">Add to cart</button>
-                   </div>
+                    <div>
+                        <button class="btn" onclick="addMeal('{{meal.id}}', '{{meal.pImage.url}}')">Add to cart</button>
+                    </div>
+                    </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
+                <div class="order-total">
+                    <h3>Order List:</h3>
+                    <ol id="pcart"></ol>
+                    <span id="ptotal">₱ 0</span>
+                </div>
             </div>
-            <div class="order-total">
-                <h3>Order List:</h3>
-                <ul id="pcart"></ul>
-                <span id="ptotal">₱ 0</span>
-            </div>
-
         </div>
-    </div>
-    <script src="{% static 'food/js/main.js' %}"></script>
-    <script src="{% static 'food/js/order.js' %}"></script>
-</body>
-</html>
+        <script src="{% static 'food/js/main.js' %}"></script>
+        <script src="{% static 'food/js/order.js' %}"></script>
+    </body>
+    </html>
 
 
 
- 
+    
