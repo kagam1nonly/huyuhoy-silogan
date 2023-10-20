@@ -1,79 +1,98 @@
-// Initialize cart count on page load
-updateCartCount();
+let cartItems = JSON.parse(localStorage.getItem('orders')) || [];
+let total = localStorage.getItem('total');
 
-// Call the updateCartContainer function to initially populate the cart container
-updateCartContainer();
-
-var name = document.querySelector("#name");
-var price = document.querySelector("#price");
-var bill = document.querySelector("#ptotal");
-
-function shoppingCart() {
-    var orders = JSON.parse(localStorage.getItem('orders')) || [];
-
-    // Get a reference to the "order-container" element
-    var orderContainer = document.querySelector(".order-container");
-
-    // Clear the existing content in the order container
-    orderContainer.innerHTML = '';
-
-    orders.forEach(function (order, index) {
-        var name = order.name;
-        var price = order.price;
-        var imageSrc = order.mealImageURL;
-
-        // Create a new row element for the order item
-        var newRow = document.createElement("div");
-        newRow.className = "order-row";
-
-        // Create columns for Image, Name, Price, and Remove button
-        var imageColumn = document.createElement("div");
-        imageColumn.className = "order-column";
-        var mealImage = document.createElement("img");
-        mealImage.src = imageSrc;
-        mealImage.alt = name;
-        mealImage.style.width = "15%"; // Set the image width
-        imageColumn.appendChild(mealImage);
-
-        var nameColumn = document.createElement("div");
-        nameColumn.className = "order-column";
-        nameColumn.textContent = name;
-
-        var priceColumn = document.createElement("div");
-        priceColumn.className = "order-column";
-        priceColumn.textContent = "₱ " + price.toFixed(2);
-
-        var removeColumn = document.createElement("div");
-        removeColumn.className = "order-column";
-        var removeButton = document.createElement("button");
-        removeButton.className = "del";
-        removeButton.textContent = "Remove";
-        removeButton.addEventListener("click", function () {
-            removeItemFromCart(index);
-        });
-
-        // Append columns to the row
-        newRow.appendChild(imageColumn);
-        newRow.appendChild(nameColumn);
-        newRow.appendChild(priceColumn);
-        newRow.appendChild(removeColumn);
-        removeColumn.appendChild(removeButton);
-
-        // Append the row to the order container
-        orderContainer.appendChild(newRow);
-    });
-
-    // Calculate and display the total
-    var total = orders.reduce(function (sum, order) {
-        return sum + order.price;
-    }, 0);
-    bill.textContent = 'Total: ₱ ' + total.toFixed(2);
+try {
+    let total = parseFloat(localStorage.getItem('total')) || 0;
+    // Your code that uses 'total' here
+} catch (error) {
+    console.error('Error while handling total:', error);
 }
 
-shoppingCart();
+// Function to add an item to the cart
+function addItemToCart(item) {
+    cartItems.push(item);
+    updateCartDisplay();
+    updateLocalStorage();
+    updateCartCount(); // Update the cart count
+}
 
 
+function removeItemFromCart(index) {
+    if (index >= 0 && index < cartItems.length) {
+        const item = cartItems[index];
+        removeItemFromServer(item.id); // Send a DELETE request to the server
+    }
+}
 
+// Function to update the cart display
+function updateCartDisplay() {
+    const cartList = document.getElementById("cart-items");
+    cartList.innerHTML = "";
+
+    cartItems.forEach((item, index) => {
+        const listItem = document.createElement("li");
+        listItem.innerHTML = `
+            <div class="cart-item">
+                <img src="${item.mealImageURL}" alt="${item.name}" class="cart-item-image" width="100" height="100">
+                <div class="cart-item-details">
+                    <p class="cart-item-name">${item.name}</p>
+                    <p class="cart-item-price">₱${item.price}</p>
+                </div>
+                <button onclick="removeItemFromCart(${index})">Remove</button>
+            </div>
+        `;
+        cartList.appendChild(listItem);
+    });
+}
+
+
+// Function to send a removal request to the server
+function removeItemFromServer(itemId) {
+    const csrfToken = getCSRFToken(); // Implement this as needed
+
+    fetch(`/food/remove_item_from_cart/${itemId}/`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken,
+        },
+    })
+        .then((response) => {
+            if (response.ok) {
+                // Handle a successful removal response
+                // You can also remove the item from the client-side cart
+                cartItems = cartItems.filter(item => item.id !== itemId);
+                updateCartDisplay();
+                updateLocalStorage();
+                updateCartCount(); // Update the cart count
+            } else {
+                // Handle the error case
+                console.error('Error removing item:', response.status, response.statusText);
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+}
+
+updateCartDisplay();
+
+// Function to update localStorage with cartItems
+function updateLocalStorage() {
+    localStorage.setItem('orders', JSON.stringify(cartItems));
+}
+
+// Function to get the CSRF token as needed
+function getCSRFToken() {
+    // Get the CSRF token from the HTML DOM
+    return document.querySelector("[name=csrfmiddlewaretoken]").value;
+}
+
+// Function to update the cart count
+function updateCartCount() {
+    var cartCount = cartItems.length;
+    document.getElementById('cartCount').textContent = cartCount;
+}
 
 // Function to toggle the cart container's visibility
 function toggleCart() {
@@ -85,96 +104,11 @@ function toggleCart() {
     }
 }
 
-function updateCartContainer() {
-    // Retrieve orders and total from localStorage
-    var orders = JSON.parse(localStorage.getItem('orders')) || [];
-    var total = parseFloat(localStorage.getItem('total')) || 0;
-
-    // Get references to the cart list and total elements in the cart container
-    var pcart = document.querySelector('.cart-list');
-    var ptotal = document.querySelector('.cart-total h5.title-1');
-
-    // Clear the existing content in the cart list
-    pcart.innerHTML = '';
-
-    // Loop through the orders and populate the cart list
-    for (let i = 0; i < orders.length; i++) {
-        var button = '<button class="del" onclick="removeItemFromCart(' + i + ')">Remove</button>';
-        var name = orders[i].name; // Get the meal name
-        var price = orders[i].price; // Get the meal price
-        var mealImageURL = orders[i].mealImageURL; // Get the meal image URL
-
-        pcart.innerHTML += `
-            <li>
-                <img src="${mealImageURL}" alt="${name}" class="cart-image">
-                ${name} ₱${price} ${button}
-            </li>
-        `;
-    }
-
-    // Update the total displayed in the cart container
-    ptotal.textContent = 'Total: ₱ ' + total.toFixed(2); // Format total as currency
-}
-
-
-function clearCart() {
-    // Clear the cart items and update the cart count and total
-    localStorage.removeItem('orders');
-    localStorage.setItem('total', 0);
-    localStorage.setItem('cartCount', 0);
-
-    // Clear the cart list and total display
-    var pcart = document.querySelector('.cart-list');
-    var ptotal = document.querySelector('.cart-total h5.title-1');
-    pcart.innerHTML = '';
-    ptotal.textContent = 'Total: ₱ 0.00';
-
-    // Update the cart count displayed in the navbar
-    updateCartCount();
-}
-
-// Update this code in your removeItemFromCart function
-function removeItemFromCart(index) {
-    var orders = JSON.parse(localStorage.getItem('orders')) || [];
-    var total = parseFloat(localStorage.getItem('total')) || 0;
-
-    if (index < orders.length) {
-        total -= orders[index].price;
-        orders.splice(index, 1);
-        localStorage.setItem('orders', JSON.stringify(orders));
-        localStorage.setItem('total', total);
-
-        // Update the cart count
-        localStorage.setItem('cartCount', orders.length);
-
-        // Use AJAX to inform the server to remove the item
-        // Example AJAX code using the fetch API
-        fetch('/remove_item', {
-            method: 'POST',
-            body: JSON.stringify({ index: index }),
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCSRFToken() // Add a function to get the CSRF token
-            }
-        }).then(function(response) {
-            if (response.ok) {
-                // The item was successfully removed from the server
-                // Now, update the cart and cart container without a page reload
-                updateCartContainer();
-                shoppingCart();
-            }
-        });
-    }
-}
-
-// Function to update the cart count
-function updateCartCount() {
-    var cartCount = localStorage.getItem('cartCount') || 0;
-    document.getElementById('cartCount').textContent = cartCount;
-}
-
 // Call the initCart function when the document is ready
 document.addEventListener("DOMContentLoaded", function () {
+
+    updateCartDisplay();
+    updateOrderContainer();
     // Call the initCart function to toggle the cart container's visibility
     toggleCart();
 
@@ -193,3 +127,54 @@ document.addEventListener("DOMContentLoaded", function () {
     // Call the initCart function when the document is ready
     initCart();
 });
+
+// Initialize the cart display
+
+function updateOrderContainer() {
+    const orderContainer = document.querySelector(".order-container");
+    const orderHeader = document.createElement("div");
+    orderHeader.classList.add("order-header");
+
+    // Define the order header columns
+    const imageColumn = document.createElement("div");
+
+    const nameColumn = document.createElement("div");
+
+    const priceColumn = document.createElement("div");
+    // Append the columns to the header
+    orderHeader.appendChild(imageColumn);
+    orderHeader.appendChild(nameColumn);
+    orderHeader.appendChild(priceColumn);
+
+    // Clear the existing content in the order container
+    orderContainer.innerHTML = "";
+
+    // Append the header to the order container
+    orderContainer.appendChild(orderHeader);
+
+    // Iterate over the cart items and add them to the order container
+    cartItems.forEach((item) => {
+        const orderItem = document.createElement("div");
+        orderItem.classList.add("order-item");
+
+        const image = document.createElement("div");
+        image.classList.add("order-item-image");
+        image.innerHTML = `<img src="${item.mealImageURL}" alt="${item.name}" width="100" height="100">`;
+
+        const name = document.createElement("div");
+        name.classList.add("order-item-name");
+        name.textContent = item.name;
+
+        const price = document.createElement("div");
+        price.classList.add("order-item-price");
+        price.textContent = `₱${item.price}`;
+
+        // Append the image, name, and price to the order item
+        orderItem.appendChild(image);
+        orderItem.appendChild(name);
+        orderItem.appendChild(price);
+
+        // Append the order item to the order container
+        orderContainer.appendChild(orderItem);
+    });
+}

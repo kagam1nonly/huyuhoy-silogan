@@ -6,7 +6,9 @@
     <link rel="icon" type="image/png" href="{% static 'imgs/huyuhoy-logo.jpg' %}">
     <title>Huyuhoy's Silogan</title>
     <link rel="stylesheet" type="text/css" href="{% static '/food/css/style.css' %}">
-    <link rel="stylesheet" href="{% static '/food/css/login.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'food/css/meal.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'food/css/order.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/food/css/login.css' %}">
     <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
     <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
@@ -20,17 +22,31 @@
         <div>
             <ul id="navbar">
                 <li><a class="active" href="{% url 'index' %}"><i class="lni lni-home"></i></a></li>
-                <li><a href="#cart"><i class="lni lni-cart"></i></a></li>
+                <li><a href="#cart"><i class="lni lni-cart"></i><span id="cartCount">0</span></a></li>
                 <li><a href="{% url 'login' %}">Log in/Sign up</a></li>
-                <!-- {% if user.is_authenticated %} -->
-                <!-- Display "Profile" link when user is logged in -->
-                <!-- <li><a href="#profile">Profile</a></li> -->
-                <!-- {% else %} -->
-                <!-- Display "Log in/Sign up" link when user is not logged in -->
-                <!-- {% endif %} -->
             </ul>
         </div>
     </section>
+    <div class="cart-overlay" onclick="toggleCart()"></div>
+    <div class="cart-container">
+        <div class="cart-content">
+            <div class="first-row">
+                <button class="del" onclick="clearCart()">Clear Cart</button>
+                <i class="lni lni-close" onclick="toggleCart()"></i>
+            </div>
+            <div class="product">
+                <ul class="cart-list">
+                    <li>sample</li>
+                </ul>
+            </div>
+            <div class="cart-bottom">
+                <div class="cart-total">
+                    <h5 id="ctotal" class="ctotal-order">Total: ₱ 0.00</h5>
+                </div>
+                <a class="view-button" href="#"><span>VIEW CART</span></a>
+            </div>
+        </div>
+    </div>
     <div class="hero">
         <div class="left-container">
             <form action="" class="form">
@@ -123,6 +139,8 @@
                 </div>
         </div>
     </footer>
+    <script src="{% static 'food/js/order.js' %}"></script>
+    <script src="{% static 'food/js/cart.js' %}"></script>
 </body>
 </html>
 

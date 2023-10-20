@@ -1,5 +1,8 @@
-/*Cart Navbar*/
+ul, ol {
+    list-style: none;
+}
 
+/* Cart Navbar */
 .cart-container {
     position: fixed;
     top: 80px;
@@ -20,6 +23,7 @@
     margin: 30px;
     height: 85%;
 }
+
 .cart-content .first-row {
     display: flex;
     justify-content: space-between;
@@ -90,57 +94,86 @@ a[href="#cart"].active {
     vertical-align: middle; /* Align the button vertically */
 }
 
-/* Updated CSS */
+/* Updated CSS for Horizontal Order Columns */
 .order-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 .order-header {
-    width: 100%;
-    padding: 0 20px;
-}
-
-.order-row {
     display: flex;
     justify-content: space-between;
+    width: 100%;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
 }
 
 .order-column {
     text-align: center;
-    border: 1px solid #ccc;
     padding: 10px;
-    flex: 1; /* Allow columns to grow equally */
-    width: 200px; /* Adjust width to content */
+    font-weight: bold;
+    display: flex; /* Display columns horizontally */
+    justify-content: center;
+    align-items: center;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+}
+
+.order-item-image {
+    width: 100px;
+}
+
+.order-item-name,
+.order-item-price {
+    flex: 1;
+    padding: 0 10px;
+    text-align: center;
 }
 
 .order-total {
     text-align: center;
-    align-items: center;
     font-size: 28px;
-    margin: 10px 0; 
-    width: 250px;
-}
-
-.order-content img {
-    width: 15%; /* Define the maximum width for the images */
+    margin: 10px 0;
+    width: 100%;
+    font-weight: bold;
 }
 
 /* Style for the submit button */
 .submit-button {
     display: inline-block;
-    padding: 10px 20px; /* Adjust the padding to your preference */
-    background-color: #4CAF50; /* Set the background color */
-    color: #fff; /* Text color */
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: #fff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s; /* Smooth background color transition */
-    margin-top: 20px; /* Add space above the button */
+    transition: background-color 0.3s;
+    margin-top: 20px;
 }
 
 .submit-button:hover {
-    background-color: #45a049; /* Change the background color on hover */
+    background-color: #45a049;
+}
+
+
+
+.order-rectangle-container {
+    background-color: #f5f5f5; /* Set the background color for the rectangle */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    width: 80%; /* Adjust the width to your preference */
+    margin: 0 auto; /* Center the rectangle horizontally */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Add a subtle shadow for depth */
 }

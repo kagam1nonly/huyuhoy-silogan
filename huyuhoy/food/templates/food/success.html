@@ -30,53 +30,27 @@
         <div class="cart-content">
             <div class="first-row">
                 <button class="del" onclick="clearCart()">Clear Cart</button>
-                <i class="lni lni-close" onclick="toggleCart()"></i>
+                <i class="lni lni-close"></i>
             </div>
             <div class="product">
-                <ul id="cart-items" class="cart-list">
+                <ul class="cart-list">
                     <li>sample</li>
                 </ul>
             </div>
             <div class="cart-bottom">
                 <div class="cart-total">
-                    <h5 id="ctotal" class="ctotal-order">Total: ₱ 0.00</h5>
+                    <h5 class="title-1">Total</h5>
+                    <h5 class="title-1">₱ 0.00</h5>
                 </div>
                 <a class="view-button" href="#"><span>VIEW CART</span></a>
             </div>
         </div>
     </div>
-    <div class="order-rectangle-container">
-        <div class="order-header">
-        </div>
-        <div class="order-container">
-            <!-- Your order items will be added here dynamically -->
-        </div>
+    <div class="s-wrapper">
+        <h3>We have received your order.</h3>
+        <h3> You ordered: <br></h3>
+        <h3> {{ order }} </h3> 
     </div>
-    <div id="order-form">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="note">Note</label>
-            <textarea id="note" name="note" rows="4" required></textarea>
-        </div>
-        <button type="button" onclick="order()">Submit Order</button>
-    </div>
-    <div id="ototal" class="order-total"> <!-- Change id to "ptotal" and add class "order-total" -->
-        Total: ₱ 0.00
-    </div>
-    <ol id="pcart" style="display: none;"></ol>
-    <script type="text/javascript">
-        var removeItemURL = "{% url 'food:remove_item_from_cart' %}/";
-    </script>
-    <script>
-
-        // Call the updateOrderContainer function when the document is ready
-        document.addEventListener("DOMContentLoaded", function () {
-            updateOrderContainer();
-        });
-    </script>
-    <script>
-        const csrfToken = "{{ csrf_token|escapejs }}";
-    </script>
     <script src="{% static 'food/js/order.js' %}"></script>
     <script src="{% static 'food/js/cart.js' %}"></script>
 </body>

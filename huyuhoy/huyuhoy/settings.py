@@ -85,6 +85,7 @@ DATABASES = {
     }
 }
 
+APPEND_SLASH = False
 
 
 # Password validation

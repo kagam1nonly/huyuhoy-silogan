@@ -1,68 +1,78 @@
-    <!-- Meal.html -->
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        {% load static %}
-        <title>Huyuhoy's Meal</title>
-        <link rel="icon" type="image/png" href="{% static 'imgs/huyuhoy-logo.jpg' %}">
-        <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
-        <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="{% static '/food/css/style.css' %}">
-        <link rel="stylesheet" type="text/css" href="{% static '/food/css/meal.css' %}">
-    </head>
-    <body>
-        <section id="header">
-            <a href="{% url 'index' %}" class="header-logo">
-                <img src="{% static '/food/imgs/huyuhoy-logo.jpg' %}" class="logo" alt="Huyuhoy logo">
-            </a> 
-            <div>
-                <ul id="navbar">
-                    <li><a class="active" href="{% url 'index' %}"><i class="lni lni-home"></i></a></li>
-                    <li><a href="#cart"><i class="lni lni-cart"></i><span id="cartCount">0</span></a></li>
-                    <li><a href="{% url 'login' %}">Log in/Sign up</a></li>
-                </ul>
-            </div>
-        </section>
-        <div class="main-wrapper">
-            <div class="container-fluid">
-                <div class="row">
-                    {% for meal in meals %}
-                    <div class="product-card">
-                        <img class="product-image" src="{{ meal.pImage.url }}" alt="{{ meal.name }}">
-                        <h4 class="product-title" id="meal{{meal.id}}">{{ meal.name }}</h4>
-                        <div class="product-radio">
-                            <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="{{ meal.id }}" value="{{ meal.withRice }}" unchecked>
-                                ₱ {{ meal.withRice }} <span> With Rice </span>
-                            </label>
-                        </div>
-                        <div class="product-radio">
-                            <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="{{ meal.id }}" value="{{ meal.withOutRice }}" unchecked>
-                                ₱ {{ meal.withOutRice }} <span> With Out Rice </span>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <title>Huyuhoy's Meal</title>
+    <link rel="icon" type="image/png" href="{% static 'imgs/huyuhoy-logo.jpg' %}">
+    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static '/food/css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/food/css/meal.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        var csrfToken = "{{ csrf_token }}";
+    </script>
+</head>
+<body>
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrfToken }}">
+    <section id="header">
+        <a href="{% url 'index' %}" class="header-logo">
+            <img src="{% static '/food/imgs/huyuhoy-logo.jpg' %}" class="logo" alt="Huyuhoy logo">
+        </a> 
+        <div>
+            <ul id="navbar">
+                <li><a class="active" href="{% url 'index' %}"><i class="lni lni-home"></i></a></li>
+                <li><a href="#cart"><i class="lni lni-cart"></i><span id="cartCount">0</span></a></li>
+                <li><a href="{% url 'login' %}">Log in/Sign up</a></li>
+            </ul>
+        </div>
+    </section>
+    <div class "main-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                {% for meal in meals %}
+                <div class="product-card">
+                    <img class="product-image" src="{{ meal.pImage.url }}" alt="{{ meal.name }}">
+                    <h4 class="product-title" id="meal{{ meal.meal_id }}">{{ meal.name }}</h4>
+
+                    <!-- Add hidden data element with meal data -->
+                    <span id="meal-data" data-meal-name="{{ meal.name }}" data-meal-image="{{ meal.pImage.url }}" style="display: none;"></span>
+
+                    <div class="product-radio">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="radio" name="mealOption" value="{{ meal.withRice }}" unchecked>
+                            ₱ {{ meal.withRice }} <span> With Rice </span>
+                        </label>
+                    </div>
+                    <div class="product-radio">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="radio" name="mealOption" value="{{ meal.withOutRice }}" unchecked>
+                            ₱ {{ meal.withOutRice }} <span> With Out Rice </span>
                         </label>
                     </div>
                     <div>
-                        <button class="btn" onclick="addMeal('{{meal.id}}', '{{meal.pImage.url}}')">Add to cart</button>
+                        <button
+                        class="btn"
+                        onclick="addToCart('{{ meal.meal_id }}', '{{ meal.pImage.url }}', '{{ meal.name }}');"
+                        data-add-to-cart-url="{% url 'add_to_cart' %}"
+                        >Add to cart</button>
                     </div>
-                    </div>
-                    {% endfor %}
                 </div>
-                <div class="order-total">
-                    <h3>Order List:</h3>
+                {% endfor %}
+            </div>
+            <div class="order-total">
+                <h3>Order List:</h3>
+                <div id="order-total">
                     <ol id="pcart"></ol>
-                    <span id="ptotal">₱ 0</span>
                 </div>
+                <span id="ptotal">₱ 0</span>
             </div>
         </div>
-        <script src="{% static 'food/js/main.js' %}"></script>
-        <script src="{% static 'food/js/order.js' %}"></script>
-    </body>
-    </html>
-
-
-
-    
+    </div>
+    <script src="{% static 'food/js/main.js' %}"></script>
+    <script src="{% static 'food/js/order.js' %}"></script>
+</body>
+</html>
