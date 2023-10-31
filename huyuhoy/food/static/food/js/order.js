@@ -1,211 +1,107 @@
-    //localStorage.setItem('total', 0);
-    var cartItems = JSON.parse(localStorage.getItem('orders')) || [];
+var cartItems = JSON.parse(localStorage.getItem('orders')) || [];
+var total = localStorage.getItem('total');
+var mcart = document.querySelector('#mcart');
+var mtotal = document.querySelector('#mtotal');
 
-    var pcart = document.querySelector('#pcart');
-    var ptotal = document.querySelector('#ptotal');
+// ADD MEAL 
+function addMeal(mid) {
+    var mealId = '#meal' + mid;
+    var mealElement = document.querySelector(mealId);
+    var mealName = mealElement.innerHTML;
+    var mealImage = mealElement.previousElementSibling.src;
 
-    function addToCart(mid) {
-        var meal_id = parseInt(mid);
-        console.log('meal_id:', mid);
-        var mealOption = document.querySelector('input[name="mealOption"]:checked');
-        var selectedRadio = mealOption ? mealOption.value : null;
+    var radio = 'mealOption' + mid;
+    var selectedRadio = document.querySelector('input[name="' + radio + '"]:checked');
 
-        var mealDataElement = document.getElementById("meal-data");
-        var mealName = mealDataElement.getAttribute("data-meal-name");
-        var mealImageURL = mealDataElement.getAttribute("data-meal-image");
-
-        if (selectedRadio) {
-            var price = parseFloat(selectedRadio) || 0;
-        }
-
-        // Create an object representing the item to be added to the cart
-        var item = {
-            id: generateUniqueId(), // Generate a unique identifier for the item
-            name: mealName, // Set the actual name of the item
-            price: price,
-            mealImageURL: mealImageURL, // Set the actual image URL
-            // Add any other properties you need to describe the item
-        };
-
-        // Add the item to the client-side cart
-        addCartItem(item);
-        console.log('Item added to cart:', item); // Add this line for debugging
-
-
-        // Store the updated cart in local storage
-        updateLocalStorage();
-
-        // Send an AJAX request to add the meal to the cart on the server
-        sendAddToCartRequest(item, meal_id);
+    if (!selectedRadio) {
+        alert('Please select a meal option before adding to the cart.');
+        return;
     }
 
-    function generateUniqueId() {
-        // Implement a function to generate a unique identifier for cart items
-        // You can use a timestamp, a random number, or a combination of both
-        return Date.now() + '-' + Math.random().toString(36).substring(2);
-    }
+    var price = parseFloat(selectedRadio.value);
+    var rice = selectedRadio.value === "{{ meal.withRice }}" ? 'With Rice' : 'Without Rice';
 
-    function addCartItem(item) {
-        // Add the item to the client-side cart (cartItems array)
-        cartItems.push(item);
+    // Calculate and update the total price
+    total = parseFloat(total) + price;
 
-        // Update the cart display
-        updateCartDisplay();
+    var listItem = document.createElement('li');
+    listItem.className = 'cart-item';
+    listItem.innerHTML = '<img src="' + mealImage + '" alt="' + mealName + '" class="cart-item-image">' +
+        '<div class="cart-item-details">' +
+        '<p class="cart-item-name">' + mealName + '</p>' +
+        '<p class="cart-item-price">₱' + price + '</p>' +
+        '</div>' +
+        '<button class="remove-button" onclick="removeMeal(this)">x</button>';
 
-        // Update the cart count
-        updateCartCount();
-    }
+    mcart.appendChild(listItem);
 
-    function updateLocalStorage() {
-        // Store the updated cart in local storage
-        localStorage.setItem('orders', JSON.stringify(cartItems));
-        console.log('Cart items:', cartItems); // Add this line for debugging
-    console.log('Local Storage Orders:', localStorage.getItem('orders')); // Add this line for debugging
-    }
+    mtotal.innerHTML = 'Total: ₱' + total.toFixed(2);
 
-    function sendAddToCartRequest(item, meal_id) {
-        // Get the CSRF token from the HTML DOM
-        var csrfToken = getCSRFToken();
-        
-        // Send an AJAX request to add the item to the cart on the server
-        fetch('/food/add_to_cart/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken, // Include the CSRF token in the header
-            },
-            body: JSON.stringify({
-                meal_id: meal_id,
-                quantity: 1, // You can include the quantity in the request
-                // Include other data as needed to add the item to the server-side cart
-            }),
-        });
-    }
-    
-
-    function updateCartDisplay() {
-        const cartList = document.getElementById("pcart");
-        const orderTotal = document.getElementById("order-total");
-    
-        cartList.innerHTML = "";
-        orderTotal.innerHTML = ""; // Clear the previous content
-    
-        cartItems.forEach((item, index) => {
-            const listItem = document.createElement("li");
-            listItem.innerHTML = `
-                <div class="cart-item">
-                    <img src="${item.mealImageURL}" alt="${item.name}" class="cart-item-image" width="100" height="100">
-                    <div class="cart-item-details">
-                        <p class="cart-item-name">${item.name}</p>
-                        <p class="cart-item-price">₱${item.price}</p>
-                    </div>
-                    <button onclick="removeItemFromCart(${index})">Remove</button>
-                </div>
-            `;
-            cartList.appendChild(listItem);
-    
-            // Display the item in the order-total section
-            const orderItem = document.createElement("div");
-            orderItem.innerHTML = `
-                <div class="order-item">
-                    <img src="${item.mealImageURL}" alt="${item.name}" width="100" height="100">
-                    <div class="order-item-details">
-                        <p class="order-item-name">${item.name}</p>
-                        <p class="order-item-price">₱${item.price}</p>
-                    </div>
-                    <button onclick="removeItemFromCart(${index})">Remove</button>
-                </div>
-            `;
-            orderTotal.appendChild(orderItem);
-        });
-    }
-    
-
-    function getCSRFToken() {
-        // Get the CSRF token from the HTML DOM
-        console.log(csrfToken);
-        return document.querySelector("[name=csrfmiddlewaretoken]").value;
-    }
-
-    function shoppingCart() {
-        var orders = JSON.parse(localStorage.getItem('orders')) || [];
-        var total = parseFloat(localStorage.getItem('total')) || 0;
-
-        if (pcart && ptotal) {
-            pcart.innerHTML = '';
-
-            orders.forEach(item => {
-                if (item && typeof item === 'object') {
-                    const { id, name, price, mealImageURL } = item;
-
-                    const itemElement = document.createElement('li');
-                    itemElement.innerHTML = `
-                        <img src="${mealImageURL}" alt="${name}" class="cart-image">
-                        ${name} ₱${price} 
-                        <button class="del" data-uniqueId="${id}">x</button>
-                    `;
-
-                    itemElement.querySelector('.del').addEventListener('click', () => {
-                        removeMeal(id);
-                    });
-
-                    pcart.appendChild(itemElement);
-                } else {
-                    console.error('Invalid item:', item);
-                }
-            });
-
-            ptotal.innerHTML = 'Total: ₱' + total;
-            updateCartCount();
-        }
-    }
-
-
-
-    function removeMeal(uniqueId) {
-        var orders = JSON.parse(localStorage.getItem('orders')) || [];
-        var total = parseFloat(localStorage.getItem('total')) || 0;
-
-        // Find the item with the matching unique identifier and remove it
-        var itemIndex = orders.findIndex(item => item.id === uniqueId);
-
-        if (itemIndex !== -1) {
-            total -= orders[itemIndex].price;
-            orders.splice(itemIndex, 1);
-            localStorage.setItem('orders', JSON.stringify(orders));
-            localStorage.setItem('total', total);
-
-            // Update the cart count
-            localStorage.setItem('cartCount', orders.length);
-
-            // Update the cart display after removing the meal
-            shoppingCart();
-        }
-    }
-
-    function updateCartCount() {
-        var cartCount = localStorage.getItem('cartCount') || 0;
-        document.getElementById('cartCount').textContent = cartCount;
-    }
-
-    // Initialize cart count on page load
-    updateCartCount();
-
-    // Call shoppingCart on page load to display initial cart content
-    shoppingCart();
-
-    document.getElementById('pcart').addEventListener('click', function (event) {
-        if (event.target && event.target.classList.contains('del')) {
-            var uniqueId = event.target.getAttribute('data-uniqueId');
-            removeMeal(uniqueId);
-        }
+    // Update the local storage
+    cartItems.push({
+        name: mealName,
+        mealImageURL: mealImage,
+        price: price,
     });
+    localStorage.setItem('orders', JSON.stringify(cartItems));
+    localStorage.setItem('total', total.toFixed(2));
+    displayCart();
+}
 
-    function initializeOrdersInLocalStorage() {
-        if (!localStorage.getItem('orders')) {
-            localStorage.setItem('orders', JSON.stringify([])); // Initialize as an empty array
-        }
+
+function displayCart() {
+    var mcart = document.querySelector('#mcart');
+    mcart.innerHTML = ''; 
+    total = localStorage.getItem('total');
+
+    for (let i = 0; i < cartItems.length; i++) {
+        var item = cartItems[i];
+
+        var listItem = document.createElement('li');
+        listItem.className = 'cart-item';
+        listItem.innerHTML = '<img src="' + item.mealImageURL + '" alt="' + item.name + '" class="cart-item-image" width="125" height="125">' +
+            '<div class="cart-item-details">' +
+            '<p class="cart-item-name">' + item.name + '</p>' +
+            '<p class="cart-item-price">₱' + item.price + '</p>' +
+            '</div>' +
+            '<button class="remove-button" onclick="removeMeal(' + i + ')">x</button>';
+
+        mcart.appendChild(listItem);
     }
-    
-    // Call the initialization function when the page loads
-    initializeOrdersInLocalStorage();
+    mtotal.innerHTML = 'Total: ₱' + total;
+    localStorage.setItem('orders', JSON.stringify(cartItems));
+    localStorage.setItem('total', total);
+    updateCartCount();
+}
+
+function removeMeal(m) {
+    if (cartItems[m] && typeof cartItems[m].price === 'number') {
+        total = Number(total) - Number(cartItems[m].price);
+        cartItems.splice(m, 1);
+        localStorage.setItem('orders', JSON.stringify(cartItems));
+        localStorage.setItem('total', total.toFixed(2));
+        displayCart();
+    }
+    else {
+        console.log('ERROR POTA!');
+    }
+}
+
+function updateCartCount() {
+    var cart = document.querySelector("#cartCount");
+    cart.innerHTML = cartItems.length;
+}
+
+// function removeItemFromCart(index) {
+//     if (confirm("Do you want to remove this item from the cart?")) {
+//         cartItems.splice(index, 1); // Remove the item at the specified index
+//         updateLocalStorage(); // Update local storage
+//         displayCart();
+//         updateCartCount();
+//     }
+// }
+
+ window.addEventListener('load', function () {
+    displayCart();
+    updateCartCount();
+});

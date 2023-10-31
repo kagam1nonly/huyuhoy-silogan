@@ -1,0 +1,83 @@
+.hero {
+    display: block;
+    background-image: url("../imgs/login-bg.png");
+    background-repeat: no-repeat;
+    max-width: 100%;
+    height: auto;
+    background-size: cover;
+}
+
+.main-container {
+    display: flex;
+    height: auto;
+    width: 1000px;
+    border: 0.5px solid black;
+    margin: auto;
+    margin-top: 50px;
+    
+}
+
+.form {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 50px;
+    align-items: center;
+    background-color: whitesmoke;
+}
+
+.form a {
+    text-decoration: none;
+    color: black;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.form a:hover {
+    text-decoration: underline;
+}
+
+
+.form h2 {
+    font-size: 36px;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    margin: 50px 30px 50px 30px;
+}
+
+.box {
+    padding: 10px;
+    width: 65%;
+    margin: 0 0 0 0;
+    border: 1px solid black;
+    outline: none;
+    border-radius: 10px;
+}
+
+.form h3 {
+    margin: 10px 80px;
+    align-self: flex-start;
+}
+
+#submit {
+    padding: 12px 30px;
+    width: 40%;
+    margin-top: 40px;
+    background-color: whitesmoke;
+    color: black;
+    text-transform: uppercase;
+    letter-spacing: 0.5;
+    border-width: 0.1px;
+    border-color: black;
+    outline: none;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+#submit:hover {
+    cursor: pointer;
+    box-shadow: 0 0 20px lightblue;
+    background-color: #fdc300;
+}
+
+

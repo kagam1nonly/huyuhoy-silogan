@@ -1,11 +1,16 @@
 import json
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
 from .models import Meal, CartItem
-from django.views.decorators.csrf import csrf_exempt
-
-# Import the Session model from your Django app
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.contrib.sessions.models import Session
+from .forms import CustomUserCreationForm  
+from django.contrib.auth import authenticate, logout
+from django.contrib.auth import login as auth_login
+from django.contrib import messages
+
+def base(request):
+    return render(request, 'food/base.html')
 
 def index(request):
     request.session.set_expiry(0)
@@ -13,9 +18,40 @@ def index(request):
         print(request.session['orders'])
     return render(request, 'food/index.html')
 
+def signup(request):  
+    ctx = {}
+    if request.method == 'POST':  
+        form = CustomUserCreationForm(request.POST)  
+        if form.is_valid():  
+            form.save()  
+        else:  
+            ctx['form'] = form
+    else:
+        form = CustomUserCreationForm()
+        ctx['form'] = form
+    return render(request, 'food/signup.html', ctx)
+
+@csrf_protect
 def login_view(request):
     request.session.set_expiry(0)
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        pwd = request.POST.get('password')
+        user = authenticate(request, username=username, password=pwd)  # Use 'username' as the field to authenticate
+        if user is not None:
+            auth_login(request, user)
+            print(user)
+            print(pwd)
+            return render(request, 'food/index.html', context={'user': request.user})  # Redirect to the index page upon successful login
+        else:
+            messages.info(request, 'Username or Password is incorrect.')
+            print(user)
+            print(pwd)
     return render(request, 'food/login.html')
+
+def logout_view(request):
+    logout(request)
+    return redirect('index')
 
 def meal_view(request):
     request.session.set_expiry(0)
@@ -32,13 +68,10 @@ def order(request):
     request.session.set_expiry(0)
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         request.session['note'] = request.POST.get('note')
-        
-        # Use 'order' instead of 'orders'
-        request.session['order'] = json.loads(request.POST.get('order'))
-        
-        # Send a JSON response indicating success
-        return JsonResponse({'message': 'Order submitted successfully'}, status=200)
-
+        request.session['orders'] = request.POST.get('orders')
+        print(request.session['orders'])
+        print(request.session['note'])
+        return JsonResponse({'message': 'This is an AJAX request.'})
     ctx = {'active_link': 'order'}
     return render(request, 'food/order.html', ctx)
 
@@ -53,7 +86,7 @@ def success_view(request):
     request.session.set_expiry(0)
     
     if 'order' in request.session:
-        order = request.session['order']
+        order = request.session['orders']
         ctx = {'order': order}
         return render(request, 'food/success.html', ctx)
     else:
@@ -102,3 +135,4 @@ def remove_item_from_cart(request, item_id):
         return JsonResponse({'message': 'Item removed successfully'})
     except CartItem.DoesNotExist:
         return JsonResponse({'message': 'Item not found'}, status=404)
+    

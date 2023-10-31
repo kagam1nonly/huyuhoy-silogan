@@ -94,22 +94,12 @@ a[href="#cart"].active {
     vertical-align: middle; /* Align the button vertically */
 }
 
-/* Updated CSS for Horizontal Order Columns */
-.order-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
+
 
 .order-header {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    padding: 10px;
     border-bottom: 1px solid #ccc;
 }
 
@@ -141,19 +131,11 @@ a[href="#cart"].active {
     text-align: center;
 }
 
-.order-total {
-    text-align: center;
-    font-size: 28px;
-    margin: 10px 0;
-    width: 100%;
-    font-weight: bold;
-}
-
 /* Style for the submit button */
 .submit-button {
     display: inline-block;
     padding: 10px 20px;
-    background-color: #4CAF50;
+    background-color:#F5B335;
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -163,17 +145,150 @@ a[href="#cart"].active {
 }
 
 .submit-button:hover {
-    background-color: #45a049;
+    cursor: pointer;
+}
+
+.order-container {
+    background-color: rgb(255, 255, 255);
+    width: 80%; /* Adjust the width to your preference */
+    height: calc(100vh - 80px);
+    margin: 50px auto; /* Center the rectangle horizontally */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Add a subtle shadow for depth */
+}   
+
+.order-header #permanent {
+    display: flex-start;
+    background-color: whitesmoke;
+    color: black; /* Set text color to white */
+    border-radius: 3px; /* Add rounded corners */
+    margin: 0 130px 10px; /* Add some spacing around the elements */
+    white-space: nowrap;
 }
 
 
+.order-list {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: large;
+}
 
-.order-rectangle-container {
-    background-color: #f5f5f5; /* Set the background color for the rectangle */
-    border: 1px solid #ccc;
+/* Updated CSS for Horizontal Order Columns */
+.head-container {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 300px;
+    padding: 15px;
     border-radius: 5px;
-    padding: 20px;
-    width: 80%; /* Adjust the width to your preference */
+    min-height: 40%; /* Ensure a minimum height of 50% */
+    border-bottom: 2px dotted #000000; /* Add a dotted line at the bottom */
+    margin: 15px;
+}
+
+.head-meal {
+    position: relative;
+    text-align: center;
+    font-weight: bold;
+    padding: 10px;
+    display: flex;
+    flex-direction: column; /* Display content vertically */
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap; /* Prevent text from wrapping */
+    overflow: hidden; /* Hide overflowed content */
+    background-color: #F5B335; /* Set a background color */
+    color: #fff; /* Set text color to white */
+    border-radius: 5px; /* Add rounded corners */
+}
+
+
+.cart-item-container {
+    width: 1000px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #ccc;
+    padding: 10px 0;
+    margin: 10px 0 10px 550px;
+}
+
+.cart-item-image {
+    width: 125px;
+    height: 125px;
+    margin-right: 10px;
+}
+
+.cart-item-name {
+    flex: 1;
+    margin: 0 10px; /* Add left and right margins to create space around the name */
+    text-align: center;
+}
+
+.cart-item-price {
+    margin-left: 10px; /* Add left margin to create space between name and price */
+    text-align: center;
+}
+
+.remove-btn {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin-right: 15px;
+    cursor: pointer;
+}
+
+.footer-container {
+    position: relative;
+    background-color: #ffffff; 
+    width: 100%; /* Adjust the width to your preference */
     margin: 0 auto; /* Center the rectangle horizontally */
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Add a subtle shadow for depth */
+}
+
+#order-form {
+    position: relative;
+    text-align: center;
+    height: auto; /* Let the form content determine the height */
+    padding: 15px; /* Add padding to the form */
+}
+
+.note {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 10px; /* Add space below the "Note" label */
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#note {
+    justify-content: center;
+    text-align: center;
+    width: 50%; /* Make the textarea fill the container width */
+    padding: 30px; /* Add padding to the textarea */
+    font-size: 20px; /* Increase the font size */
+    border: 2px solid #ccc; /* Add a border for a clean look */
+    border-radius: 5px; /* Add rounded corners */
+}
+
+
+.order-total {
+    background-color: #000000;
+    position: relative;
+    text-align: end;
+    color: #fff;
+    width: 100%;
+    height: 50px;
+    font-weight: bold;
+    padding-top: 25px;
+}
+
+#total {
+    margin-right: 20px;
+    font-size: 20px;
 }

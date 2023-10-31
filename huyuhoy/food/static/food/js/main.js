@@ -1,29 +1,29 @@
 var hours = 24;
-var now = Date.now;
+var now = Date.now();
 var stepTime = localStorage.getItem('stepTime');
 
 if (stepTime == null) {
     localStorage.setItem('stepTime', now);
-}
-
-else {
-    if (now - stepTime > hours* 60 * 60 * 1000) {
+} else {
+    if (now - stepTime > hours * 60 * 60 * 1000) {
         localStorage.clear();
         localStorage.setItem('stepTime', now);
     }
 }
 
-var orders = JSON.parse(localStorage.getItem('orders'));
+var orders = localStorage.getItem('orders');
 var total = localStorage.getItem('total');
 
 if (orders === null || orders === undefined) {
-localStorage.setItem('orders', JSON.stringify([]));
-orders = JSON.parse(localStorage.getItem('orders'));
+    orders = [];
+    localStorage.setItem('orders', JSON.stringify(orders));
+} else {
+    orders = JSON.parse(orders);
 }
 
 if (total === null || total === undefined) {
-    localStorage.setItem('total', 0);
-    total = localStorage.getItem('total');
+    total = 0;
+    localStorage.setItem('total', total);
 }
 
 var cart = document.querySelector("#cartCount");

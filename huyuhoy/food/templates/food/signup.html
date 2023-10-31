@@ -1,0 +1,46 @@
+{% load static %}
+{% include 'food/header.html' %} <!-- Include the header -->
+{% block content %}
+    <div>
+    <link rel="stylesheet" type="text/css" href="{% static '/food/css/signup.css' %}">
+    
+    <div class="hero">
+        <div class="main-container">
+            <form method="POST" class="form">
+                {% csrf_token %}
+                <h2>Register an account</h2>
+            
+                {% for field in form %}
+                <div class="form-group">
+                    <div>
+                        {{ field.label_tag }}
+                    </div>
+                    <div>
+                        {{ field }}
+                    </div>
+                    <div>
+                        {% if field.help_text %}
+                            <small style="color: grey">{{ field.help_text }}</small>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+                <button type="submit" class="sub-btn">Submit</button>
+            </form>
+        </div>
+    </div>
+{% endblock content %}
+{% include 'food/footer.html' %} <!-- Include the footer -->
+<!-- 
+<h3>First Name: </h3>
+                <input id="firstname" name="firstname" class="box" placeholder="James" type="text">
+                <h3>Last Name: </h3>
+                <input id="lastname" name="lastname" class="box" placeholder="Mackay" type="text">
+                <h3>Phone number</h3>
+                <input id="phonenumber" name="phonenumber" class="box" placeholder="09943394859" type="text">
+                <h3>Email</h3>
+                <input id="email" name="email" class="box" placeholder="example@hcdc.edu.ph" type="text">
+                <h3>Password</h3>
+                <input id="password" name="password" class="box" placeholder="must be at least 6 characters long." type="text">
+                <input type="submit" value="Log In" id="submit">
+                <a href="#">Forget password?</a> -->

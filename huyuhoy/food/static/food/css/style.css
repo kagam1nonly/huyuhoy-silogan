@@ -42,6 +42,10 @@ body {
     transition: 0.3s ease;
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }
+
+#navbar #h4 {
+    color: #fdc300;
+}
   
 #navbar li a.active::after,
 #navbar li a:hover::after {
@@ -130,6 +134,10 @@ i.lni {
     left: 104%; /* Position it in the center of the .footer-desc */
     top: 0;
     transform: translateX(-50%); /* Center horizontally */
+}
+
+footer {
+    margin-top: 300px; /* Push the footer to the bottom of the page */
 }
 
 .footer-content .content-left,

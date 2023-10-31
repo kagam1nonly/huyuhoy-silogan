@@ -1,0 +1,18 @@
+{% load static %}
+<div>
+    <section id="header">
+        <a href="{% url 'index' %}" class="header-logo">
+            <img src="{% static 'food/imgs/huyuhoy-logo.jpg' %}" class="logo" alt="Huyuhoy logo">
+        </a> 
+        <ul id="navbar">
+            <li><a class="active" href="{% url 'index' %}"><i class="lni lni-home"></i></a></li>
+            <li><a href="{% url 'order' %}"><i class="lni lni-cart"></i><span id="cartCount">0</span></a></li>
+            {% if user.is_authenticated %}
+            <li><h4 id="h4">Welcome {{ user.username }}</h4></li>
+            <li><a href="{% url 'logout' %}">Log out</a></li>
+            {% else %}
+            <li><a href="{% url 'login' %}">Log in/Sign up</a></li>
+            {% endif %}
+        </ul>
+    </section>
+</div>
