@@ -98,16 +98,15 @@ i.lni {
 
 .footer-main {
     display: flex;
-    justify-content: center;
-    align-items: center;
     flex-direction: column;
     background-color: black;
     position: relative;
 }
 
-.footer .footer-logo {
+.footer-logo {
     max-width: 128px;
     height: 128px;
+    margin-right: 20px; /* Add some spacing between the logo and the content */
 }
 
 .footer-content {
@@ -121,6 +120,7 @@ i.lni {
 /* Add styling for the line indicator */
 
 .footer-desc {
+    font-family: Arial, Helvetica, sans-serif;
     position: relative; /* Set the container as relative */
     padding-bottom: 10px; /* Add some space below the description for the line */
 }
@@ -136,12 +136,11 @@ i.lni {
     transform: translateX(-50%); /* Center horizontally */
 }
 
-footer {
-    margin-top: 300px; /* Push the footer to the bottom of the page */
-}
-
 .footer-content .content-left,
 .footer-content .content-right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 50%; /* Equal width for left and right */
     padding: 20px; /* Adjust the padding as needed */
     box-sizing: border-box; /* Include padding in width calculation */
@@ -174,7 +173,7 @@ footer-main .container .footer-content .content-right .delivery-contact .deliver
   }
   
   .number-per-city .body-1--bold-yellow {
-    font-weight: bold;
+      font-weight: bold;
     color: #fdc300;
   }
   
@@ -245,6 +244,7 @@ footer-main .container .footer-content .content-right .delivery-contact .deliver
     line-height: 18px;
     letter-spacing: 0.09em;
     text-transform: uppercase;
+    font-family: Arial, Helvetica, sans-serif;
     color: #252932;
 }
 

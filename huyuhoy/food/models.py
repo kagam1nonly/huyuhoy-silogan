@@ -16,7 +16,7 @@ class Meal(models.Model):
 class Order(models.Model):
     customer = models.ForeignKey(User, on_delete=models.CASCADE)
     number = models.CharField(max_length=60)
-    bill = models.DecimalField(max_digits=4, decimal_places=2)
+    bill = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateTimeField(auto_now_add=True, blank=True)
     note = models.TextField(blank=True, null= True)
 
@@ -25,7 +25,7 @@ class CartItem(models.Model):
     cartitem_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=120)
     rice = models.CharField(max_length=60)
-    price = models.DecimalField(decimal_places=2, max_digits=10)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
     order = models.ForeignKey('Order', on_delete=models.CASCADE)
 
     def __str__(self):

@@ -1,33 +1,44 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
 .hero {
     display: block;
-    background-image: url("../imgs/login-bg.png");
+    background-image: url("../imgs/bg.jpg");
     background-repeat: no-repeat;
     max-width: 100%;
-    height: auto;
     background-size: cover;
+    contain: content;
 }
 
 .left-container {
     display: flex;
-    height: 500px;
-    width: 1000px;
+    height: 577px;
+    width: 1100px;
     border: 0.5px solid black;
     margin: auto;
     margin-top: 50px;
-    
+    margin-bottom: 50px;
+    background-color: #e6870e;
 }
 
 .form {
+    position: relative;
     display: flex;
     flex-direction: column;
     width: 50%;
+    height: auto;
     align-items: center;
-    background-color: whitesmoke;
+    background-color: black;
+    border-radius: 10px;
+    border: 0.5px solid white; /* Specify the border style and color */
+    margin: 50px;
 }
 
 .form a {
     text-decoration: none;
-    color: black;
+    color: #e6870e;
     margin-top: 10px;
     font-size: 14px;
 }
@@ -38,9 +49,11 @@
 
 
 .form h2 {
+    font-weight: normal;
     font-size: 36px;
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     margin: 50px 30px 50px 30px;
+    color: #e6870e;
 }
 
 .box {
@@ -53,8 +66,10 @@
 }
 
 .form h3 {
-    margin: 10px 80px;
+    margin: 10px 90px;
     align-self: flex-start;
+    font-family:Arial, Helvetica, sans-serif;
+    color:#e6870e;
 }
 
 #submit {
@@ -78,10 +93,27 @@
     background-color: #fdc300;
 }
 
+.line {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    gap: 300px; /* Adjust the horizontal spacing as needed */
+    padding: 1px;
+    border-radius: 1px;
+    width: 1px;
+    min-height: 1px; /* Set the height to create a horizontal line */
+    background-color: #000000; /* Line color */
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
 /* Right Container*/
 .right-container {
+    margin-top: 50px;
     justify-content: center;
-    background-color: #fff8dd;
+    background-color: #e6870e;
     width: 50%;
 }
 
@@ -93,6 +125,7 @@
 
 .right-container p {
     font-size: 16px;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 10px 50px 10px 65px;
 }
 
@@ -106,10 +139,11 @@
     margin: 10px 10px 50px 150px;
     padding: 12px 30px;
     width: 40%;
+    color:#e6870e;
     border-radius: 10px;
-    border-color: black;
+    border-color: white;
     border-width: 0.1px;
-    background-color: #fdc300;
+    background-color: black;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     font-weight: bold;

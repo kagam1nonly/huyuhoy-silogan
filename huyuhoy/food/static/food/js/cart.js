@@ -92,10 +92,12 @@ function order() {
     updateCartCount(); 
     var msg = note.value;
     var orders = localStorage.getItem('orders');
+    var total = localStorage.getItem('total')
     var url = '/food/order';
     var orderData = {};
     orderData['orders'] = orders;
     orderData['note'] = msg;
+    orderData['bill'] = total;
     $.ajax({
         url: url,
         type: "POST",

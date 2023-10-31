@@ -1,13 +1,18 @@
-import json
+import json, random
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
-from .models import Meal, CartItem
+from .models import Meal, CartItem, Order
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.contrib.sessions.models import Session
 from .forms import CustomUserCreationForm  
 from django.contrib.auth import authenticate, logout
 from django.contrib.auth import login as auth_login
 from django.contrib import messages
+
+def randomOrderNumber(length):
+    sample = 'ABCDEFGH0123456789'
+    numberO = ''.join(random.choice(sample) for i in range(length))
+    return numberO
 
 def base(request):
     return render(request, 'food/base.html')
@@ -69,8 +74,33 @@ def order(request):
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         request.session['note'] = request.POST.get('note')
         request.session['orders'] = request.POST.get('orders')
+        request.session['bill'] = request.POST.get('bill')
+        orders = json.loads(request.session['orders'])
+        randomNum = randomOrderNumber(6)
+
+        while Order.objects.filter(number=randomNum).count() > 0:
+            randomNum = randomOrderNumber(6)
+            
         print(request.session['orders'])
         print(request.session['note'])
+        print(request.session['bill'])
+        if request.user.is_authenticated:
+            order = Order(customer=request.user,
+                            number=randomOrderNumber(6),
+                            bill=float(request.session['bill']),
+                            note=request.session['note'])    
+            order.save()
+            for article in orders:
+                rice_choice = article.get('rice', '')  # Get the value of 'rice' from the article
+                rice = 'withRice' if rice_choice.lower() == 'withrice' else 'withOutRice'  # Choose 'withRice' or 'withOutRice' based on the value
+                item = CartItem(
+                    order=order,
+                    name=article['name'],
+                    price=float(article['price']),
+                    rice=rice  # Assign the chosen rice option
+                )
+                item.save()
+
         return JsonResponse({'message': 'This is an AJAX request.'})
     ctx = {'active_link': 'order'}
     return render(request, 'food/order.html', ctx)
