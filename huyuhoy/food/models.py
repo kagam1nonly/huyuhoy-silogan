@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser, Group, Permission
+from django.utils import timezone
 
 # Meal Model.
 class Meal(models.Model):
@@ -14,11 +15,17 @@ class Meal(models.Model):
     
 # Order Model
 class Order(models.Model):
+    STATUS_CHOICES = (
+        ('Pending', 'Pending'),
+        ('Completed', 'Completed'),
+    )
+
     customer = models.ForeignKey(User, on_delete=models.CASCADE)
-    number = models.CharField(max_length=60)
+    number = models.CharField(max_length=6, unique=True)  # Make it unique
     bill = models.DecimalField(max_digits=10, decimal_places=2)
-    date = models.DateTimeField(auto_now_add=True, blank=True)
-    note = models.TextField(blank=True, null= True)
+    date = models.DateTimeField(auto_now_add=True)
+    note = models.TextField(blank=True, null=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
 
 # CartItem Model 
 class CartItem(models.Model):
@@ -31,22 +38,10 @@ class CartItem(models.Model):
     def __str__(self):
         return self.name
 
-# CustomUser Model
-class CustomUser(models.Model):
-    email = models.EmailField(unique=True)
+# Customer Model
+class Customer(models.Model):
+    customer_id = models.AutoField(primary_key=True)
+    address = models.CharField(max_length=255)
+    phone = models.CharField(max_length=15)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    # Add any additional user-related fields you need
-    # For example, you can add fields like profile picture, address, etc.
-
-    def __str__(self):
-        return self.user.username
     
-# # CartItem Model 
-# class CartItem(models.Model):
-#     cart_item_id = models.AutoField(primary_key=True, default=1)
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)  # Link cart items to a user
-#     meal = models.ForeignKey(Meal, on_delete=models.CASCADE)
-#     quantity = models.PositiveIntegerField(default=1)
-
-#     def __str__(self):
-#         return f"{self.meal.name} ({self.quantity}x)"

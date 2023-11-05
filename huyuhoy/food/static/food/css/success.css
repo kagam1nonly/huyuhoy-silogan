@@ -5,3 +5,7 @@
     align-items: center;
     margin: 200px;
 }
+
+.item-name {
+    text-transform: uppercase;
+}

@@ -1,0 +1,43 @@
+{% extends 'food/base.html' %}
+{% load static %}
+{% include 'food/header.html' %} <!-- Include the header -->
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'food/css/view-order.css' %}">
+<div class="vorder-wrapper">
+    <h3 class="your-order-title">Your Orders: </h3>
+    <ul>
+        {% for order in orders %}
+        <div class="order-box">
+            <li>
+                Order Number: {{ order.number }}<br>
+                Bill: {{ order.bill }}<br>
+                Date: {{ order.date }}<br>
+                Note: {{ order.note }}<br>
+                Status: {{ order.status }}<br>
+
+                <ul>
+                    {% for cartitem in order.cartitems.all %}
+                        <li>
+                            Name: {{ cartitem.name }}<br>
+                            Rice: {{ cartitem.rice }}<br>
+                            Price: {{ cartitem.price }}<br>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
+        </div>
+        {% endfor %}
+        <p>Debug: {{ result }}</p>
+        <script>
+            // Call the updateOrderContainer function when the document is ready
+            document.addEventListener("DOMContentLoaded", function () {
+                updateCartCount();
+            });
+        </script>
+    </ul>
+</div>
+<script src="{% static 'food/js/cart.js' %}"></script>
+<!-- <script src="{% static 'food/js/order.js' %}"></script>
+<script src="{% static 'food/js/cart.js' %}"></script> -->
+{% endblock content %}
+{% include 'food/footer.html' %} <!-- Include the footer -->

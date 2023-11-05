@@ -151,7 +151,7 @@ a[href="#cart"].active {
 .order-container {
     background-color: rgb(255, 255, 255);
     width: 80%; /* Adjust the width to your preference */
-    height: calc(100vh - 80px);
+    min-height: 800px;
     margin: 50px auto; /* Center the rectangle horizontally */
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Add a subtle shadow for depth */
 }   

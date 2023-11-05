@@ -92,16 +92,8 @@ function updateCartCount() {
     cart.innerHTML = cartItems.length;
 }
 
-// function removeItemFromCart(index) {
-//     if (confirm("Do you want to remove this item from the cart?")) {
-//         cartItems.splice(index, 1); // Remove the item at the specified index
-//         updateLocalStorage(); // Update local storage
-//         displayCart();
-//         updateCartCount();
-//     }
-// }
-
- window.addEventListener('load', function () {
+window.addEventListener('load', function () {
     displayCart();
     updateCartCount();
 });
+

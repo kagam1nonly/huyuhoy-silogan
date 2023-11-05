@@ -1,13 +1,16 @@
 import json, random
+from django.db import connection
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
-from .models import Meal, CartItem, Order
+from .models import Meal, CartItem, Order, Customer
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.contrib.sessions.models import Session
 from .forms import CustomUserCreationForm  
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, logout
 from django.contrib.auth import login as auth_login
 from django.contrib import messages
+from django.urls import reverse
 
 def randomOrderNumber(length):
     sample = 'ABCDEFGH0123456789'
@@ -23,13 +26,18 @@ def index(request):
         print(request.session['orders'])
     return render(request, 'food/index.html')
 
-def signup(request):  
+def signup(request):
     ctx = {}
-    if request.method == 'POST':  
-        form = CustomUserCreationForm(request.POST)  
-        if form.is_valid():  
-            form.save()  
-        else:  
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            print(f"User details: {user.username}, {user.email}, {user.first_name}, {user.last_name}")
+            print('Success')
+
+            return redirect(reverse('login'))
+        else:
+            print(form.errors)
             ctx['form'] = form
     else:
         form = CustomUserCreationForm()
@@ -65,8 +73,23 @@ def meal_view(request):
         request.session['order'] = []
 
     meals = Meal.objects.all()
-    ctx = {'meals': meals}
+    isAuthenticated = request.user.is_authenticated  # Check if the user is authenticated
+    print(isAuthenticated)
+
+    ctx = {'meals': meals, 'isAuthenticated': isAuthenticated}
     return render(request, 'food/meal.html', ctx)
+
+def call_place_order_procedure(customer_id, cart_items):
+    with connection.cursor() as cursor:
+        try:
+            # Call the PlaceOrder stored procedure
+            cursor.callproc('PlaceOrder', [customer_id, cart_items])
+
+            # Commit the changes
+            cursor.execute('COMMIT;')
+            return True  # Indicates success
+        except Exception as e:
+            return False  # Indicates failure
 
 @csrf_exempt
 def order(request):
@@ -105,6 +128,18 @@ def order(request):
     ctx = {'active_link': 'order'}
     return render(request, 'food/order.html', ctx)
 
+def success_view(request):
+    request.session.set_expiry(0)
+    
+    if 'order' in request.session:
+        orderNum = request.session['order']
+        bill = request.session['bill']
+        items = CartItem.objects.filter(order__number = orderNum)
+        ctx = {'orderNum': orderNum, 'bill': bill, 'items': items}
+        return render(request, 'food/success.html', ctx)
+    else:
+        return HttpResponse('No order found in the session.')
+
 def clear_session(request):
     # Clear the session
     request.session.flush()
@@ -112,57 +147,19 @@ def clear_session(request):
     # You can return an HTTP response or redirect to another page
     return HttpResponse('Session cleared.')
 
-def success_view(request):
-    request.session.set_expiry(0)
-    
-    if 'order' in request.session:
-        order = request.session['orders']
-        ctx = {'order': order}
-        return render(request, 'food/success.html', ctx)
+@login_required  # Ensure the user is logged in to access this view
+def view_order(request):
+    if request.user.is_authenticated:
+        # Query the database to get orders related to the logged-in user
+        orders = Order.objects.filter(customer=request.user)
+
+        if not orders:
+            print('Please log in to view your orders.')
+        
+        ctx = {'orders': orders}
+        return render(request, 'food/view-order.html', ctx)
     else:
-        return HttpResponse('No order found in the session.')
-
-def add_to_cart(request):
-    if request.method == 'POST':
-        # Parse the JSON request body
-        try:
-            payload = json.loads(request.body.decode('utf-8'))
-            meal_id = payload.get('meal_id')
-            quantity = payload.get('quantity')
-        except json.JSONDecodeError:
-            return JsonResponse({'success': False, 'message': 'Invalid JSON payload'})
-
-        if meal_id is not None:
-            meal_id = int(meal_id)
-        else:
-            return JsonResponse({'success': False, 'message': 'Meal ID is missing'})
-
-        user = request.user  # Assuming the user is authenticated
-
-        order = request.session.get('order', [])
-        order.append({'meal_id': meal_id, 'quantity': quantity})
-        request.session['order'] = order
-
-        try:
-            meal = Meal.objects.get(meal_id=meal_id)
-
-            # Create a new CartItem record
-            cart_item, created = CartItem.objects.get_or_create(user=user, meal=meal)
-            cart_item.quantity += quantity
-            cart_item.save()
-            print('Added to cart')
-            return JsonResponse({'success': True})
-        except Meal.DoesNotExist:
-            return JsonResponse({'success': False, 'message': 'Meal not found'})
-
-    return JsonResponse({'success': False, 'message': 'Invalid request method'})
-
-@csrf_exempt
-def remove_item_from_cart(request, item_id):
-    try:
-        item = CartItem.objects.get(pk=item_id)
-        item.delete()
-        return JsonResponse({'message': 'Item removed successfully'})
-    except CartItem.DoesNotExist:
-        return JsonResponse({'message': 'Item not found'}, status=404)
+        # Handle the case when the user is not logged in
+        # You can redirect them to a login page or show an appropriate message
+        return HttpResponse('Please log in to view your orders.')
     

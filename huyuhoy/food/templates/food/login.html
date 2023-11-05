@@ -33,6 +33,14 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Call the updateOrderContainer function when the document is ready
+        document.addEventListener("DOMContentLoaded", function () {
+            updateCartCount();
+        });
+    </script>
     </login>
+    <script src="{% static 'food/js/cart.js' %}"></script>
 {% endblock content %}
 {% include 'food/footer.html' %} <!-- Include the footer -->

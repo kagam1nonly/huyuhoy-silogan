@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from .models import Customer
 
 class CustomUserCreationForm(UserCreationForm):
     address = forms.CharField(max_length=255, required=True, widget=forms.TextInput(attrs={'class': 'custom-class', 'placeholder': 'Enter your address'}))
@@ -23,12 +24,6 @@ class CustomUserCreationForm(UserCreationForm):
         self.fields['first_name'].widget.attrs['class'] = 'first-class'
         self.fields['last_name'].widget.attrs['class'] = 'last-class'
         self.fields['email'].widget.attrs['class'] = 'email-class'
-        self.fields['username'].widget.attrs['class'] = 'custom-class'
-        self.fields['password1'].widget.attrs['class'] = 'custom-class'
-        self.fields['password2'].widget.attrs['class'] = 'custom-class'
-
-# first_name = forms.CharField(max_length=30, required=True)
-#     last_name = forms.CharField(max_length=30, required=True)
-#     email = forms.EmailField(max_length=254, required=True)
-#     password1 = forms.CharField(min_length= 8, max_length=16, required=True)
-#     password2 = forms.CharField(min_length= 8, max_length=16, required=True)
+        self.fields['username'].widget.attrs['class'] = 'user-class'
+        self.fields['password1'].widget.attrs['class'] = 'pass1-class'
+        self.fields['password2'].widget.attrs['class'] = 'pass2-class'

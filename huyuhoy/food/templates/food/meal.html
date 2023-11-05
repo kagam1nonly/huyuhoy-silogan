@@ -1,6 +1,7 @@
 {% extends 'food/base.html' %}
 
 {% load static %}
+{% load crispy_forms_tags %}
 {% include 'food/header.html' %} <!-- Include the header -->
 {% block content %}
     <link rel="stylesheet" type="text/css" href="{% static 'food/css/meal.css' %}">
@@ -35,21 +36,23 @@
                         <button
                         class="btn"
                         onclick="addMeal('{{ meal.meal_id }}');"
-                        data-add-to-cart-url="{% url 'add_to_cart' %}"
+                        id="addToCartBtn"
                         >Add to cart</button>
                     </div>
                 </div>
                 {% endfor %}
+
             <div class="order-total">
                 <h3>Order List:</h3>
                 <div id="order-total">
-                    <ol id="mcart"></ol>
+                    <ol id="mcart"><br><br><br><br><br></ol>
                 </div>
                 <div id="horizontal-line"></div>
                 <span id="mtotal">₱ 0</span>
             </div>
         </div>
     </div>
+    
     <script src="{% static 'food/js/main.js' %}"></script>
     <script src="{% static 'food/js/order.js' %}"></script>
 {% endblock content %}
