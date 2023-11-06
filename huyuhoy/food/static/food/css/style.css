@@ -101,6 +101,7 @@ i.lni {
     flex-direction: column;
     background-color: black;
     position: relative;
+    min-height: 330px;
 }
 
 .footer-logo {
