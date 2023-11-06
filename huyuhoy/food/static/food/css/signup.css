@@ -145,3 +145,23 @@ input[type="email"] {
     font-size: small;
     color: white;
 }
+@media (min-width: 768px) and (max-width: 1023px) {
+    .main-container {
+        display: flex;
+        height: auto;
+        width: 768px;
+        background-color: black; /* Set a background color */
+        border-radius: 5px; /* Add rounded corners */
+        margin: 100px 0 50px 90px;
+        padding: 20px;
+    }
+
+    #createacct {
+        width: 400px; /* Adjust to your desired width */
+        height: 55px; /* Adjust to your desired height */
+        overflow: hidden; /* Hide text that overflows the container */
+        bottom: 600px;
+        right: 350px;
+        font-size: 28px;
+    }
+}

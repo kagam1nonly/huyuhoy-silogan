@@ -15,7 +15,7 @@ body {
 .left-container {
     display: flex;
     height: 577px;
-    width: 1100px;
+    max-width: 1100px;
     border: 0.5px solid black;
     margin: auto;
     margin-top: 50px;
@@ -154,3 +154,115 @@ body {
     box-shadow: 0 0 20px lightblue;
 }
 
+/* MAKE RESPONSIVE  
+/* For mobile phones */
+
+/* For tablets */
+@media (min-width: 768px) and (max-width: 1023px) {
+    /* Your tablet-specific CSS goes here */
+    .left-container {
+        display: flex;
+        height: 577px;
+        width: 768px;
+        border: 0.5px solid black;
+        margin: 50px 0 50px 90px;
+        padding: 20px;
+        background-color: #e6870e;
+    }
+
+    .right-container {
+        margin-top: 50px;
+        justify-content: center;
+        background-color: #e6870e;
+        width: 50%;
+    }
+    
+
+    .right-container h2 {
+        font-size: 28px;
+        font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+        margin: 50px 30px 60px 70px;
+        padding: 15px
+    }
+
+    .right-container p {
+        font-size: 14px;
+        font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 5px 30px 10px 35px;
+    }
+
+    .right-container #delivery {
+        width: 100px;
+        height: 100px;
+        margin: 10px 10px 10px 120px;
+    }
+
+    .right-container button {
+        margin: 10px 10px 50px 100px;
+        padding: 12px 30px;
+        width: 40%;
+        color:#e6870e;
+        border-radius: 10px;
+        border-color: white;
+        border-width: 0.1px;
+        background-color: black;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: bold;
+    }
+    #submit {
+        padding: 12px 30px;
+        width: 40%;
+        margin-top: 40px;
+        background-color: whitesmoke;
+        color: black;
+        text-transform: uppercase;
+        letter-spacing: 0.5;
+        border-width: 0.1px;
+        border-color: black;
+        outline: none;
+        border-radius: 10px;
+        font-weight: bold;
+    }
+
+    .footer .footer-main {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        height: 230px;
+        background-color: black;
+    }
+    
+}
+
+/* For small screens (e.g., specific targeting of 400px width) */
+@media (min-width: 477px) and (max-width: 768px){
+    .hero .left-container {
+        display: flex;
+        flex-wrap: wrap;
+        width: 90%;
+        height: 1000px;
+        margin: 0 auto;
+        background-color: green;
+    }
+
+    .right-container {
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    .form {
+        width: 90%;
+        margin: 20px;
+    }
+
+    .right-container button {
+        margin: 10px;
+        padding: 8px 20px;
+    }
+}
+
+/* For desktop screens */
+@media (min-width: 1024px) {
+    /* Your desktop-specific CSS goes here */
+}
