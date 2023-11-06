@@ -1,0 +1,21 @@
+use huyuhoydb;
+
+-- Declare a variable to store the total bill
+SET @totalBill = 0.00;
+
+-- Call the stored procedure with the customer ID as a parameter
+CALL CalculateTotalBillForCustomer(4); -- this worked btw
+
+-- Display the result
+SELECT @totalBill; -- displayed 765.00
+
+
+DELIMITER //
+CREATE PROCEDURE CalculateTotalBillForCustomer(IN customerID INT)
+BEGIN
+    SELECT SUM(bill) AS totalBill
+    FROM food_order
+    WHERE customer_id = customerID;
+END;
+//
+DELIMITER ;

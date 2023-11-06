@@ -28,9 +28,23 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # AUTH_USER_MODEL = 'food.Customer'
-
-
 # Application definition
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}
 
 INSTALLED_APPS = [
     'django.contrib.admin',

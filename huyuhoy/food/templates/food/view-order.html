@@ -1,11 +1,17 @@
-{% extends 'food/base.html' %}
 {% load static %}
 {% include 'food/header.html' %} <!-- Include the header -->
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'food/css/view-order.css' %}">
 <div class="vorder-wrapper">
-    <h3 class="your-order-title">Your Orders: </h3>
-    <ul>
+    <div class="head">
+        <div class="your-orders">
+            <h3 class="your-order-title">Your Orders:</h3>
+        </div>
+        <div class="total-bill">
+            <h3>Total Bill <span class="totalBill">{{ total_bill|default:"5.00" }}</span></h3>
+        </div>
+    </div>
+    <div class="order-box-container"> <!-- Use a div container for flex layout -->
         {% for order in orders %}
         <div class="order-box">
             <li>
@@ -13,28 +19,24 @@
                 Bill: {{ order.bill }}<br>
                 Date: {{ order.date }}<br>
                 Note: {{ order.note }}<br>
-                Status: {{ order.status }}<br>
-
+                Status: <span class="status">{{ order.status }}</span><br>
                 <ul>
-                    {% for cartitem in order.cartitems.all %}
+                    {% for cartitem in order.cart_items.all %}
                         <li>
-                            Name: {{ cartitem.name }}<br>
-                            Rice: {{ cartitem.rice }}<br>
-                            Price: {{ cartitem.price }}<br>
+                            Item: {{ cartitem.name }} x {{ cartitem.rice }} x ₱{{ cartitem.price }}
                         </li>
                     {% endfor %}
                 </ul>
             </li>
         </div>
         {% endfor %}
-        <p>Debug: {{ result }}</p>
-        <script>
-            // Call the updateOrderContainer function when the document is ready
-            document.addEventListener("DOMContentLoaded", function () {
-                updateCartCount();
-            });
-        </script>
-    </ul>
+    </div>
+    <script>
+        // Call the updateOrderContainer function when the document is ready
+        document.addEventListener("DOMContentLoaded", function () {
+            updateCartCount();
+        });
+    </script>
 </div>
 <script src="{% static 'food/js/cart.js' %}"></script>
 <!-- <script src="{% static 'food/js/order.js' %}"></script>

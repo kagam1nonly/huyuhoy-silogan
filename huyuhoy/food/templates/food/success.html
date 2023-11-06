@@ -5,13 +5,16 @@
 <link rel="stylesheet" type="text/css" href="{% static 'food/css/success.css' %}">
 <div class="s-wrapper">
     <h3>We have received your order.</h3>
-    <h4>Number of order: {{ orderNum }}</h4>
+    <h4>Order Number: {{ orderNum }}</h4>
     <h3> You ordered: <br></h3>
-    {% for item in items %}
-    <h4 class="item-name">{{ item.name }} {{ item.rice }} {{ item.price }}</h4>
-    {% endfor %}
+    <ul>
+        {% for item in items %}
+            <li class="item-name">{{ item.name }} {{ item.rice }} {{ item.price }}</li>
+        {% endfor %}
+    </ul>
     <h4>Total: ₱ {{ bill }}</h4>
 </div>
+
 
 <!-- <script src="{% static 'food/js/order.js' %}"></script>
 <script src="{% static 'food/js/cart.js' %}"></script> -->
