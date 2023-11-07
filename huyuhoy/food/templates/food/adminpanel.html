@@ -1,0 +1,30 @@
+{% load static %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'food/css/adminpanel.css' %}">
+<div class="sidebar">
+    <div class="side">
+        <h2>Admin Panel</h2>
+        <ul>
+            <li><a href="{% url 'index' %}" class="header-logo">
+                <img src="{% static 'food/imgs/huyuhoy-logo.jpg' %}" class="logo" alt="Huyuhoy logo">
+            </a></li>
+            <li><a href="{% url 'adminpanel' %}">Home</a></li>
+            <li><a href="{% url 'adminpanel-order' %}">Orders</a></li>
+        </ul>
+    </div>
+</div>
+<div class="main-container">
+    <div class="dashboard-box revenue-box">
+        <h3>Total Revenue</h3>
+        <p>₱ {{ total_revenue }}</p>
+    </div>
+    <div class="dashboard-box customer-box">
+        <h3>Total Customers</h3>
+        <p>{{ total_customers }}</p>
+    </div>
+    <div class="dashboard-box ordered-food-box">
+        <h3>Total Ordered Food</h3>
+        <p>{{ total_ordered_meals }}</p>
+    </div>
+</div>
+{% endblock %}

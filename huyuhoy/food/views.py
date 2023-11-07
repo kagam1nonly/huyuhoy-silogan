@@ -207,10 +207,74 @@ def cancel_order(request, order_number):
                     order = Order.objects.get(number=order_number, customer=customer_id)
                     order.delete()
                 except Order.DoesNotExist:
+                    print('No order id found')
                     pass  # Handle the case where the order is already deleted or not found
 
-            return JsonResponse({'success': True, 'message': result})
+            print('Outside if')
+            return redirect('view-order')
         except Exception as e:
             return JsonResponse({'success': False, 'error_message': str(e)})
 
     return redirect('view-order')
+
+def adminpanel_view(request):
+    orders = Order.objects.all()  # You can add filters as needed
+
+    # Calculate Total Revenue
+    with connection.cursor() as cursor:
+        cursor.execute('SELECT CalculateTotalRevenue()')
+        total_revenue = cursor.fetchone()[0]
+
+    # Calculate Total Ordered Meals
+    with connection.cursor() as cursor:
+        cursor.execute('SELECT CalculateTotalOrderedMeals()')
+        total_ordered_meals = cursor.fetchone()[0]
+
+    # Calculate Total Customers
+    with connection.cursor() as cursor:
+        cursor.execute('SELECT CalculateTotalCustomers()')
+        total_customers = cursor.fetchone()[0]
+
+    return render(request, 'food/adminpanel.html', {
+        'orders': orders,
+        'total_revenue': total_revenue,
+        'total_ordered_meals': total_ordered_meals,
+        'total_customers': total_customers,
+        })
+
+def adminpanelorder_view(request):
+    if request.method == 'GET':
+        # Fetch orders and messages from the messages table
+        with connection.cursor() as cursor:
+            orders = Order.objects.all()
+
+            cursor.execute("SELECT message FROM messages")
+            messages = cursor.fetchone()
+
+        # Pass the orders and messages to the template context
+        return render(request, 'food/adminpanel-order.html', {'orders': orders, 'messages': messages})
+    
+    if request.method == 'POST':
+        order_id = int(request.POST.get('order_id'))
+        action = request.POST.get('action')
+        admin_id = request.user.id  # Get the admin's ID from the request or another source
+        
+        if not admin_id:
+            return JsonResponse({'success': False, 'message': 'Admin not authenticated.'})
+
+        if action == 'Delete':
+            try:
+                order = Order.objects.get(id=order_id)
+                order.delete()
+                return redirect('adminpanel-order')
+            except Order.DoesNotExist:
+                return redirect('adminpanel-order')
+        else:
+            with connection.cursor() as cursor:
+                cursor.callproc('AcceptRefuseOrder', [order_id, action, admin_id])
+                result = cursor.fetchone()
+                if isinstance(result[0], str) and 'successfully' in result[0]:
+                    return redirect('adminpanel-order')
+                else:
+                    return redirect('adminpanel-order')
+    return redirect('adminpanel-order')

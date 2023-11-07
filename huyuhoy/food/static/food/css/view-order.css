@@ -41,20 +41,36 @@ body, h1, h2, h3, p, ul, li {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    background-color: wheat;
+    background-color: rgba(253, 168, 10, 0.51);
     width: 350px;
     min-height: 150px; /* Increased min-height for better alignment */
     padding: 20px;
     margin: 0 0 0 48px;
 }
 
+button {
+    background-color: #fdc300;
+    padding: 5px;
+    text-decoration: none;
+    border: none;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+.order-box.canceled {
+    background-color: #ff00008d; 
+}
+
+.order-box.completed {
+    background-color: #00FF00;
+}
+
 .status {
     color: red;
 }
 
-.order-box ul {
-    color: green;
-}
 
 
 

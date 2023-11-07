@@ -6,6 +6,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('adminpanel/', views.adminpanel_view, name='adminpanel'),
+    path('adminpanel-order/', views.adminpanelorder_view, name='adminpanel-order'),
     path('', views.index, name='index'),
     path('base/', views.base, name='base'),
     path('meal/', views.meal_view, name='meal'),

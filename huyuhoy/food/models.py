@@ -18,6 +18,8 @@ class Order(models.Model):
     STATUS_CHOICES = (
         ('Pending', 'Pending'),
         ('Completed', 'Completed'),
+        ('Canceled', 'Canceled'),
+        ('Processing', 'Processing'),
     )
 
     customer = models.ForeignKey(User, on_delete=models.CASCADE)

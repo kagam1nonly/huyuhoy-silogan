@@ -7,6 +7,8 @@ app_name = 'food'
 
 urlpatterns = [
     path('base/', views.base, name='base'),
+    path('adminpanel/', views.adminpanel_view, name='adminpanel'),
+    path('adminpanel-order/', views.adminpanelorder_view, name='adminpanel-order'),
     path('meal/', views.meal_view, name='meal'),
     path('order', views.order, name='order'),
     path('success', views.success_view, name='success'),
