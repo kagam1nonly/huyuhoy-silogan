@@ -17,6 +17,7 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),  # Custom URL for login
     path('signup/', views.signup, name='signup'),
     path('view-order/', views.view_order, name='view-order'),  
+    path('cancel-order/<str:order_number>/', views.cancel_order, name='cancel_order'),
 ]
 
 if settings.DEBUG:

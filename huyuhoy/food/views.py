@@ -185,3 +185,18 @@ def view_order(request):
         return render(request, 'food/view-order.html', ctx)
     else:
         return HttpResponse('Please log in to view your orders.')
+    
+@csrf_exempt
+def cancel_order(request):
+    if request.method == 'POST':
+        order_number = request.POST.get('order_number')
+        try:
+            order = Order.objects.get(number=order_number)
+            # Implement any additional checks, e.g., to ensure that the user is allowed to cancel this order
+            order.delete()  # Delete the order from the database
+            return JsonResponse({'success': True})
+        except Order.DoesNotExist:
+            return JsonResponse({'success': False, 'error_message': 'Order not found'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error_message': str(e)})
+    return JsonResponse({'success': False, 'error_message': 'Invalid request method'})

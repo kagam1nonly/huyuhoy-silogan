@@ -111,7 +111,7 @@ body {
 
 /* Right Container*/
 .right-container {
-    margin-top: 50px;
+    margin: 50px;
     justify-content: center;
     background-color: #e6870e;
     width: 50%;

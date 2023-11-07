@@ -8,10 +8,10 @@
             <h3 class="your-order-title">Your Orders:</h3>
         </div>
         <div class="total-bill">
-            <h3>Total Bill <span class="totalBill">{{ total_bill|default:"5.00" }}</span></h3>
+            <h3>Total Bill <span class="total   Bill">{{ total_bill|default:"5.00" }}</span></h3>
         </div>
     </div>
-    <div class="order-box-container"> <!-- Use a div container for flex layout -->
+    <div class="order-box-container"> 
         {% for order in orders %}
         <div class="order-box">
             <li>
@@ -27,6 +27,12 @@
                         </li>
                     {% endfor %}
                 </ul>
+
+                <form method="POST" action="{% url 'cancel_order' order.number %}">
+                    {% csrf_token %}
+                    <button type="submit">Cancel Order</button>
+                </form>
+                
             </li>
         </div>
         {% endfor %}

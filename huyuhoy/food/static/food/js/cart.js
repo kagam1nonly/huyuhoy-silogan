@@ -112,6 +112,24 @@ function order() {
     })
 }
 
+function cancelOrder(orderNumber) {
+    if (confirm("Are you sure you want to cancel this order?")) {
+        // Make an AJAX request to cancel the order on the server
+        // You can use JavaScript or a JavaScript framework (e.g., jQuery) for the AJAX request
+        // After successfully canceling the order, you can remove the corresponding order box from the DOM
+        // Example using jQuery:
+        $.post("/cancel-order/", { order_number: orderNumber }, function(data) {
+            if (data.success) {
+                // Remove the order box from the DOM
+                const orderBox = document.querySelector(".order-box");
+                orderBox.parentNode.removeChild(orderBox);
+            } else {
+                alert("Failed to cancel the order.");
+            }
+        });
+    }
+}
+
 // Call displayCart on page load.
 document.addEventListener("DOMContentLoaded", function () {
     displayCart();
