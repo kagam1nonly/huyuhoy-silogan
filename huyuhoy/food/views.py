@@ -19,6 +19,9 @@ def generate_random_order_number(length):
     sample = 'ABCDEFGH0123456789'
     return ''.join(random.choice(sample) for i in range(length))
 
+def adminpanel_view(request):
+    return render(request, 'food/adminpanel.html')
+
 def base(request):
     return render(request, 'food/base.html')
 
@@ -176,8 +179,6 @@ def view_order(request):
         else:
             print("Failed to retrieve total bill")
 
-        print("Total bill is none!")
-
         if not orders:
             print('Please log in to view your orders.')
 
@@ -187,16 +188,29 @@ def view_order(request):
         return HttpResponse('Please log in to view your orders.')
     
 @csrf_exempt
-def cancel_order(request):
+def cancel_order(request, order_number):
     if request.method == 'POST':
-        order_number = request.POST.get('order_number')
         try:
-            order = Order.objects.get(number=order_number)
-            # Implement any additional checks, e.g., to ensure that the user is allowed to cancel this order
-            order.delete()  # Delete the order from the database
-            return JsonResponse({'success': True})
-        except Order.DoesNotExist:
-            return JsonResponse({'success': False, 'error_message': 'Order not found'})
+            # Retrieve the customer ID (you may need to adapt this part)
+            customer_id = request.user.id
+
+            with connection.cursor() as cursor:
+                # Call the stored procedure to cancel the order
+                cursor.callproc('CancelCustomerOrder', [order_number, customer_id])
+                cursor.execute('SELECT @result;')
+                result = cursor.fetchone()[0]
+
+            # Check if the cancellation was successful
+            if result == 'Order canceled successfully':
+                # Remove the order
+                try:
+                    order = Order.objects.get(number=order_number, customer=customer_id)
+                    order.delete()
+                except Order.DoesNotExist:
+                    pass  # Handle the case where the order is already deleted or not found
+
+            return JsonResponse({'success': True, 'message': result})
         except Exception as e:
             return JsonResponse({'success': False, 'error_message': str(e)})
-    return JsonResponse({'success': False, 'error_message': 'Invalid request method'})
+
+    return redirect('view-order')
