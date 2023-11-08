@@ -244,27 +244,36 @@ def adminpanel_view(request):
 
 def adminpanelorder_view(request):
     if request.method == 'GET':
+        orders = Order.objects.all()
         # Fetch orders and messages from the messages table
         with connection.cursor() as cursor:
-            orders = Order.objects.all()
-
-            cursor.execute("SELECT message FROM messages")
-            messages = cursor.fetchone()
+            messages = None  # Initialize messages as None
 
         # Pass the orders and messages to the template context
         return render(request, 'food/adminpanel-order.html', {'orders': orders, 'messages': messages})
-    
+
     if request.method == 'POST':
+        orders = Order.objects.all()
         order_id = int(request.POST.get('order_id'))
         action = request.POST.get('action')
         admin_id = request.user.id  # Get the admin's ID from the request or another source
-        
+
         if not admin_id:
             return JsonResponse({'success': False, 'message': 'Admin not authenticated.'})
 
+        # Check if the order status allows the action
+        order = Order.objects.get(id=order_id)
+        if order.status not in ('Pending', 'Processing'):
+            # Execute the message retrieval
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT message FROM messages")
+                messages = cursor.fetchone()
+                messages = messages[0] if messages else None  # Extract the message if it exists
+                messages = ('Cannot perform this action on the order',) if messages else ('Cannot perform this action on the order',)
+                return render(request, 'food/adminpanel-order.html', {'orders': orders, 'messages': messages})
+
         if action == 'Delete':
             try:
-                order = Order.objects.get(id=order_id)
                 order.delete()
                 return redirect('adminpanel-order')
             except Order.DoesNotExist:
