@@ -1,3 +1,55 @@
+body {
+    margin: 0;
+}
+
+.home {
+    position: absolute;
+    top: 5px;
+    right: 1440px;
+    height: 5px;
+    width: 50px;
+    padding: 15px;
+    border: 1px solid #333;
+    border-radius: 30px;
+    background-color: darkgrey;
+    z-index: 0; 
+}
+
+.home:hover {
+    border: 1px solid #333;
+    background-color: darkgrey;
+    box-shadow: 0 0 10px #000000;
+    cursor: pointer;
+}
+
+#back {
+    position: absolute;
+    top: 15px;
+    right: 1450px;
+    font-size: 14px;
+    white-space: nowrap;
+    color: #fff;
+}
+
+#back:hover {
+    color: aquamarine;
+}
+
+.h1 {
+    align-items: center;
+    margin-top: 10px;
+    color: white;
+    font-size: xx-large;
+}
+
+.main-container2 {
+    width: 100%;
+    height: 100%;
+    background-color:darkslategrey;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 /* Sidebar Styles */
 .sidebar {
     display: flex;
@@ -63,7 +115,7 @@
     z-index: 1;
     left: 0;
     top: 0;
-    width: 100%;
+    width: 80%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.7); /* Background color with some transparency */
 }
@@ -76,16 +128,25 @@
     position: absolute;
     left: 600px;
     bottom: 400px;
+    color: red;
     background-color: #fff; /* Background color of the modal */
     margin: auto; /* Center the modal horizontally and vertically */
     padding: 20px;
     border: 1px solid #888;
-    width: 70%; /* Set your desired width */
+    border-radius: 20px;
+    width: 22%; /* Set your desired width */
     max-width: 400px; /* Add a maximum width if needed */
 }
 
 .modal-background {
-    background-color: #000000eb;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Background color with some transparency */
+    z-index: 1;
+    display: none; /* Initially hidden */
 }
 
 .close {

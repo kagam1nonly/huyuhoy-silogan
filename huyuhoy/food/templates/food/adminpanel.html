@@ -1,6 +1,7 @@
 {% load static %}
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'food/css/adminpanel.css' %}">
+{% if user.is_superuser %}
 <div class="sidebar">
     <div class="side">
         <h2>Admin Panel</h2>
@@ -10,9 +11,11 @@
             </a></li>
             <li><a href="{% url 'adminpanel' %}">Home</a></li>
             <li><a href="{% url 'adminpanel-order' %}">Orders</a></li>
+            <li><a href="{% url 'logout' %}">Log out</a></li>
         </ul>
     </div>
 </div>
+
 <div class="main-container">
     <div class="dashboard-box revenue-box">
         <h3>Total Revenue</h3>
@@ -27,4 +30,12 @@
         <p>{{ total_ordered_meals }}</p>
     </div>
 </div>
+{% else %}
+<div class="main-container2">
+    <div class="home">
+    </div>
+    <a class="home-btn" href="{% url 'index' %}"><span id="back">GO BACK</span></a>
+    <h1 class="h1">You must be admin to visit this site.</h1>
+</div>
+{% endif %}
 {% endblock %}
