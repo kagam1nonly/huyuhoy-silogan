@@ -245,7 +245,7 @@ button:hover {
     flex-direction: column;
     background-color: black;
     position: relative;
-    min-height: 330px;
+    min-height: 200px;
 }
 
 .footer-logo {
@@ -265,6 +265,7 @@ button:hover {
 /* Add styling for the line indicator */
 
 .footer-desc {
+    width: 100%;
     font-family: Arial, Helvetica, sans-serif;
     position: relative; /* Set the container as relative */
     padding-bottom: 10px; /* Add some space below the description for the line */
@@ -281,8 +282,11 @@ button:hover {
     transform: translateX(-50%); /* Center horizontally */
 }
 
-.footer-content .content-left,
 .footer-content .content-right {
+    width: 80%;
+}
+
+.footer-content .content-left {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -340,7 +344,14 @@ footer-main .container .footer-content .content-right .delivery-contact .deliver
 
 .footer p {
     color: white;
-    font-size: 14px;
+}
+
+.body-1 {
+    font-size: 22px;
+    width: 190%;
+    margin-top: 30px;
+    margin-bottom: 30px;
+  
 }
 
 .footer .content-left,
