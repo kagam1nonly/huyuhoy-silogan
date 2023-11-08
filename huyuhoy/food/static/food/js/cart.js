@@ -98,19 +98,30 @@ function order() {
     orderData['orders'] = orders;
     orderData['note'] = msg;
     orderData['bill'] = total;
-    $.ajax({
-        url: url,
-        type: "POST",
-        data: orderData,
-        success: function(data) {
-            window.location.replace('/food/success')
-            localStorage.setItem('orders', JSON.stringify([]));
-            localStorage.setItem('total', 0);
-            console.log(orders);
-            console.log(msg);
-        }
-    })
+    
+    // Check if orders are empty
+    if (orders === null || orders === '[]') {
+        alert('Your cart is empty. Please add items to your cart before submitting your order.');
+        return;
+    }
+    
+    if (confirm('Are you sure you want to submit your order?')) {
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: orderData,
+            success: function(data) {
+                window.location.replace('/food/success')
+                localStorage.setItem('orders', JSON.stringify([]));
+                localStorage.setItem('total', 0);
+                console.log(orders);
+                console.log(msg);
+            }
+        })
+    }
 }
+
+
 
 function cancelOrder(orderNumber) {
     if (confirm("Are you sure you want to cancel this order?")) {

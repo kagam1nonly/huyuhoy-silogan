@@ -12,6 +12,28 @@ body, h1, h2, h3, p, ul, li {
     padding: 15px;
 }
 
+.cancelform {
+    padding: 5px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.cancel-btn {
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 14px;
+    justify-content: center;
+    align-items: center;
+    color: #000; /* Button text color */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    padding: 5px 10px;
+    cursor: pointer;
+    margin-left: auto;
+    background-color: antiquewhite;
+    margin: 0;
+}
+
 .head {
     display: flex;
     justify-content: space-between; 
@@ -41,34 +63,59 @@ body, h1, h2, h3, p, ul, li {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    background-color: rgba(253, 168, 10, 0.51);
     width: 350px;
-    min-height: 150px; /* Increased min-height for better alignment */
-    padding: 20px;
+    min-height: 150px;
+    padding: 20px 20px 0 20px;
     margin: 0 0 0 48px;
-}
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  }
 
 button {
-    background-color: #fdc300;
+    background-color: aliceblue;
     padding: 5px;
     text-decoration: none;
     border: none;
+    margin-top: 20px;
+    margin-bottom: 0;
+    border-radius: 5px;
 }
 
 button:hover {
     cursor: pointer;
 }
 
-.order-box.canceled {
+.order-box {
+    background-color:#fdc2008e;
+}
+
+.order-box.canceled,
+.order-box.refused {
     background-color: #ff00008d; 
 }
 
 .order-box.completed {
-    background-color: #00FF00;
+    background-color: #00ff0082;
 }
 
 .status {
-    color: red;
+    font-weight: bold;
+}
+
+.status-refused,
+.status-canceled {
+    color: #000;
+    text-shadow: 0.5px 0.1px 0.1px white;
+}
+
+.status-pending,
+.status-processing {
+    color: #000;
+    text-shadow: 0.5px 0.1px 0.1px white;
+}
+
+.status-completed {
+    color: #000;
+    text-shadow: 0.5px 0.1px 0.1px white;
 }
 
 

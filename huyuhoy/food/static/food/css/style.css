@@ -43,7 +43,10 @@ body {
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }
 
-#navbar #h4 {
+#navbar li h4 {
+    font-weight: 400;
+    font-size: 24px;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     color: #fdc300;
 }
   
@@ -89,6 +92,147 @@ i.lni {
     font-size: 24px;
     justify-content: center;
 }
+
+#meal {
+    height: 100%; /* Make it occupy the full viewport height */
+    width: 100%; /* Make it occupy the full viewport width */
+    display: flex;
+    background-color: rgba(128, 128, 128, 0.5);
+}
+
+.menu-container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    background-color: rgb(255, 255, 255);
+    margin: 150px;
+    flex: 1px;
+}
+
+#root {
+    width: 85%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+}
+
+.box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+}
+
+.box h3 {
+    margin-bottom: 20px;
+}
+
+.img-box {
+    width: 100%;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.images {
+    max-height: 90%;
+    max-width: 90%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.bottom {
+    margin-top: 20px;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 70px;
+}
+
+h2 {
+    font: caption;
+    color: #fdc300;
+}
+
+
+.header {
+    position: absolute;
+    top: 785px;
+    right: 700px;
+    display: flex;
+    background-color: e6870e;
+    font-size: 36px;
+    font-family: 'Moul', serif;
+    text-transform: uppercase;
+    color: black;
+    margin: 30px 0 50px 0;
+    letter-spacing: 1.5px;
+    padding: 15px;
+    align-items: center;
+    justify-content: center;
+    height: 10vh;
+    border-bottom: 1px solid #eee;
+    background-color: #fdc300;
+}
+
+.header p {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+
+.sidebar {
+    width: 15%;
+    min-height: 101vh;
+}
+
+.content {
+    width: 85%;
+}
+
+.fil-p {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 30px;
+    align-items: center;
+    background-color: rgb(0, 0, 0);
+    margin: 0 0 30px 0;
+    cursor: pointer;
+    font-size: 22px;
+    text-transform: uppercase;
+    color: #FFFFFF;
+}
+
+.fil-p:hover {
+    color: black;
+    background-color: #fdc300;
+}
+
+button {
+    width: 100%;
+    position: relative;
+    border: none;
+    background-color: #fdc300;
+    padding: 7px 25px;
+    cursor: pointer;
+    color: black;
+}
+
+.add-btn {
+    width: 80%;
+}
+
+button:hover {
+    color: #fff;
+    background-color: black;
+}
+
 
 #banner {
     background-position: auto;

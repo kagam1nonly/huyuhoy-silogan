@@ -286,9 +286,32 @@ a[href="#cart"].active {
     height: 50px;
     font-weight: bold;
     padding-top: 25px;
+    margin-top: 15px;
 }
 
 #total {
     margin-right: 20px;
     font-size: 20px;
+}
+
+.btn-group {
+    margin: 0;
+}
+
+a {
+    color: black;
+    font-size: 18px;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #000000;
+    text-decoration: underline;
+    box-shadow: 5px 8px 12px 5px rgba(0, 0, 0, 0.2);
+}
+
+.login {
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: #F5B335;
 }

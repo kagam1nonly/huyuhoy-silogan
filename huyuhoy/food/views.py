@@ -84,7 +84,6 @@ def meal_view(request):
 
 
 @csrf_exempt
-@login_required
 def order(request):
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         orders = json.loads(request.POST.get('orders', '[]'))
@@ -263,6 +262,14 @@ def adminpanelorder_view(request):
 
         # Check if the order status allows the action
         order = Order.objects.get(id=order_id)
+
+        if action == 'Delete':
+            try:
+                order.delete()
+                return redirect('adminpanel-order')
+            except Order.DoesNotExist:
+                return redirect('adminpanel-order')
+            
         if order.status not in ('Pending', 'Processing'):
             # Execute the message retrieval
             with connection.cursor() as cursor:
@@ -272,12 +279,6 @@ def adminpanelorder_view(request):
                 messages = ('Cannot perform this action on the order',) if messages else ('Cannot perform this action on the order',)
                 return render(request, 'food/adminpanel-order.html', {'orders': orders, 'messages': messages})
 
-        if action == 'Delete':
-            try:
-                order.delete()
-                return redirect('adminpanel-order')
-            except Order.DoesNotExist:
-                return redirect('adminpanel-order')
         else:
             with connection.cursor() as cursor:
                 cursor.callproc('AcceptRefuseOrder', [order_id, action, admin_id])

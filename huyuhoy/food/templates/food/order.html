@@ -33,7 +33,9 @@
                 </div>
                 <button type="button" class="submit-button" onclick="order()">Submit Order</button>
                 {% else %}
-                <a href="{% url 'login' %}">Log in/Sign up now!</a>
+                <div class="btn-group">
+                    <a href="{% url 'login' %}" class="login">Log in/Sign up now!</a>
+                </div>
                 {% endif %}
             </form>
             <div id="ototal" class="order-total"> <!-- Change id to "ptotal" and add class "order-total" -->
@@ -44,13 +46,6 @@
 
     <ol id="pcart" style="display: none;"></ol>
 
-    <script>
-        // Call the updateOrderContainer function when the document is ready
-        document.addEventListener("DOMContentLoaded", function () {
-            //updateOrderContainer();
-            //displayCart();
-        });
-    </script>
     <script>
         const csrfToken = "{{ csrf_token|escapejs }}";
     </script>
