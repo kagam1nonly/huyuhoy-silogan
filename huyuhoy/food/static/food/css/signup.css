@@ -61,7 +61,7 @@ body {
     display: flex;
     position: absolute;
     transform: rotate(-20deg); /* Rotate the text counterclockwise by 90 degrees */
-    background-color: e6870e;
+    background-color: #e6870e;
     font-size: 36px;
     font-family: 'Moul', serif;
     text-transform: uppercase;

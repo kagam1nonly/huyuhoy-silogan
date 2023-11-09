@@ -2,35 +2,25 @@
 
 {% block content %}
 {% load static %}
-
-    <div class="cart-overlay" onclick="toggleCart()"></div>
-    <div class="cart-container">
-        <div class="cart-content">
-            <div class="first-row">
-                <button class="del" onclick="clearCart()">Clear Cart</button>
-                <i class="lni lni-close" onclick="toggleCart()"></i>
+    <section id="hero">
+    </section>
+    <section id="meal">
+        <div class="menu-container">
+            <div class="sidebar">
+                    <div id="cat-btn"></div>
             </div>
-            <div class="product">
-                <ul class="cart-list">
-                    <li>sample</li>
-                </ul>
-            </div>
-            <div class="cart-bottom">
-                <div class="cart-total">
-                    <h5 id="ctotal" class="ctotal-order">Total: ₱ 0.00</h5>
+            <div class="content">
+                <div class="header">
+                    <p>Choose Order</p>
                 </div>
-                <a class="view-button" href="#"><span>VIEW CART</span></a>
+                <div id="root"></div>
             </div>
         </div>
-    </div>
-    <section id="hero">
-        <!-- Your hero section content here -->
     </section>
     <section id="banner">
         <img src="{% static 'food/imgs/Huyuhoys_Hero_Page_6.png' %}" alt="">
     </section>
 
     <script src="{% static 'food/js/main.js' %}"></script>
-    <!-- <script src="{% static 'food/js/cart.js' %}"></script>
-    <script src="{% static 'food/js/order.js' %}"></script> -->
+    <script src="{% static 'food/js/filter.js' %}"></script> 
 {% endblock content %}

@@ -5,10 +5,10 @@
             <img src="{% static 'food/imgs/huyuhoy-logo.jpg' %}" class="logo" alt="Huyuhoy logo">
         </a> 
         <ul id="navbar">
-            <li><a class="active" href="{% url 'index' %}"><i class="lni lni-home"></i></a></li>
+            <li><a href="{% url 'index' %}"><i class="lni lni-home"></i></a></li>
             <li><a href="{% url 'order' %}"><i class="lni lni-cart"></i><span id="cartCount">0</span></a></li>
             {% if user.is_authenticated %}
-                <li><h4 id="h4">Welcome {{ user.username }}</h4></li>
+                <li><h4 class="welcome">Welcome {{ user.username }}</h4></li>
                 {% if not user.is_superuser %}
                     <li><a href="{% url 'view-order' %}">View Orders</a></li>
                 {% endif %}
