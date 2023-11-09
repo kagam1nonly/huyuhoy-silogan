@@ -69,6 +69,18 @@ def logout_view(request):
     logout(request)
     return redirect('index')
 
+def howtoorder(request):
+    logout(request)
+    return render(request, 'food/howtoorder.html')
+
+def conditionofuse(request):
+    logout(request)
+    return render(request, 'food/howtoorder.html')
+
+def privacypolicy(request):
+    logout(request)
+    return render(request, 'food/privacypolicy.html')
+
 def meal_view(request):
     request.session.set_expiry(0)
 
