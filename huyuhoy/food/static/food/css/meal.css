@@ -5,19 +5,23 @@ body, h1, h2, h3, p, ol, li, ul {
 }
 
 /* Main container */
-.main-wrapper {
+.m-wrapper {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     position: relative;
     margin: 0;
     padding: 0;
+    height: auto;
+    background-color: red;
+    
 }
 
 /* Container for product cards */
 .meal-container {
     margin-left: 15px;
-    width: 1000px;
+    width: 1100px;
+    min-height: 110vh;
     display: flex;
     flex-wrap: wrap; /* Allow cards to wrap to the next line */
     justify-content: flex-start;/* Adjust spacing between cards */
@@ -26,7 +30,7 @@ body, h1, h2, h3, p, ol, li, ul {
 .product-card {
     border: 1px solid #ccc;
     padding: 15px;
-    margin: 10px;
+    margin: 25px 25px 25px 25px;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
     background-color: #fff;
     text-align: flex-start;
@@ -46,7 +50,6 @@ body, h1, h2, h3, p, ol, li, ul {
 .product-image {
     width: 100px;
     height: 100px;
-    border: 1px solid #ccc;
     object-fit: cover;
     margin: 0 auto;
 }
@@ -95,7 +98,8 @@ body, h1, h2, h3, p, ol, li, ul {
 /* Container for order summary */
 .order-total {
     position: absolute;
-    right: 15px;
+    top: 95px;
+    right: 5px;
     margin: 10px;
     padding: 15px;
     border-radius: 10px;
@@ -105,6 +109,10 @@ body, h1, h2, h3, p, ol, li, ul {
     width: 30%;
     height: auto;
     background-color: rgb(242, 248, 128);
+}
+
+#order-total {
+    margin: auto;
 }
 
 .order-total h3 {
@@ -152,10 +160,13 @@ body, h1, h2, h3, p, ol, li, ul {
 }
 
 .remove-button {
+    position: relative;
     background-color: red;
     color: white;
     border: none;
-    padding: 5px 10px;
+    margin-right: 15px;
+    padding: 6px;
+    width: 30px;
     cursor: pointer;
 }
 

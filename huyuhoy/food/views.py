@@ -1,9 +1,11 @@
 import json
 import random
+from django.core.mail import send_mail
 from django.db import connection
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
 from .models import Meal, CartItem, Order, Customer
+from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from .forms import CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
@@ -228,6 +230,22 @@ def cancel_order(request, order_number):
 
     return redirect('view-order')
 
+def send_email(request, order_id):
+    subject = 'Order Completed'
+    message = 'Your order is completed.'
+    from_email = 'huyuhoy.business@gmail.com'
+
+    # Retrieve the customer's email using the customer_id associated with the order
+    try:
+        order = Order.objects.get(id=order_id)
+        customer_id = order.customer_id
+        customer = User.objects.get(id=customer_id)
+        recipient_list = [customer.email]  # Use the customer's email as the recipient
+    except (Order.DoesNotExist, User.DoesNotExist):
+        recipient_list = []  # Set an empty recipient list if the order or customer does not exist
+
+    send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+
 def adminpanel_view(request):
     orders = Order.objects.all()  # You can add filters as needed
 
@@ -281,6 +299,23 @@ def adminpanelorder_view(request):
                 return redirect('adminpanel-order')
             except Order.DoesNotExist:
                 return redirect('adminpanel-order')
+            
+        if action == 'complete':
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT message FROM messages")
+                messages = cursor.fetchone()
+                messages = messages[0] if messages else None  # Extract the message if it exists
+
+                # Send the completion email
+                if messages:
+                    try:
+                        send_email(request, order_id)  # Send the email to the customer
+                    except Exception as e:
+                        # Handle the email sending error, e.g., log it
+                        print(f"Error sending email: {str(e)}")
+
+                messages = ('Email sent.',) if messages else ('Email not sent.',)
+                return render(request, 'food/adminpanel-order.html', {'orders': orders, 'messages': messages})
             
         if order.status not in ('Pending', 'Processing'):
             # Execute the message retrieval

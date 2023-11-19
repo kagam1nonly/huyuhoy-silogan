@@ -25,6 +25,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-right: 50px;
+
 }
 
 #navbar li {
@@ -94,10 +96,10 @@ i.lni {
 }
 
 #meal {
-    height: 100%; /* Make it occupy the full viewport height */
+    min-height: 100%; /* Make it occupy the full viewport height */
     width: 100%; /* Make it occupy the full viewport width */
     display: flex;
-    background-color: rgba(128, 128, 128, 0.5);
+    /* background-color: rgba(128, 128, 128, 0.5); */
 }
 
 .menu-container {
@@ -105,7 +107,8 @@ i.lni {
     align-items: flex-start;
     justify-content: flex-start;
     background-color: rgb(255, 255, 255);
-    margin: 150px;
+    margin: 150px 150px 30px 150px;
+    border: 1px solid #000000;
     flex: 1px;
 }
 
@@ -117,6 +120,7 @@ i.lni {
 }
 
 .box {
+    width: 250px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -156,25 +160,25 @@ i.lni {
 
 h2 {
     font: caption;
-    color: #fdc300;
+    color: #ffc400;
 }
 
 
 .header {
     position: absolute;
-    top: 785px;
-    right: 700px;
+    top: 738px;
+    right: 600px;
     display: flex;
-    background-color: e6870e;
+    background-color: #e6870e;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 36px;
-    font-family: 'Moul', serif;
     text-transform: uppercase;
     color: black;
     margin: 30px 0 50px 0;
     letter-spacing: 1.5px;
-    padding: 15px;
     align-items: center;
     justify-content: center;
+    padding: 15px;
     height: 10vh;
     border-bottom: 1px solid #eee;
     background-color: #fdc300;
@@ -188,10 +192,11 @@ h2 {
 
 .sidebar {
     width: 15%;
-    min-height: 101vh;
+    min-height: 91vh;
 }
 
-.content {
+.meal-content {
+    margin: 0 40px 20px 40px;
     width: 85%;
 }
 
@@ -199,12 +204,12 @@ h2 {
     display: flex;
     justify-content: center;
     width: 100%;
-    padding: 30px;
+    padding: 20px;
     align-items: center;
     background-color: rgb(0, 0, 0);
-    margin: 0 0 30px 0;
+    margin: 0 0 5px 0;
     cursor: pointer;
-    font-size: 22px;
+    font-size: 18px;
     text-transform: uppercase;
     color: #FFFFFF;
 }
@@ -212,6 +217,11 @@ h2 {
 .fil-p:hover {
     color: black;
     background-color: #fdc300;
+}
+
+.cline {
+    margin-top: 56px;
+    border: 2.5px solid #000000;
 }
 
 button {
@@ -235,12 +245,19 @@ button:hover {
 
 
 #banner {
+    background-color: #fdc300;
     background-position: auto;
     background-repeat: no-repeat;
     background-size: auto;
 }
 
-.footer-main {
+.footer-logo {
+    max-width: 128px;
+    height: 128px;
+    margin-right: 20px; 
+}
+
+.footer-container {
     display: flex;
     flex-direction: column;
     background-color: black;
@@ -248,42 +265,13 @@ button:hover {
     min-height: 200px;
 }
 
-.footer-logo {
-    max-width: 128px;
-    height: 128px;
-    margin-right: 20px; /* Add some spacing between the logo and the content */
-}
-
 .footer-content {
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     width: 100%;
     max-width: 1100px;
-}
-
-/* Add styling for the line indicator */
-
-.footer-desc {
-    width: 100%;
-    font-family: Arial, Helvetica, sans-serif;
-    position: relative; /* Set the container as relative */
-    padding-bottom: 10px; /* Add some space below the description for the line */
-}
-
-
-.line-indicator {
-    width: 2px; /* Adjust the width as needed */
-    background-color: dimgray; /* Adjust the color as needed */
-    height: 100%; /* Height will match the height of .footer-desc */
-    position: absolute;
-    left: 104%; /* Position it in the center of the .footer-desc */
-    top: 0;
-    transform: translateX(-50%); /* Center horizontally */
-}
-
-.footer-content .content-right {
-    width: 80%;
 }
 
 .footer-content .content-left {
@@ -295,68 +283,17 @@ button:hover {
     box-sizing: border-box; /* Include padding in width calculation */
 }
 
-.delivery-contact .overline {
-    font-size: 14px;
-    font-weight: bold;
-}
-
-.footer-main .container .footer-content .content-right .delivery-contact .delivery-numbers {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: row;
-    flex-direction: row;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-}
-
-footer-main .container .footer-content .content-right .delivery-contact .delivery-numbers .overline {
-    color: #FFFFFF;
-    margin: 0 0 32px 36px;
-}
-  
-  .number-per-city {
-    margin-bottom: 10px;
-  }
-  
-  .number-per-city .body-1--bold-yellow {
-      font-weight: bold;
-    color: #fdc300;
-  }
-  
-  /* Delivery Service */
-  .delivery-service {
-    margin-top: 20px;
-  }
-  
-  .delivery-desc {
-    font-size: 14px;
-    line-height: 1.5;
-    margin-bottom: 10px;
-  }
-  
-  .delivery-img img {
-    max-width: 100%;
-    height: auto;
-  }
-
 .footer p {
     color: white;
 }
 
 .body-1 {
-    font-size: 22px;
+    position: relative;
+    font-size: 18px;
     width: 190%;
     margin-top: 30px;
     margin-bottom: 30px;
   
-}
-
-.footer .content-left,
-.content-right {
-    display: flex;
 }
 
 .footer2 {

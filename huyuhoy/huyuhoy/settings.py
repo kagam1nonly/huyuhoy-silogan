@@ -30,6 +30,13 @@ ALLOWED_HOSTS = []
 # AUTH_USER_MODEL = 'food.Customer'
 # Application definition
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'huyuhoy.business@gmail.com'
+EMAIL_HOST_PASSWORD = 'Silogan2021'
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

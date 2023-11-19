@@ -10,7 +10,7 @@
         var csrfToken = "{{ csrf_token }}";
     </script>
     <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrfToken }}">
-    <div class "main-wrapper">
+    <div class "m-wrapper">
         <div class="meal-container">
                 {% for meal in meals %}
                 <div class="product-card">
@@ -43,9 +43,9 @@
                 {% endfor %}
 
             <div class="order-total">
-                <h3>Order List:</h3>
+                <h3>Cart Items:</h3>
                 <div id="order-total">
-                    <ol id="mcart"><br><br><br><br><br></ol>
+                    <ol id="mcart"></ol>
                 </div>
                 <div id="horizontal-line"></div>
                 <span id="mtotal">₱ 0</span>

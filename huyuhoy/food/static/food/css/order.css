@@ -2,105 +2,20 @@ ul, ol {
     list-style: none;
 }
 
-/* Cart Navbar */
-.cart-container {
-    position: fixed;
-    top: 80px;
-    left: calc(100% - 550px);
-    width: 550px;
-    background-color: rgb(252, 246, 222);
-    height: 50vh;
-    transition: 0.3s ease;
-    z-index: 1001;
-    display: none; /* Hide the cart-container by default */
-}
-
-.cart-container .show-cart {
-    display: block; /* Show the cart container */
-}
-
-.cart-container .cart-content {
-    margin: 30px;
-    height: 85%;
-}
-
-.cart-content .first-row {
-    display: flex;
-    justify-content: space-between;
-}
-
-.cart-content h1 {
-    font-weight: 100;
-    margin: 0;
-    padding: 5px 0;
-    display: flex;
-}
-
-.cart-container .cart-content .first-row i.lni.lni-close {
-    font-size: 28px;
-    padding-top: 10px;
-}
-
-.cart-container .product {
-    padding: 16px 0;
-    font-size: 28px;
-}
-
-.cart-container .cart-total {
-    display: flex;
-    justify-content: space-between;
-    margin: 30px 0;
-    font-size: 28px;
-}
-
-.view-button {
-    justify-content: center;
-    align-items: center;
-    background-color: #F5B335;
-    padding: 15.5px;
-    width: calc(100% - 30px); /* Set the width to 100% minus padding */
-    display: flex;
-    text-align: center;
-    text-decoration: none;
-    color: black;
-}
-
-.view-button span {
-    font-family: "Circular Std", san-serif;
-    padding-top: 2px;
-    color: #202020;
-    line-height: 120%;
-    font-weight: 900;
-}
-
-a[href="#cart"].active {
-    /* Add your desired styles for the active state here */
-    /* For example, you can change the color or background */
-    color: #ff0000; /* Change to your desired color */
-    /* Add other styles as needed */
-}
-
-/* Styles for the Delete button in the cart navbar */
-.cart-container .cart-content .product .cart-list li .del {
-    /* Add your desired styles here */
-    background-color: red; /* Change to your desired color */
-    color: white; /* Change to your desired text color */
-    margin: 0 5px; /* Adjust margin for spacing */
-    padding: 5px 10px; /* Adjust padding for button size */
-}
-
-/* Adjust alignment for the Delete button */
-.cart-container .cart-content .product .cart-list li .del {
-    vertical-align: middle; /* Align the button vertically */
-}
-
-
+.order-container {
+    background-color: rgb(255, 255, 255);
+    width: 80%; /* Adjust the width to your preference */
+    min-height: 700px;
+    margin: 50px auto; /* Center the rectangle horizontally */
+    border: #000000;
+    border: 1px solid;
+}   
 
 .order-header {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #000;
 }
 
 .order-column {
@@ -134,6 +49,7 @@ a[href="#cart"].active {
 /* Style for the submit button */
 .submit-button {
     display: inline-block;
+    width: 100px;
     padding: 10px 20px;
     background-color:#F5B335;
     color: #fff;
@@ -148,26 +64,18 @@ a[href="#cart"].active {
     cursor: pointer;
 }
 
-.order-container {
-    background-color: rgb(255, 255, 255);
-    width: 80%; /* Adjust the width to your preference */
-    min-height: 800px;
-    margin: 50px auto; /* Center the rectangle horizontally */
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Add a subtle shadow for depth */
-}   
-
 .order-header #permanent {
     display: flex-start;
     background-color: whitesmoke;
     color: black; /* Set text color to white */
     border-radius: 3px; /* Add rounded corners */
-    margin: 0 130px 10px; /* Add some spacing around the elements */
+    margin: 10px 110px 10px 0; /* Add some spacing around the elements */
     white-space: nowrap;
 }
 
 
 .order-list {
-    position: absolute;
+    margin: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -184,7 +92,8 @@ a[href="#cart"].active {
     gap: 300px;
     padding: 15px;
     border-radius: 5px;
-    min-height: 40%; /* Ensure a minimum height of 50% */
+    min-height: 250px;
+    /* Ensure a minimum height of 50% */
     border-bottom: 2px dotted #000000; /* Add a dotted line at the bottom */
     margin: 15px;
 }
@@ -207,29 +116,26 @@ a[href="#cart"].active {
 
 
 .cart-item-container {
-    width: 1000px;
+    width: 945px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid #ccc;
     padding: 10px 0;
-    margin: 10px 0 10px 550px;
+    margin-left: 750px;
 }
 
 .cart-item-image {
     width: 125px;
     height: 125px;
-    margin-right: 10px;
 }
 
 .cart-item-name {
     flex: 1;
-    margin: 0 10px; /* Add left and right margins to create space around the name */
     text-align: center;
 }
 
 .cart-item-price {
-    margin-left: 10px; /* Add left margin to create space between name and price */
     text-align: center;
 }
 
@@ -252,9 +158,15 @@ a[href="#cart"].active {
 
 #order-form {
     position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     text-align: center;
     height: auto; /* Let the form content determine the height */
     padding: 15px; /* Add padding to the form */
+    min-height: 200px;
+
 }
 
 .note {
@@ -263,7 +175,9 @@ a[href="#cart"].active {
     text-align: center;
     margin-bottom: 10px; /* Add space below the "Note" label */
     font-size: 20px;
+    width: 500px;
     font-weight: bold;
+
 }
 
 #note {
