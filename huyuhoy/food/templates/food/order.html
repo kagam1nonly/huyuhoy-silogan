@@ -6,17 +6,22 @@
 <link rel="stylesheet" type="text/css" href="{% static 'food/css/order.css' %}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    <a href="{% url 'meal' %}" class="meal">Menu <i class="lni lni-pizza"></i></a>
+    <h2 id="cartitems">Cart-items</h2>
+    
     <div class="order-container">
         <div class="order-header">
-            <span class="order-list">Order List: </span>
-            <h3 id="permanent">Meal Image</h3>
-            <h3 id="permanent">Meal Name</h3>
-            <h3 id="permanent">Price</h3>
+            <div class="title">
+                <h3 id="permanent">Meal Name</h3>
+                <h3 id="permanent">Rice</h3>
+                <h3 id="permanent">Price</h3>
+            </div>
         </div>
         <div class="head-container">
             <!-- Your order items will be added here dynamically -->
             <div class="inner-meal" id="meal-img"></div>
             <div class="inner-meal" id="meal-name"></div>
+            <div class="inner-meal" id="meal-rice"></div>
             <div class="inner-meal" id="meal-price"></div>
             <div class="remove-btn" id="rmv" style="display: none;">x</div>
         </div>
@@ -24,8 +29,23 @@
             <form id="order-form">
                 {% csrf_token %}
                 {% if user.is_authenticated %}
+                <div class="transaction">
+                    <div class="delivery transaction-box" onclick="selectTransaction('delivery')">
+                        <span>Delivery</span>
+                    </div>
+                    <div class="pickup transaction-box" onclick="selectTransaction('pickup')">
+                        <span>Pickup</span>
+                    </div>
+                </div>
+                <div class="selection-message"></div>
+                <div id="address-box" style="display: none;">
+                    <i class="lni lni-map-marker"></i><label for="address" class="address">Delivery Address:</label>
+                    <textarea id="addressInput" placeholder="Enter your address" rows="4" cols="50"></textarea>
+                </div>
+
+
                 <div class="form-group">
-                    <label for="note" class="note">Message: </label>
+                    <label for="note" class="note">Special Note: </label>
                     <textarea id="note" name="note" rows="4" required></textarea>
                 </div>
                 <button type="button" class="submit-button" onclick="order()">Submit Order</button>
@@ -36,7 +56,9 @@
                 {% endif %}
             </form>
             <div id="ototal" class="order-total"> <!-- Change id to "ptotal" and add class "order-total" -->
-                <span id="total">Total: ₱ 0.00</span> 
+                <div class="total">
+                    <span id="total">Total: ₱ 0.00</span> 
+                </div>
             </div>
         </div>
     </div>

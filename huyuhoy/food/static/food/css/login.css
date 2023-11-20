@@ -5,7 +5,6 @@ body {
 
 .hero {
     display: block;
-    background-image: url("../imgs/bg.jpg");
     background-repeat: no-repeat;
     max-width: 100%;
     background-size: cover;
@@ -20,7 +19,8 @@ body {
     margin: auto;
     margin-top: 50px;
     margin-bottom: 50px;
-    background-color: #e6870e;
+    background-color: whitesmoke;
+    border-radius: 10px;
 }
 
 .form {
@@ -30,15 +30,13 @@ body {
     width: 50%;
     height: auto;
     align-items: center;
-    background-color: black;
     border-radius: 10px;
-    border: 0.5px solid white; /* Specify the border style and color */
     margin: 50px;
 }
 
 .form a {
     text-decoration: none;
-    color: #e6870e;
+    color: #000000;
     margin-top: 10px;
     font-size: 14px;
 }
@@ -49,11 +47,11 @@ body {
 
 
 .form h2 {
+    color: #000000;
     font-weight: normal;
     font-size: 36px;
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     margin: 50px 30px 50px 30px;
-    color: #e6870e;
 }
 
 .box {
@@ -66,10 +64,9 @@ body {
 }
 
 .form h3 {
-    margin: 10px 90px;
+    margin: 10px 100px;
     align-self: flex-start;
     font-family:Arial, Helvetica, sans-serif;
-    color:#e6870e;
 }
 
 #submit {
@@ -87,10 +84,15 @@ body {
     font-weight: bold;
 }
 
+.forgetpass :hover {
+    text-decoration: underline;
+}
+
 #submit:hover {
     cursor: pointer;
     box-shadow: 0 0 20px lightblue;
-    background-color: #fdc300;
+    color: #e6870e;
+    background-color: #000000;
 }
 
 .line {
@@ -109,39 +111,42 @@ body {
     margin-bottom: 50px;
 }
 
-/* Right Container*/
 .right-container {
-    margin: 50px;
+    margin: 40px 50px 40px 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
-    background-color: #e6870e;
+    background-color: khaki;
+    border-radius: 10px;
     width: 50%;
 }
 
 .right-container h2 {
+    color:#000000;
     font-size: 36px;
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    margin: 50px 30px 60px 130px;
+    margin: 50px 0 60px 0;
 }
 
 .right-container p {
     font-size: 16px;
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 10px 50px 10px 65px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    margin: 30px;
 }
 
 .right-container #delivery {
     width: 100px;
     height: 100px;
-    margin: 10px 10px 10px 200px;
 }
 
 .right-container button {
-    margin: 10px 10px 50px 150px;
+    margin: 10px;
     padding: 12px 30px;
     width: 40%;
-    color:#e6870e;
+    color: #fff;
     border-radius: 10px;
-    border-color: white;
     border-width: 0.1px;
     background-color: black;
     text-transform: uppercase;
@@ -152,6 +157,7 @@ body {
 .right-container button:hover {
     cursor: pointer;
     box-shadow: 0 0 20px lightblue;
+    color:#e6870e;
 }
 
 /* MAKE RESPONSIVE  
@@ -210,6 +216,7 @@ body {
         letter-spacing: 0.5px;
         font-weight: bold;
     }
+    
     #submit {
         padding: 12px 30px;
         width: 40%;

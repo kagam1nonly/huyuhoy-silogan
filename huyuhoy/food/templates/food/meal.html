@@ -1,8 +1,7 @@
 {% extends 'food/base.html' %}
-
 {% load static %}
 {% load crispy_forms_tags %}
-{% include 'food/header.html' %} <!-- Include the header -->
+{% include 'food/header.html' %} 
 {% block content %}
     <link rel="stylesheet" type="text/css" href="{% static 'food/css/meal.css' %}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -10,7 +9,8 @@
         var csrfToken = "{{ csrf_token }}";
     </script>
     <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrfToken }}">
-    <div class "m-wrapper">
+    <h2 id="menu">Menu</h2>
+    <div class="m-wrapper">
         <div class="meal-container">
                 {% for meal in meals %}
                 <div class="product-card">
@@ -29,27 +29,26 @@
                     <div class="product-radio">
                         <label class="form-check-label">
                             <input class="form-check-input" type="radio" name="mealOption{{ meal.meal_id }}" value="{{ meal.withOutRice }}" unchecked>
-                            ₱ {{ meal.withOutRice }} <span> With Out Rice </span>
+                            ₱ {{ meal.withOutRice }} <span> Without Rice </span>
                         </label>
                     </div>
                     <div>
-                        <button
-                        class="btn"
-                        onclick="addMeal('{{ meal.meal_id }}');"
-                        id="addToCartBtn"
-                        >Add to cart</button>
+                        <button class="btn" onclick="addMeal('{{ meal.meal_id }}', '{{ meal.name }}', '{{ meal.pImage.url }}', '{{ meal.withRice }}', '{{ meal.withOutRice }}');">Add to cart</button>
+
                     </div>
                 </div>
                 {% endfor %}
-
-            <div class="order-total">
-                <h3>Cart Items:</h3>
-                <div id="order-total">
-                    <ol id="mcart"></ol>
-                </div>
-                <div id="horizontal-line"></div>
-                <span id="mtotal">₱ 0</span>
+        </div>
+        <div class="order-total">
+            <div class="order-header">
+            <h3>Cart-items:</h3>
+            <button class="checkout" onclick="window.location.href='http://127.0.0.1:8000/order/'">Proceed to checkout</button>
             </div>
+            <div class="cart-items">
+                <ol id="mcart"></ol>
+            </div>
+            <div class="horizontal-line"></div>
+            <span id="mtotal">₱ 0</span>
         </div>
     </div>
     

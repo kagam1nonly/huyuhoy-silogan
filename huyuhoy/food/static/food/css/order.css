@@ -2,20 +2,78 @@ ul, ol {
     list-style: none;
 }
 
+.meal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 50px;
+    background-color: #F5B335;
+    border: 2px solid #000;
+    transform: rotate(-5deg);
+    color: #000;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    transition: background-color 0.3s, color 0.3s;
+    margin: 30px 150px;
+}
+
+.meal:hover {
+    text-decoration: none;
+    background-color: #000;
+    color: #fff;
+    cursor: pointer;
+}
+
+.meal i {
+    margin-left: 10px;
+}
+#cartitems {
+    width: 240px; /* Adjust to your desired width */
+    height: 40px; /* Adjust to your desired height */
+    overflow: hidden; /* Hide text that overflows the container */
+    bottom: 510px;
+    right: 980px;
+    display: flex;
+    position: absolute;
+    transform: rotate(-5deg); /* Rotate the text counterclockwise by 90 degrees */
+    background-color: #000000;
+    font-size: 36px;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    color: #fff;
+    margin: 30px 0 50px 0;
+    letter-spacing: 1.5px;
+    padding: 15px;
+}
+
 .order-container {
+    position: relative;
     background-color: rgb(255, 255, 255);
     width: 80%; /* Adjust the width to your preference */
     min-height: 700px;
-    margin: 50px auto; /* Center the rectangle horizontally */
+    margin: 80px 100px 50px 150px;
     border: #000000;
     border: 1px solid;
 }   
 
 .order-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
+    align-items: flex-end;
     width: 100%;
     border-bottom: 1px solid #000;
+}
+
+.title {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
 }
 
 .order-column {
@@ -33,17 +91,6 @@ ul, ol {
     width: 100%;
     padding: 10px 0;
     border-bottom: 1px solid #ccc;
-}
-
-.order-item-image {
-    width: 100px;
-}
-
-.order-item-name,
-.order-item-price {
-    flex: 1;
-    padding: 0 10px;
-    text-align: center;
 }
 
 /* Style for the submit button */
@@ -69,21 +116,13 @@ ul, ol {
     background-color: whitesmoke;
     color: black; /* Set text color to white */
     border-radius: 3px; /* Add rounded corners */
-    margin: 10px 110px 10px 0; /* Add some spacing around the elements */
+    margin: 10px 110px 10px 150px; /* Add some spacing around the elements */
     white-space: nowrap;
-}
-
-
-.order-list {
-    margin: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: large;
 }
 
 /* Updated CSS for Horizontal Order Columns */
 .head-container {
+    width: 100%;
     position: relative;
     display: flex;
     flex-direction: row;
@@ -93,8 +132,6 @@ ul, ol {
     padding: 15px;
     border-radius: 5px;
     min-height: 250px;
-    /* Ensure a minimum height of 50% */
-    border-bottom: 2px dotted #000000; /* Add a dotted line at the bottom */
     margin: 15px;
 }
 
@@ -114,15 +151,18 @@ ul, ol {
     border-radius: 5px; /* Add rounded corners */
 }
 
+.inner-meal {
+    position: relative;
+}
 
 .cart-item-container {
-    width: 945px;
+    width: 1200px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid #ccc;
     padding: 10px 0;
-    margin-left: 750px;
+    margin: 0 0 0 850px;
 }
 
 .cart-item-image {
@@ -132,19 +172,37 @@ ul, ol {
 
 .cart-item-name {
     flex: 1;
-    text-align: center;
+    margin: 0 50px 0 220px;
 }
 
-.cart-item-price {
+.cart-item-rice {
+    flex: 1;
+    align-items: center;
     text-align: center;
+    margin: 0 0 0 100px;
+}
+
+.cart-item-price {  
+    flex: 1;
+    margin: 0 0 0 200px;
 }
 
 .remove-btn {
-    background-color: red;
-    color: white;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    position: relative;
     border: none;
-    padding: 5px 10px;
-    margin-right: 15px;
+    background-color: #fdc300;
+    padding: 7px 12px;
+    cursor: pointer;
+    color: black;
+    margin-right: 20px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.remove-btn:hover {
+    background-color: #000;
+    color: #fff;
     cursor: pointer;
 }
 
@@ -156,7 +214,70 @@ ul, ol {
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Add a subtle shadow for depth */
 }
 
+.transaction {
+    margin-top: 50px;
+    display: flex;
+}
+
+.transaction-box {
+    flex: 1;
+    padding: 15px;
+    margin: 10px;
+    text-align: center;
+    cursor: pointer;
+    background-color: #F5B335;
+    border: 2px solid #000;
+    border-radius: 10px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.transaction-box:hover {
+    background-color: #000;
+    color: #fff;
+}
+
+.transaction span {
+    letter-spacing: 1px;
+}
+
+    /* Styles for the address box */
+#address-box {
+    display: flex;
+    margin-bottom: 50px; /* Adjust as needed */
+    text-align: center;
+    align-items: center;
+}
+
+.address {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+#address-box i {
+    position: relative;
+    top: 8px;
+}
+
+#addressInput {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #000;
+    border-radius: 10px;
+    box-sizing: border-box;
+    margin-top: 15px;
+}
+
+/* Additional styles for the selection message if needed */
+.selection-message {
+    text-align: center;
+    font-size: 16px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
 #order-form {
+    border-top: #000 1px solid;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -166,7 +287,7 @@ ul, ol {
     height: auto; /* Let the form content determine the height */
     padding: 15px; /* Add padding to the form */
     min-height: 200px;
-
+    background-color: #fff;
 }
 
 .note {
@@ -177,7 +298,6 @@ ul, ol {
     font-size: 20px;
     width: 500px;
     font-weight: bold;
-
 }
 
 #note {
@@ -192,21 +312,18 @@ ul, ol {
 
 
 .order-total {
-    background-color: #000000;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
     position: relative;
-    text-align: end;
     color: #fff;
-    width: 100%;
     height: 50px;
     font-weight: bold;
-    padding-top: 25px;
-    margin-top: 15px;
+    font-size: 20px;
+    margin: 0;
+    padding: 0 70px 0 15px;
 }
 
-#total {
-    margin-right: 20px;
-    font-size: 20px;
-}
 
 .btn-group {
     margin: 0;

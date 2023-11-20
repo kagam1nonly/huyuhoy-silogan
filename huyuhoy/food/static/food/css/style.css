@@ -225,6 +225,8 @@ h2 {
 }
 
 button {
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
     width: 100%;
     position: relative;
     border: none;
@@ -232,6 +234,7 @@ button {
     padding: 7px 25px;
     cursor: pointer;
     color: black;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .add-btn {
@@ -239,8 +242,9 @@ button {
 }
 
 button:hover {
+    background-color: #000;
     color: #fff;
-    background-color: black;
+    cursor: pointer;
 }
 
 
@@ -333,11 +337,11 @@ button:hover {
 .overline {
     font-style: normal;
     font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 14px;
     line-height: 18px;
     letter-spacing: 0.09em;
     text-transform: uppercase;
-    font-family: Arial, Helvetica, sans-serif;
     color: #252932;
 }
 

@@ -4,12 +4,7 @@ var mcart = document.querySelector('#mcart');
 var mtotal = document.querySelector('#mtotal');
 
 // ADD MEAL 
-function addMeal(mid) {
-    var mealId = '#meal' + mid;
-    var mealElement = document.querySelector(mealId);
-    var mealName = mealElement.innerHTML;
-    var mealImage = mealElement.previousElementSibling.src;
-
+function addMeal(mid, mealName, mealImageUrl, withRice, withOutRice) {
     var radio = 'mealOption' + mid;
     var selectedRadio = document.querySelector('input[name="' + radio + '"]:checked');
 
@@ -19,34 +14,38 @@ function addMeal(mid) {
     }
 
     var price = parseFloat(selectedRadio.value);
-    var rice = selectedRadio.value === "{{ meal.withRice }}" ? 'With Rice' : 'Without Rice';
+    var rice = selectedRadio.value === withRice ? 'With Rice' : 'Without Rice';
 
     // Calculate and update the total price
     total = parseFloat(total) + price;
 
     var listItem = document.createElement('li');
     listItem.className = 'cart-item';
-    listItem.innerHTML = '<img src="' + mealImage + '" alt="' + mealName + '" class="cart-item-image">' +
+    listItem.innerHTML = '<img src="' + mealImageUrl + '" alt="' + mealName + '" class="cart-item-image">' +
         '<div class="cart-item-details">' +
         '<p class="cart-item-name">' + mealName + '</p>' +
-        '<p class="cart-item-price">₱' + price + '</p>' +
+        '<p class="cart-item-rice">(' + rice + ')</p>' +
+        '<p class="cart-item-price">₱' + price.toFixed(2) + '</p>' +
         '</div>' +
         '<button class="remove-button" onclick="removeMeal(this)">x</button>';
 
     mcart.appendChild(listItem);
 
-    mtotal.innerHTML = 'Total: ₱' + total.toFixed(2);
+    mtotal.innerHTML = "Total: <div class='total'>₱" + total.toFixed(2) + "</div>";
 
     // Update the local storage
     cartItems.push({
         name: mealName,
-        mealImageURL: mealImage,
+        mealImageURL: mealImageUrl,
+        rice: rice,
         price: price,
     });
+
     localStorage.setItem('orders', JSON.stringify(cartItems));
     localStorage.setItem('total', total.toFixed(2));
     displayCart();
 }
+
 
 
 function displayCart() {
@@ -62,13 +61,15 @@ function displayCart() {
         listItem.innerHTML = '<img src="' + item.mealImageURL + '" alt="' + item.name + '" class="cart-item-image" width="125" height="125">' +
             '<div class="cart-item-details">' +
             '<p class="cart-item-name">' + item.name + '</p>' +
-            '<p class="cart-item-price">₱' + item.price + '</p>' +
+            '<p class="cart-item-rice">(' + item.rice + ')</p>' + 
+            '<p class="cart-item-price">₱' + item.price + '.00</p>' +
             '</div>' +
             '<button class="remove-button" onclick="removeMeal(' + i + ')">x</button>';
 
         mcart.appendChild(listItem);
     }
-    mtotal.innerHTML = 'Total: ₱' + total;
+    mtotal.innerHTML = "Total: <div class='total'>₱" + total + "</div>";
+
     localStorage.setItem('orders', JSON.stringify(cartItems));
     localStorage.setItem('total', total);
     updateCartCount();
@@ -83,7 +84,7 @@ function removeMeal(m) {
         displayCart();
     }
     else {
-        console.log('ERROR POTA!');
+        console.log('Error potang!');
     }
 }
 

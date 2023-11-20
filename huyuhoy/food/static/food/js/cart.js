@@ -38,9 +38,13 @@ function displayCart() {
         mealName.textContent = cartItem.name;
         mealName.classList.add('cart-item-name'); // Add a class to the meal name
 
+        var mealRice = document.createElement('h3');
+        mealRice.textContent = cartItem.rice;
+        mealRice.classList.add('cart-item-rice'); 
+        
         var mealPrice = document.createElement('h3');
         mealPrice.textContent = '₱' + cartItem.price;
-        mealPrice.classList.add('cart-item-price'); // Add a class to the meal price
+        mealPrice.classList.add('cart-item-price'); 
 
         // Create a remove button
         var rmvButton = document.createElement('div');
@@ -54,6 +58,7 @@ function displayCart() {
         cartItemContainer.appendChild(rmvButton);
         cartItemContainer.appendChild(mealImage);
         cartItemContainer.appendChild(mealName);
+        cartItemContainer.appendChild(mealRice);
         cartItemContainer.appendChild(mealPrice);
 
         // Append the cart item container to their respective containers
@@ -121,7 +126,33 @@ function order() {
     }
 }
 
+function selectTransaction(type) {
+    var transactionBoxes = document.querySelectorAll('.transaction-box');
+    var addressBox = document.getElementById('address-box');
 
+    // Remove the 'selected' class and reset background color from all boxes
+    transactionBoxes.forEach(function (box) {
+        box.classList.remove('selected');
+        box.style.color = 'white';
+        box.style.backgroundColor = ''; // Reset background color
+    });
+
+    // Find the clicked box and add the 'selected' class and set background color
+    var selectedBox = document.querySelector('.' + type);
+    selectedBox.classList.add('selected');
+    selectedBox.style.color = 'white';  
+    selectedBox.style.backgroundColor = '#000';
+
+    // Update selection message outside the boxes
+    var selectionMessage = document.querySelector('.selection-message');
+    selectionMessage.textContent = 'Transaction Type: ' + type.charAt(0).toUpperCase() + type.slice(1);
+
+    if (type.toLowerCase() === 'delivery') {
+        addressBox.style.display = 'block';
+    } else {
+        addressBox.style.display = 'none';
+    }
+}
 
 function cancelOrder(orderNumber) {
     if (confirm("Are you sure you want to cancel this order?")) {

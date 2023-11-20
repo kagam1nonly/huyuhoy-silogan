@@ -4,23 +4,41 @@ body, h1, h2, h3, p, ol, li, ul {
     padding: 0;
 }
 
+#menu {
+    width: 100px; /* Adjust to your desired width */
+    height: 40px; /* Adjust to your desired height */
+    overflow: hidden; /* Hide text that overflows the container */
+    bottom: 500px;
+    right: 1320px;
+    display: flex;
+    position: absolute;
+    transform: rotate(-5deg); /* Rotate the text counterclockwise by 90 degrees */
+    background-color: #000000;
+    font-size: 36px;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    color: #fff;
+    margin: 30px 0 50px 0;
+    letter-spacing: 1.5px;
+    padding: 15px;
+}
+
 /* Main container */
 .m-wrapper {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
+    flex-direction: row;
     position: relative;
-    margin: 0;
+    margin-top: 60px;
     padding: 0;
     height: auto;
-    background-color: red;
     
 }
 
 /* Container for product cards */
 .meal-container {
-    margin-left: 15px;
-    width: 1100px;
+    margin: 80px 10px 50px 50px;
+    width: 920px;
     min-height: 110vh;
     display: flex;
     flex-wrap: wrap; /* Allow cards to wrap to the next line */
@@ -30,13 +48,13 @@ body, h1, h2, h3, p, ol, li, ul {
 .product-card {
     border: 1px solid #ccc;
     padding: 15px;
-    margin: 25px 25px 25px 25px;
+    margin: 0 12px 25px 12px;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
     background-color: #fff;
     text-align: flex-start;
     transition: transform 0.2s;
-    width: 275px;
-    height: 275px;
+    width: 250px;
+    height: 300px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -80,7 +98,6 @@ body, h1, h2, h3, p, ol, li, ul {
     width: 80%;
     border-radius: 10px;
     border-color: whitesmoke;
-    background-color: #fdc300;
 }
 
 .btn button {
@@ -89,33 +106,54 @@ body, h1, h2, h3, p, ol, li, ul {
     align-items: center;
     width: 100%;
     height: 100%;
+    background-color: #e6870e;
 }
 
 .btn button:hover {
     cursor: pointer;
+    box-shadow: 0 0 20px lightblue;
+    background-color: #e6870e;
 }
 
 /* Container for order summary */
 .order-total {
-    position: absolute;
-    top: 95px;
-    right: 5px;
-    margin: 10px;
-    padding: 15px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    width: 33%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-top: 80px;
+    padding: 0 15px 0 15px;
+    background-color: #fff;
     text-align: start;
-    width: 30%;
-    height: auto;
-    background-color: rgb(242, 248, 128);
+    height: 500px;
 }
 
-#order-total {
-    margin: auto;
+.cart-items {
+    width: 100%;
+    overflow-y: auto;
+    position: relative;
+    min-height: 300px;
+    margin: 0;
 }
 
-.order-total h3 {
+.order-header {
+    display: flex;
+    width: 100%;
+    height: 35px;
+    justify-content: space-between;
+    padding: 5px;
+    margin: 0;
+}
+
+.checkout {
+    width: 200px;
+    height: 40px;
+}
+
+.order-header h3 {
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    white-space: nowrap;
     margin: 0;
     color: black;
     font-size: 24px;
@@ -135,34 +173,73 @@ body, h1, h2, h3, p, ol, li, ul {
 }
 
 .order-total .del {
-    background-color: red;
+    background-color: #e6870e;
     color: white;
     border: none;
     padding: 5px 10px;
     cursor: pointer;
 }
 
+.cart-item {
+    font-weight: 600;
+    width: 100%; /* Ensure it takes up 100% width */
+    position: relative;
+    margin: 0;
+    padding: 10px; /* Add padding to provide some spacing */
+    padding: 10px;
+    border-bottom: 1px solid #ccc; /* Add a border between cart items */
+}
+
+.cart-item-details {
+    flex: 1; /* Allow it to take up available space */
+    margin: 0 10px; /* Adjust spacing */
+}
+
 .cart-item-image {
     width: 100px;
     height: 100px;
     object-fit: cover;
+    margin-right: 30px;
 }
 
-#horizontal-line {
-    border-bottom: 2px dotted #000000; /* Add a dotted line at the bottom */
-    margin: 10px;
+.cart-item-name {
+    display: flex;
+    margin: 0; /* Remove margin */
+}
+
+.cart-item-rice {
+    display: flex;
+    margin: 0; /* Remove margin */
+}
+
+.cart-item-price {
+    display: flex;
+    margin: 0;
+}
+
+.horizontal-line {
+    width: 90%;
+    border: 1.8px dotted #000000; /* Add a dotted line at the bottom */
+    margin: 10px 15px 10px 15px;
 }
 
 #mtotal {
+    position: relative;
+    display: flex;
     white-space: nowrap;
     color: black;
-    margin: 0 180px;
+    right: 115px;
+}
+
+.total {
+    display: flex;
+    margin-left: 40px;
 }
 
 .remove-button {
     position: relative;
-    background-color: red;
-    color: white;
+    background-color: #fdc300;
+    color: #000000;
     border: none;
     margin-right: 15px;
     padding: 6px;
