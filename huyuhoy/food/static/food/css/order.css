@@ -10,7 +10,7 @@ ul, ol {
     height: 50px;
     background-color: #F5B335;
     border: 2px solid #000;
-    transform: rotate(-5deg);
+    transform: rotate(-3deg);
     color: #000;
     font-size: 16px;
     font-weight: bold;
@@ -37,10 +37,10 @@ ul, ol {
     height: 40px; /* Adjust to your desired height */
     overflow: hidden; /* Hide text that overflows the container */
     bottom: 510px;
-    right: 980px;
+    right: 970px;
     display: flex;
     position: absolute;
-    transform: rotate(-5deg); /* Rotate the text counterclockwise by 90 degrees */
+    transform: rotate(-3deg); /* Rotate the text counterclockwise by 90 degrees */
     background-color: #000000;
     font-size: 36px;
     font-weight: bold;
@@ -57,7 +57,7 @@ ul, ol {
     background-color: rgb(255, 255, 255);
     width: 80%; /* Adjust the width to your preference */
     min-height: 700px;
-    margin: 80px 100px 50px 150px;
+    margin: 80px 100px 150px 150px;
     border: #000000;
     border: 1px solid;
 }   
@@ -70,10 +70,11 @@ ul, ol {
     border-bottom: 1px solid #000;
 }
 
-.title {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
+.order-header #permanent {
+    background-color: whitesmoke;
+    color: black; 
+    margin: 10px 10px 10px 200px; /* Add some spacing around the elements */
+    white-space: nowrap;
 }
 
 .order-column {
@@ -96,39 +97,29 @@ ul, ol {
 /* Style for the submit button */
 .submit-button {
     display: inline-block;
-    width: 100px;
-    padding: 10px 20px;
+    width: 180px;
+    padding: 10px;
+    height: 70px;
+    font-size: 22px;
+    font-weight: 530;
+    white-space: nowrap;
     background-color:#F5B335;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
+    color: #000000;    
+    border: 2px solid #000;
+    border-radius: 10px;
     cursor: pointer;
     transition: background-color 0.3s;
-    margin-top: 20px;
-}
-
-.submit-button:hover {
-    cursor: pointer;
-}
-
-.order-header #permanent {
-    display: flex-start;
-    background-color: whitesmoke;
-    color: black; /* Set text color to white */
-    border-radius: 3px; /* Add rounded corners */
-    margin: 10px 110px 10px 150px; /* Add some spacing around the elements */
-    white-space: nowrap;
+    margin-top: 50px;
 }
 
 /* Updated CSS for Horizontal Order Columns */
 .head-container {
-    width: 100%;
+    width: 95%;
     position: relative;
     display: flex;
-    flex-direction: row;
-    align-items: flex-start;
+    flex-direction: column;
     justify-content: center;
-    gap: 300px;
+    gap: 10px;
     padding: 15px;
     border-radius: 5px;
     min-height: 250px;
@@ -151,53 +142,54 @@ ul, ol {
     border-radius: 5px; /* Add rounded corners */
 }
 
-.inner-meal {
-    position: relative;
-}
 
 .cart-item-container {
-    width: 1200px;
+    width: 320px; /* Adjust the width to your preference */
+    margin: 80px auto 0 auto; /* Center the container horizontally */
     display: flex;
-    align-items: center;
+    flex-wrap: wrap;
+    flex-direction: column;
+    flex-wrap: wrap; 
     justify-content: space-between;
-    border-bottom: 1px solid #ccc;
-    padding: 10px 0;
-    margin: 0 0 0 850px;
+    align-items: center; 
+    border: 1px solid #ccc; 
+
+}
+
+.inner-meal {
+    flex-wrap: wrap;
+    width: 98%; 
+    padding: 10px;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .cart-item-image {
-    width: 125px;
+    width: 125px; /* Make image fill the container */
     height: 125px;
+    margin-bottom: 10px; /* Add space between image and text */
 }
 
-.cart-item-name {
-    flex: 1;
-    margin: 0 50px 0 220px;
+.cart-item-name,
+.cart-item-rice,
+.cart-item-price {
+    text-align: right;
 }
 
-.cart-item-rice {
-    flex: 1;
-    align-items: center;
-    text-align: center;
-    margin: 0 0 0 100px;
-}
-
-.cart-item-price {  
-    flex: 1;
-    margin: 0 0 0 200px;
-}
 
 .remove-btn {
     font-weight: bold;
     font-family: Arial, Helvetica, sans-serif;
-    position: relative;
     border: none;
     background-color: #fdc300;
-    padding: 7px 12px;
+    padding: 7px 15px;
     cursor: pointer;
     color: black;
-    margin-right: 20px;
+    margin-left: 282px;
     transition: background-color 0.3s, color 0.3s;
+    box-sizing: border-box;
 }
 
 .remove-btn:hover {
@@ -214,9 +206,19 @@ ul, ol {
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Add a subtle shadow for depth */
 }
 
+#order-form .type {
+    color: #000000;
+    margin-top: 50px;
+    font-size: 36px;
+    font-weight: bold;
+    text-decoration: none;
+    word-spacing: 1.5px;
+}
+
 .transaction {
     margin-top: 50px;
     display: flex;
+    font-size: 22px;
 }
 
 .transaction-box {
@@ -236,6 +238,18 @@ ul, ol {
     color: #fff;
 }
 
+.selected {
+    border: 2px solid rgb(130, 215, 251);
+    box-shadow: 0 0 10px rgba(11, 7, 131, 0.5);
+    transition: border 0.3s, box-shadow 0.3s; /* Add smooth transitions */
+}
+
+.payment-box .selected {
+    border: 2px solid rgb(130, 215, 251);
+    box-shadow: 0 0 10px rgba(11, 7, 131, 0.5);
+    transition: border 0.3s, box-shadow 0.3s; /* Add smooth transitions */
+}
+
 .transaction span {
     letter-spacing: 1px;
 }
@@ -243,15 +257,18 @@ ul, ol {
     /* Styles for the address box */
 #address-box {
     display: flex;
-    margin-bottom: 50px; /* Adjust as needed */
     text-align: center;
     align-items: center;
 }
 
-.address {
+#order-form .address {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 10px;
+}
+
+.type2 {
+    text-decoration: underline;
 }
 
 #address-box i {
@@ -260,20 +277,59 @@ ul, ol {
 }
 
 #addressInput {
-    width: 100%;
-    padding: 10px;
-    border: 2px solid #000;
-    border-radius: 10px;
+    font-size: 20px;
+    width: 70%;
+    padding: 20px;
+    border: 2px solid #ccc transparent;
+    border-radius: 5px;
     box-sizing: border-box;
     margin-top: 15px;
+    height: 70px; 
+    resize: none; 
+    overflow-y: hidden; 
+    overflow-x: auto;
+    white-space: nowrap; 
 }
-
 /* Additional styles for the selection message if needed */
 .selection-message {
     text-align: center;
-    font-size: 16px;
-    margin-top: 50px;
+    font-size: 18px;
+    color: dimgray;
+    font-weight: 600px;
     margin-bottom: 50px;
+}
+
+.type {
+    font-size: 18px;
+    text-decoration: underline;
+}
+
+.payment {
+    width: 250px;
+    margin-top: 50px;
+    display: flex;
+    flex-direction: row;
+    font-size: 22px;
+}
+
+.payment-box {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 28px;
+    margin: 15px 10px;
+    cursor: pointer;
+    background-color: #F5B335;
+    border: 2px solid #000;
+    border-radius: 10px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.gcash .payment-box span {
+    display: block;
+    padding-top: 50px;
 }
 
 #order-form {
@@ -290,26 +346,31 @@ ul, ol {
     background-color: #fff;
 }
 
-.note {
+.form-group {
     display: flex;
-    justify-content: center;
+    margin-bottom: 50px;
     text-align: center;
-    margin-bottom: 10px; /* Add space below the "Note" label */
-    font-size: 20px;
-    width: 500px;
+    align-items: center;
+    flex-direction: column;
+}
+
+.note {
+    font-size: 24px;
     font-weight: bold;
+    margin-top: 50px;
+    margin-bottom: 10px;    
 }
 
 #note {
+    resize: none;
     justify-content: center;
     text-align: center;
-    width: 50%; /* Make the textarea fill the container width */
+    width: 100%; /* Make the textarea fill the container width */
     padding: 30px; /* Add padding to the textarea */
     font-size: 20px; /* Increase the font size */
-    border: 2px solid #ccc; /* Add a border for a clean look */
+    border: 2px solid #ccc transparent; /* Add a border for a clean look */
     border-radius: 5px; /* Add rounded corners */
 }
-
 
 .order-total {
     display: flex;
@@ -317,13 +378,12 @@ ul, ol {
     align-items: center;
     position: relative;
     color: #fff;
-    height: 50px;
+    height: 35px;
     font-weight: bold;
     font-size: 20px;
     margin: 0;
-    padding: 0 70px 0 15px;
+    padding: 0 12px 20px 15px;
 }
-
 
 .btn-group {
     margin: 0;

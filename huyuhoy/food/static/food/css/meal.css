@@ -5,14 +5,14 @@ body, h1, h2, h3, p, ol, li, ul {
 }
 
 #menu {
-    width: 100px; /* Adjust to your desired width */
+    width: 112px; /* Adjust to your desired width */
     height: 40px; /* Adjust to your desired height */
     overflow: hidden; /* Hide text that overflows the container */
     bottom: 500px;
     right: 1320px;
     display: flex;
     position: absolute;
-    transform: rotate(-5deg); /* Rotate the text counterclockwise by 90 degrees */
+    transform: rotate(-3deg); /* Rotate the text counterclockwise by 90 degrees */
     background-color: #000000;
     font-size: 36px;
     font-weight: bold;
@@ -121,18 +121,19 @@ body, h1, h2, h3, p, ol, li, ul {
     position: relative;
     display: flex;
     flex-direction: column;
-    margin-top: 80px;
+    top: 245px;
     padding: 0 15px 0 15px;
+    margin: 0;
     background-color: #fff;
     text-align: start;
-    height: 500px;
+    height: 400px;
 }
 
 .cart-items {
     width: 100%;
     overflow-y: auto;
     position: relative;
-    min-height: 300px;
+    min-height: 470px;
     margin: 0;
 }
 
