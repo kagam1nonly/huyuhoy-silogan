@@ -22,6 +22,7 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),  # Custom URL for login
     path('signup/', views.signup, name='signup'),
     path('view-order/', views.view_order, name='view-order'),  
+    path('process-gcash-payment/', views.process_gcash_payment, name='process_gcash_payment'),
     path('cancel-order/<str:order_number>/', views.cancel_order, name='cancel_order'),
 ]
 
