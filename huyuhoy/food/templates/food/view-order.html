@@ -1,55 +1,107 @@
 {% load static %}
 {% include 'food/header.html' %} <!-- Include the header -->
 {% block content %}
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <link rel="stylesheet" type="text/css" href="{% static 'food/css/view-order.css' %}">
+<a href="{% url 'meal' %}" class="meal">Menu <i class="lni lni-pizza"></i></a>
+<h2 id="myorder">Your orders</h2>
+
 <div class="vorder-wrapper">
     <div class="head">
         <div class="your-orders">
-            <h3 class="your-order-title">Your Orders:</h3>
+            <h3 class="your-order-title">...</h3>
         </div>
         <div class="total-bill">
-            <h3 class="totalBill">Total Bill: ₱<span>{{ total_bill|default:"0.00" }}</span></h3>
+            <h3 class="totalBill">Amount to pay: ₱<span>{{ total_bill|default:"0.00" }}</span></h3>
         </div>
     </div>
     <div class="order-box-container"> 
         {% for order in orders %}
         <div class="order-box{% if order.status == 'Canceled' %} canceled{% elif order.status == 'Completed' %} completed{% elif order.status == 'Refused' %} refused{% endif %}">
-            <div class="order-box2">
-                <li>
-                    Order Number: {{ order.number }}<br>
-                    Bill: {{ order.bill }}<br>
-                    Date: {{ order.date }}<br>
-                    Note: {{ order.note }}<br>
-                    Status: <span class="status status-{{ order.status|lower }}">{{ order.status }}</span><br>
-                    <ul>
-                        {% for cartitem in order.cart_items.all %}
-                            <li>
-                                Item: {{ cartitem.name }} x {{ cartitem.rice }} x ₱{{ cartitem.price }}
-                            </li>
-                        {% endfor %}
-                    </ul>
-    
-                    <form class="cancelform" method="POST" action="{% url 'cancel_order' order.number %}">
-                        {% csrf_token %}
-                        {% if order.status not in 'Processing' and order.status not in 'Canceled'  and order.status not in 'Refused'  and order.status not in 'Completed'%}
-                            <button class="cancel-btn" type="submit" onclick="return confirm('Are you sure you want to cancel this order?')">Cancel Order</button>
-                        {% endif %}
-                    </form>
-                </li>
-            </div>
+            <li class="order-box2">
+                Order Number: {{ order.number }}<br>
+                Bill: {{ order.bill }}<br>
+                Date: {{ order.date }}<br>
+                Transaction: {{ order.transaction }} <br>
+                Status: <span class="status status-{{ order.status|lower }}">{{ order.status }}</span><br>
+                <ul>
+                    {% for cartitem in order.cart_items.all %}
+                    <li>
+                        Item: {{ cartitem.name }} x {{ cartitem.rice }} x ₱{{ cartitem.price }}
+                    </li>
+                    {% endfor %}
+                </ul>
+                Note: {{ order.note }}<br>
+                Address: {{ order.address }}
+            </li>
+            <form class="cancelform" method="POST" action="{% url 'cancel_order' order.number %}">
+                {% csrf_token %}
+                {% if order.status not in 'Processing' and order.status not in 'Canceled'  and order.status not in 'Refused'  and order.status not in 'Completed'%}
+                    <div class="buttons">
+                        <button class="pay-btn" type="button" onclick="showPayModal('{{ order.number }}'); return false;">Pay</button>
+                        <button class="cancel-btn" type="submit" onclick="return confirm('Are you sure you want to cancel this order?')">Cancel Order</button>
+                    </div>
+                {% endif %}
+            </form>
         </div>
     {% endfor %}
-
     </div>
-    <script>
-        // Call the updateOrderContainer function when the document is ready
-        document.addEventListener("DOMContentLoaded", function () {
-            updateCartCount();
-        });
-    </script>
+
+    <div class="loadingModal" style="display: none;">
+        <div class="loader"></div>
+        <div class="e-msg"></div>
+    </div>
+    {% for order in orders %}
+    <div class="payMessage" id="payModal{{ order.number }}">
+        <div class="modal-background" data-order-number="{{ order.number }}"></div>
+        <span class="close" id="closeModal{{ order.number }}" onclick="hideModal('{{ order.number }}')">&times;</span>
+        <div class="modal-content">
+            <div class="gcash-pic"></div>
+            <form class="cancelform" method="POST" action="{% url 'process_gcash_payment'%}">
+                {% csrf_token %}
+                <span class="amount" id="amount{{ order.number }}">Amount: {{ order.bill }}<br></span>
+                <input class="ref-num" data-order-number="{{ order.number }}" placeholder="Enter Ref. No." maxlength="12"></input>
+                <button class="gbutton" id="g-pay{{ order.number }}" onclick="gcashPay('{{ order.number }}', event)">Confirm</button>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+    <button type="button" class="submit-button" style="display: none;">
 </div>
 <script src="{% static 'food/js/cart.js' %}"></script>
-<!-- <script src="{% static 'food/js/order.js' %}"></script>
-<script src="{% static 'food/js/cart.js' %}"></script> -->
+<script>
+    var gPay = document.getElementById('g-pay');
+
+    // MODAL
+    function showPayModal(orderNumber) {
+    
+        // Check if orderNumber is valid
+        if (orderNumber) {
+            console.log('If Order Number:', orderNumber);
+            var modalId = 'payModal' + orderNumber;
+            console.log('Modal ID:', modalId);
+    
+            var modalElement = document.getElementById(modalId);
+            if (modalElement) {
+                console.log('Display changed from none to block');
+                modalElement.style.display = 'block';
+            } 
+        } 
+    }
+
+    function hideModal(orderNumber) {
+        var modalId = 'payModal' + orderNumber;
+        var modalElement = document.getElementById(modalId);
+        modalElement.style.display = 'none';
+        console.log('Modal hidden');
+    }
+
+    document.querySelectorAll('.pay-btn').forEach(function (button) {
+        button.addEventListener('click', function (event) {
+            var orderNumber = button.getAttribute('data-order-number');
+            showPayModal(orderNumber);
+        });
+    });
+</script>
 {% endblock content %}
 {% include 'food/footer.html' %} <!-- Include the footer -->

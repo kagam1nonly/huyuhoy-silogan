@@ -1,4 +1,4 @@
-{% extends 'food/base.html' %}
+{% comment %} {% extends 'food/base.html' %} {% endcomment %}
 
 {% load static %}
 {% include 'food/header.html' %} <!-- Include the header -->
@@ -11,11 +11,7 @@
     
     <div class="order-container">
         <div class="order-header">
-            <div class="title">
-                <h3 id="permanent">Meal Name</h3>
-                <h3 id="permanent">Rice</h3>
-                <h3 id="permanent">Price</h3>
-            </div>
+            <h3 id="permanent">Item Quantity: </h3>
         </div>
         <div class="head-container">
             <!-- Your order items will be added here dynamically -->
@@ -29,25 +25,34 @@
             <form id="order-form">
                 {% csrf_token %}
                 {% if user.is_authenticated %}
+                <h2 class="type">Transaction Type</h2>
                 <div class="transaction">
-                    <div class="delivery transaction-box" onclick="selectTransaction('delivery')">
+                    <div class="delivery transaction-box" onclick="selectTransaction('Delivery')">
                         <span>Delivery</span>
                     </div>
-                    <div class="pickup transaction-box" onclick="selectTransaction('pickup')">
+                    <div class="pickup transaction-box" onclick="selectTransaction('Pickup')">
                         <span>Pickup</span>
                     </div>
                 </div>
                 <div class="selection-message"></div>
                 <div id="address-box" style="display: none;">
                     <i class="lni lni-map-marker"></i><label for="address" class="address">Delivery Address:</label>
-                    <textarea id="addressInput" placeholder="Enter your address" rows="4" cols="50"></textarea>
+                    <textarea id="addressInput" placeholder="E.g. 123 Rizal Street" rows="1" required></textarea>
                 </div>
-
-
+                <h2 class="type" id="paym" style="display: none;">Payment method</h2>
+                <div class="payment" id="payment-box" style="display: none;">
+                    <div class="cod payment-box" onclick="selectPayment('cod')" data-payment-method="COD">
+                        <span>Cash on Delivery</span>
+                    </div>
+                    <div class="gcash payment-box" onclick="selectPayment('gcash')" data-payment-method="GCASH">
+                        <span id="gcash">GCash</span>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label for="note" class="note">Special Note: </label>
-                    <textarea id="note" name="note" rows="4" required></textarea>
+                    <textarea id="note" placeholder="E.g. No mayo please" class="noteInput" name="note" rows="4"></textarea>
                 </div>
+                
                 <button type="button" class="submit-button" onclick="order()">Submit Order</button>
                 {% else %}
                 <div class="btn-group">
@@ -63,12 +68,12 @@
         </div>
     </div>
 
-    <ol id="pcart" style="display: none;"></ol>
-
+    <script src="{% static 'food/js/cart.js' %}"></script>
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+             displayCart();
+        });
         const csrfToken = "{{ csrf_token|escapejs }}";
     </script>
-    <!-- <script src="{% static 'food/js/order.js' %}"></script> -->
-    <script src="{% static 'food/js/cart.js' %}"></script>
 {% endblock content %}
 {% include 'food/footer.html' %} <!-- Include the footer -->
