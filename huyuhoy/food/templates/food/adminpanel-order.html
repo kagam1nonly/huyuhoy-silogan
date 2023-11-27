@@ -86,13 +86,13 @@
         </div>
     </div>
     {% endif %}
-    {% else %}
-    <div class="main-container2">
-        <div class="home">
-        </div>
-        <a class="home-btn" href="{% url 'index' %}"><span id="back">GO BACK</span></a>
-        <h1 class="h1">You must be admin to visit this site.</h1>
-    </div>
+{% else %}
+<div class="main-container2">
+<div class="home">
+</div>
+<a class="home-btn" href="{% url 'index' %}"><span id="back">GO BACK</span></a>
+<h1 class="h1">You must be admin to visit this site.</h1>
+</div>
 {% endif %}
 <script src="{% static 'food/js/adminpanel.js' %}"></script>
 {% endblock %}
