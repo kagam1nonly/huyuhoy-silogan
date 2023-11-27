@@ -4,7 +4,7 @@ from django.core.mail import send_mail
 from django.db import connection
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
-from .models import Meal, CartItem, Order, Customer
+from .models import Meal, CartItem, Order, Customer, Payment
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from .forms import CustomUserCreationForm
@@ -109,17 +109,39 @@ def order(request):
             random_order_number = generate_random_order_number(6)
 
         if request.user.is_authenticated:
+            transaction=request.POST.get('transaction', '')
+            address=request.POST.get('address', '')
+            method=request.POST.get('payment_method', '')
+
+            print(transaction)
+            
+            # Set the default status to 'Pending'
+            status = 'Pending'
+
+            if transaction.lower() == 'pickup':
+                status = 'Processing'
+                method = 'CASH'
+
+            if transaction.lower() == 'delivery' and method == 'COD':
+                status = 'Processing'
+
             order = Order(
                 customer=request.user,
                 number=random_order_number,
                 bill=bill,
-                note=note
+                note=note,
+                status=status,
+                transaction=transaction,
+                address=address,
             )
             order.save()
 
+            payment = Payment(order=order, amount=None, ref_num=None, method=method)
+            payment.save()
+
             for article in orders:
                 rice_choice = article.get('rice', '')
-                rice = 'withRice' if rice_choice.lower() == 'withrice' else 'withOutRice'
+                rice = 'withRice' if rice_choice.lower() == 'with rice' else 'withOutRice'
                 item = CartItem(
                     order=order,
                     name=article['name'],
@@ -127,6 +149,7 @@ def order(request):
                     rice=rice
                 )
                 item.save()
+                print(rice)
 
             # Set the 'order' and 'bill' in the session
             request.session['order'] = random_order_number
@@ -139,7 +162,6 @@ def order(request):
 
     ctx = {'active_link': 'order'}
     return render(request, 'food/order.html', ctx)
-
 
 def success_view(request):
     request.session.set_expiry(0)
@@ -200,6 +222,42 @@ def view_order(request):
     else:
         return HttpResponse('Please log in to view your orders.')
     
+@csrf_exempt
+def process_gcash_payment(request):
+    if request.method == 'POST':
+        amount = request.POST.get('amount')
+        ref_num = request.POST.get('ref_num')
+        gorder_number = request.POST.get('order_number')
+        print(f"Received amount: {amount}")
+        print(f"Received ref_num: {ref_num}")
+        print(f"Received order_number: {gorder_number}")
+
+        try:
+            # Retrieve the customer ID from the current user
+            customer_id = request.user.id
+
+            # Find the order based on the order number and customer ID
+            order = Order.objects.get(number=gorder_number, customer_id=customer_id)
+            print(f"Found Order: {order}")
+
+            # Check if a payment already exists for the order
+            payment, created = Payment.objects.get_or_create(order=order)
+
+            # Update the payment details
+            payment.amount = amount
+            payment.ref_num = ref_num
+            payment.method = 'GCASH'  # You may want to set the payment method explicitly
+            payment.save()
+            return JsonResponse({'success': True, 'message': 'Payment processed successfully'})
+        except Order.DoesNotExist:
+            print(f"Order not found for order_number: {gorder_number}")
+            return JsonResponse({'success': False, 'message': 'Order not found'})
+        except Exception as e:
+            print(f"Error processing payment: {str(e)}")
+            return JsonResponse({'success': False, 'message': 'Error processing payment'})
+    else:
+        return JsonResponse({'success': False, 'message': 'Invalid request method'})
+
 @csrf_exempt
 def cancel_order(request, order_number):
     if request.method == 'POST':
