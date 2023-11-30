@@ -136,9 +136,12 @@ def order(request):
             )
             order.save()
 
-            payment = Payment(order=order, amount=None, ref_num=None, method=method)
+            payment = Payment(order=order, payment_status='Unpaid', amount=None, ref_num=None, method=method)
             payment.save()
 
+            order.payment = payment
+            order.save()
+            
             for article in orders:
                 rice_choice = article.get('rice', '')
                 rice = 'withRice' if rice_choice.lower() == 'with rice' else 'withOutRice'
@@ -241,9 +244,15 @@ def process_gcash_payment(request):
             print(f"Found Order: {order}")
 
             # Check if a payment already exists for the order
-            payment, created = Payment.objects.get_or_create(order=order)
+            try:
+                # Try to get an existing payment for the order
+                payment = Payment.objects.get(order_payment__id=order.id)
+            except Payment.DoesNotExist:
+                # If the payment doesn't exist, create a new one
+                payment = Payment.objects.create(order_payment=order)
 
             # Update the payment details
+            payment.payment_status = 'Paid'
             payment.amount = amount
             payment.ref_num = ref_num
             payment.method = 'GCASH'  # You may want to set the payment method explicitly
@@ -358,7 +367,7 @@ def adminpanelorder_view(request):
             except Order.DoesNotExist:
                 return redirect('adminpanel-order')
             
-        if action == 'complete':
+        if action == 'Complete':
             with connection.cursor() as cursor:
                 cursor.execute("SELECT message FROM messages")
                 messages = cursor.fetchone()
@@ -393,3 +402,7 @@ def adminpanelorder_view(request):
                 else:
                     return redirect('adminpanel-order')
     return redirect('adminpanel-order')
+
+def adminpanelpayment_view(request):
+    payments= Payment.objects.all()
+    return render(request, 'food/adminpanel-payment.html', {'payments': payments})
