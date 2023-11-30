@@ -19,9 +19,17 @@ class Payment(models.Model):
         ('CASH', 'Cash'),
         # Add more payment methods if needed
     )
-    order = models.OneToOneField('Order', on_delete=models.CASCADE, null=True, related_name='payment')
+    PAYMENT_STATUS_CHOICES = (
+        ('Unpaid', 'Unpaid'),
+        ('Paid', 'Paid'),
+        ('Failed', 'Failed'),
+        # Add more payment status choices if needed
+    )
+
+    order = models.OneToOneField('Order', on_delete=models.CASCADE, null=True, related_name='payment_order')
+    payment_status = models.CharField(max_length=10, choices=PAYMENT_STATUS_CHOICES, default='Unpaid')
     amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    ref_num = models.CharField(max_length=12, null=True, blank=True, default='')
+    ref_num = models.CharField(max_length=13, null=True, blank=True, default='')
     method = models.CharField(max_length=5, choices=PAYMENT_METHOD_CHOICES, null=True, default='Cash')
 # Order Model
 class Order(models.Model):
@@ -44,6 +52,7 @@ class Order(models.Model):
     note = models.TextField(blank=True, null=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
     transaction = models.CharField(max_length=10, choices=TRANSACTION_CHOICES, default='Pickup')
+    payment = models.OneToOneField('Payment', on_delete=models.CASCADE, default='', related_name='order_payment')
     address = models.CharField(max_length=120, null=True, default='')
 
 # CartItem Model 
