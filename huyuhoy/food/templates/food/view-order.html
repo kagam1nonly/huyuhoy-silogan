@@ -3,7 +3,7 @@
 {% block content %}
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <link rel="stylesheet" type="text/css" href="{% static 'food/css/view-order.css' %}">
-<a href="{% url 'meal' %}" class="meal">Menu <i class="lni lni-pizza"></i></a>
+<a href="{% url 'meal' %}" class="meal">Menu <i class="lni lni-dinner"></i></a>
 <h2 id="myorder">Your orders</h2>
 
 <div class="vorder-wrapper">
@@ -60,7 +60,7 @@
             <form class="cancelform" method="POST" action="{% url 'process_gcash_payment'%}">
                 {% csrf_token %}
                 <span class="amount" id="amount{{ order.number }}">Amount: {{ order.bill }}<br></span>
-                <input class="ref-num" data-order-number="{{ order.number }}" placeholder="Enter Ref. No." maxlength="12"></input>
+                <input class="ref-num" data-order-number="{{ order.number }}" placeholder="Enter Ref. No." maxlength="13"></input>
                 <button class="gbutton" id="g-pay{{ order.number }}" onclick="gcashPay('{{ order.number }}', event)">Confirm</button>
             </form>
         </div>
