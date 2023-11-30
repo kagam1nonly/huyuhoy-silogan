@@ -1,42 +1,63 @@
+
 {% load static %}
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'food/css/adminpanel.css' %}">
+<link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet">
+<title>Huyuhoy Silogan</title>
+    <link rel="icon" type="image/png" href="{% static 'imgs/huyuhoy-logo.jpg' %}">
 {% if user.is_superuser %}
-<div class="sidebar">
-    <div class="side">
-        <h2>Admin Panel</h2>
-        <ul>
-            <li><a href="{% url 'index' %}" class="header-logo">
+<div class="my-container">
+    <div class="sidebar">
+        <div class="header">
+            <a href="{% url 'index' %}" class="header-logo">
                 <img src="{% static 'food/imgs/huyuhoy-logo.jpg' %}" class="logo" alt="Huyuhoy logo">
-            </a></li>
-            
-            <li><a href="{% url 'adminpanel' %}">Home</a></li>
-            <li><a href="{% url 'adminpanel-order' %}">Orders</a></li>
-            <li><a href="{% url 'logout' %}">Log out</a></li>
-        </ul>
+            </a>
+            <i class="lni lni-user"> </i> <h2>{{ user.username }}</h2>
+        </div>
+        <div class="line"></div>
+        <div class="side">
+            <a href="{% url 'adminpanel' %}"><div class="button"><i class="lni lni-home"></i> Dashboard</div></a>
+            <a href="{% url 'adminpanel-order' %}"><div class="button"><i class="lni lni-layers"></i> Orders</div></a>
+            <a href="{% url 'adminpanel-payment' %}"><div class="button"><i class="lni lni-coin"></i> Payment</div></a>
+            <a href="{% url 'logout' %}"><div class="button"><i class="lni lni-cogs"></i> Log out</div></a>
+        </div>
     </div>
+    <div class="my-content">
+        <div class="dashboard-box revenue-box">
+            <div class="circle">
+                <i class="lni lni-wallet"></i>
+            </div>
+            <h3>Total Revenue</h3>
+            <p>₱ {{ total_revenue }}</p>
+        </div>
+        <div class="dashboard-box customer-box">
+            <div class="circle">
+                <i class="lni lni-customer"></i>
+            </div>
+            <h3>Total Customers</h3>
+            <p>{{ total_customers }}</p>
+        </div>
+        <div class="dashboard-box ordered-food-box">
+            <div class="circle">
+                <i class="lni lni-service"></i>
+            </div>
+            <h3>Total Ordered Food</h3>
+            <p>{{ total_ordered_meals }}</p>
+        </div>
+    </div>
+    {% else %}
+    <div class="main-container2">
+        <div class="warning-container">
+            <span><i class="lni lni-warning"></i></span>
+            <div class="h1">Admin section only!</div>
+        </div>
+        <div class="home-container">
+            <a class="home-btn" href="{% url 'index' %}">
+                <span><i class="lni lni-home"></i></span>
+                <div class="return">Return</div>
+            </a>
+        </div>
+    </div>
+    {% endif %}
 </div>
-
-<div class="main-container">
-    <div class="dashboard-box revenue-box">
-        <h3>Total Revenue</h3>
-        <p>₱ {{ total_revenue }}</p>
-    </div>
-    <div class="dashboard-box customer-box">
-        <h3>Total Customers</h3>
-        <p>{{ total_customers }}</p>
-    </div>
-    <div class="dashboard-box ordered-food-box">
-        <h3>Total Ordered Food</h3>
-        <p>{{ total_ordered_meals }}</p>
-    </div>
-</div>
-{% else %}
-<div class="main-container2">
-    <div class="home">
-    </div>
-    <a class="home-btn" href="{% url 'index' %}"><span id="back">GO BACK</span></a>
-    <h1 class="h1">You must be admin to visit this site.</h1>
-</div>
-{% endif %}
 {% endblock %}
