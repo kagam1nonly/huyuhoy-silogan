@@ -8,6 +8,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('adminpanel/', views.adminpanel_view, name='adminpanel'),
     path('adminpanel-order/', views.adminpanelorder_view, name='adminpanel-order'),
+    path('adminpanel-payment/', views.adminpanelpayment_view, name='adminpanel-payment'),
     path('', views.index, name='index'),
     path('howtoorder', views.howtoorder, name='howtoorder'),
     path('howtoorder', views.howtoorder, name='conditionofuse'),
