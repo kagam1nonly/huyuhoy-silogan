@@ -2,7 +2,29 @@
 body, h1, h2, h3, p, ul, li {
     margin: 0;
     padding: 0;
-}
+  }
+  
+  body::-webkit-scrollbar {
+    width: .5rem;
+    height: .5rem;
+  }
+  
+  /* Show scrollbar on hover */
+  body::-webkit-scrollbar-thumb {
+    border-radius: .5rem;
+    background-color: #0004;
+    visibility: visible;
+  }
+  
+  body::-webkit-scrollbar-track {
+    background-color: #0002;
+  }
+  
+  /* Style the scrollbar thumb */
+  body:hover::-webkit-scrollbar-thumb {
+    background-color: #0004;
+    visibility: hidden;
+  }
 
 body {
     font-family: 'Dela Gothic One', cursive;
@@ -25,13 +47,14 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 50px;
+    margin-right: 30px;
+    letter-spacing: 1.5px;
 
 }
 
 #navbar li {
     list-style: none;
-    padding: 0 20px;
+    padding: 0 10px;
     position: relative;
     text-transform: uppercase;
     
