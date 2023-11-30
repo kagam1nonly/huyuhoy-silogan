@@ -137,6 +137,21 @@ body, h1, h2, h3, p, ol, li, ul {
     margin: 0;
 }
 
+.cart-items::-webkit-scrollbar {
+    width: 0.5rem;
+    height: 0.5rem;
+}
+
+.cart-items::-webkit-scrollbar-thumb {
+    border-radius: .5rem;
+    background-color: #0004;
+    visibility: hidden;
+}
+
+.cart-items:hover::-webkit-scrollbar-thumb {
+    visibility: visible;
+}
+
 .order-header {
     display: flex;
     width: 100%;
