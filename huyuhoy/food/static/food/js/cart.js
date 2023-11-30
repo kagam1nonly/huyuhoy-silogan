@@ -243,7 +243,7 @@ function gcashPay(orderNumber, event) {
     console.log('Sending ref_num:', refNum);
     console.log('Sending order_number:', orderNumber);
 
-    if (refNum === '' || refNum.length < 12) {
+    if (refNum === '' || refNum.length < 13) {
         loader.style.display = 'none'; // Hide loader if there is an error
         emsg.innerHTML  = 'Please enter a valid reference number.';
         emsg.style.marginTop = '15px';
