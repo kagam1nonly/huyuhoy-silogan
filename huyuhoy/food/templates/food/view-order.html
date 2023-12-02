@@ -9,10 +9,10 @@
 <div class="vorder-wrapper">
     <div class="head">
         <div class="your-orders">
-            <h3 class="your-order-title">...</h3>
+            <h3 class="your-order-title"></h3>
         </div>
         <div class="total-bill">
-            <h3 class="totalBill">Amount to pay: ₱<span>{{ total_bill|default:"0.00" }}</span></h3>
+            <h3 class="totalBill">Amount to pay: <span>₱{{ total_bill|default:"0.00" }}</span></h3>
         </div>
     </div>
     <div class="order-box-container"> 
@@ -27,7 +27,11 @@
                 <ul>
                     {% for cartitem in order.cart_items.all %}
                     <li>
-                        Item: {{ cartitem.name }} x {{ cartitem.rice }} x ₱{{ cartitem.price }}
+                        {% if cartitem.rice == 'withOutRice' %}
+                        Item: {{ cartitem.name }} x With Out Rice x ₱{{ cartitem.price }}
+                        {% else %}
+                        Item: {{ cartitem.name }} x With Rice x ₱{{ cartitem.price }}
+                        {% endif %}
                     </li>
                     {% endfor %}
                 </ul>
