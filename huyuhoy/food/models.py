@@ -66,10 +66,3 @@ class CartItem(models.Model):
     def __str__(self):
         return self.name
 
-# Customer Model
-class Customer(models.Model):
-    customer_id = models.AutoField(primary_key=True)
-    address = models.CharField(max_length=255)
-    phone = models.CharField(max_length=15)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    
