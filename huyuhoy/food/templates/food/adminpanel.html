@@ -23,7 +23,8 @@
         </div>
     </div>
     <div class="my-content">
-        <div class="dashboard-box revenue-box">
+        <div class="dashboard-container">
+            <div class="dashboard-box revenue-box">
             <div class="circle">
                 <i class="lni lni-wallet"></i>
             </div>
@@ -44,7 +45,53 @@
             <h3>Total Ordered Food</h3>
             <p>{{ total_ordered_meals }}</p>
         </div>
+        </div>
+        
+        <section class="table_body3">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Date Joined</th>
+                        <th>Last Login</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.first_name }}</td>
+                        <td>{{ user.last_name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.date_joined }}</td>
+                        <td>{{ user.last_login }}</td>
+                        <td>
+                            {% comment %} <form method="POST" action="{% url 'adminpanel' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="user_id" value="{{ user_id }}">
+                                <input type="hidden" name="action" value="Edit">
+                                <button type="submit" class="complete-button" onclick="return confirm('Are you sure you want to Edit this Account?')"><i class="lni lni-pencil-alt"></i></button>
+                            </form> {% endcomment %}
+                            <form method="POST" action="{% url 'adminpanel' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="user_id" value="{{ user.id }}">
+                                <input type="hidden" name="action" value="Delete">
+                                <button type="submit" class="delete-button" onclick="return confirm('Are you sure you want to Delete this Account?')"><i class="lni lni-trash-can"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
     </div>
+    
     {% else %}
     <div class="main-container2">
         <div class="warning-container">
