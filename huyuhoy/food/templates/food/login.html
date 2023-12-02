@@ -3,33 +3,36 @@
 {% block content %}
     <login>
     <link rel="stylesheet" type="text/css" href="{% static '/food/css/login.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'food/css/order.css' %}">
    
     <div class="hero">
         <div class="left-container">
             <form method="post" class="form">
                 {% csrf_token %} <!-- Add the CSRF token here -->
-                <h2>Registered Customers</h2>
-                <h3>Username:</h3>
-                <input id="username" name="username" class="box" placeholder="Noobmaster69" type="text">
-                <h3>Password:</h3>
-                <input id="password" name="password" class="box" placeholder="********" type="password">
+                <h2 id="create-account-header">Login</h2>
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input id="username" name="username" class="box" placeholder="Noobmaster69" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input id="password" name="password" class="box" placeholder="********" type="password">
+                </div>
                 {% if messages %}
-                    <ul class="">
+                    <ul class="errorlist">
                         {% for msg in messages %}
-                        <li style="color: red;">{{ msg }}</li>
+                            <li style="color: red;">{{ msg }}</li>
                         {% endfor %}
                     </ul>
                 {% endif %}
-                <input type="submit" value="Log In" id="submit">
-                <a href="#" class="forgetpass">forget password?</a>
+                <input type="submit" value="Log in" class="sub-btn">
+                <a href="#" class="forgetpass">Forgot your password?</a>
             </form>
             <div class="line"></div>
             <div class="right-container">
-                <h2>New Customers</h2>
-                <p>By creating an account with our store, you will be able to move through the checkout process faster, store multiple shipping addresses, view and track your orders in your account and more</p>
+                <h2>Create an Account</h2>
+                <p>By creating an account with our store, you will be able to move through the checkout process faster, store multiple shipping addresses, view and track your orders in your account, and more.</p>
                 <img src="{% static '/food/imgs/delivery-guy.png' %}" id="delivery" alt="">
-                <button onclick="window.location.href = 'http://127.0.0.1:8000/signup/'">Create an account</button>
+                <button onclick="window.location.href = '{% url 'signup' %}'">Create an account</button>
             </div>
         </div>
     </div>
