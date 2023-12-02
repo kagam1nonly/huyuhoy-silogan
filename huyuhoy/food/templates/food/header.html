@@ -8,14 +8,19 @@
             <li><a href="{% url 'index' %}"><i class="lni lni-home"></i></a></li>
             <li><a href="{% url 'order' %}"><i class="lni lni-cart"></i><span id="cartCount">0</span></a></li>
             {% if user.is_authenticated %}
-                <li><h4 class="welcome">Welcome {{ user.username }}</h4></li>
-                {% if not user.is_superuser %}
-                    <li><a href="{% url 'view-order' %}">View Orders</a></li>
-                {% endif %}
-                {% if user.is_superuser %}
-                    <li><a href="{% url 'adminpanel' %}">Admin Panel</a></li>
-                {% endif %}
-                <li><a href="{% url 'logout' %}">Log out</a></li>
+            <li class="dropdown">
+                <h4 class="username">{{ user.username }}</h4>
+                <div class="dropdown-content">
+                    {% if not user.is_superuser %}
+                        <a href="{% url 'meal' %}">Menu</a>
+                        <a href="{% url 'view-order' %}">View Orders</a>
+                    {% endif %}
+                    {% if user.is_superuser %}
+                        <a href="{% url 'adminpanel' %}">Admin Panel</a>
+                    {% endif %}
+                    <a href="{% url 'logout' %}">Log out</a>
+                </div>
+            </li>
             {% else %}
                 <li><a href="{% url 'login' %}">Log in/Sign up</a></li>
             {% endif %}
