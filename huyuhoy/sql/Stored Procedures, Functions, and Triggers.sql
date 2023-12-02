@@ -19,10 +19,12 @@ END$$
 DELIMITER ;
 
 DELIMITER $$
+USE `huyuhoydb`$$
 CREATE DEFINER=`root`@`localhost` FUNCTION `CalculateTotalRevenue`() RETURNS decimal(10,2)
+READS SQL DATA
 BEGIN
     DECLARE total DECIMAL(10, 2);
-    SELECT SUM(bill) INTO total FROM food_order WHERE status = 'Completed';
+    SELECT SUM(amount) INTO total FROM food_payment WHERE payment_status = 'Paid';
     RETURN total;
 END$$
 DELIMITER ;
@@ -75,6 +77,8 @@ BEGIN
 END$$
 DELIMITER ;
 
+
+
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `CalculateTotalBillForCustomer`(IN customerID INT)
 BEGIN
@@ -107,18 +111,59 @@ DELIMITER ;
 
 -- Triggers 
 
-DELIMITER //
-CREATE TRIGGER PreventAdminActionUpdate
-BEFORE UPDATE ON food_order
+DELIMITER $$
+CREATE TRIGGER DeleteAssociatedPayment
+AFTER DELETE ON food_order
 FOR EACH ROW
 BEGIN
-    IF NEW.status IN ('Accepted', 'Refused') AND OLD.status IN ('Accepted', 'Refused') THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Cannot update order status to Accepted or Refused if already marked as such.';
+    DECLARE paymentIdToDelete INT;
+
+    -- Get the payment_id associated with the deleted order
+    SELECT id INTO paymentIdToDelete FROM food_payment WHERE order_id = OLD.id;
+
+    -- If a payment is associated, delete it
+    IF paymentIdToDelete IS NOT NULL THEN
+        DELETE FROM food_payment WHERE id = paymentIdToDelete;
     END IF;
 END;
-//
-DELIMITER ;
+DELIMITER;
+
+DELIMITER $$
+CREATE TRIGGER DeleteAssociatedOrder
+AFTER DELETE ON food_payment
+FOR EACH ROW
+BEGIN
+    DECLARE orderIdToDelete INT;
+
+    -- Get the payment_id associated with the deleted order
+    SELECT id INTO orderIdToDelete FROM food_order WHERE payment_id  = OLD.id;
+
+    -- If a payment is associated, delete it
+    IF orderIdToDelete IS NOT NULL THEN
+        DELETE FROM food_order WHERE id = orderIdToDelete;
+    END IF;
+END;
+DELIMITER;
+
+DELIMITER $$
+CREATE TRIGGER DeleteAssociatedOrderPayment
+AFTER DELETE ON auth_user
+FOR EACH ROW
+BEGIN
+    DECLARE customerIdToDelete INT;
+
+    -- Get the customer_id associated with the deleted user
+    SELECT id INTO customerIdToDelete FROM food_order WHERE customer_id = OLD.id;
+
+    -- If user is associated, delete it
+    IF customerIdToDelete IS NOT NULL THEN
+        DELETE FROM food_order WHERE customer_id = customerIdToDelete;
+    END IF;
+END;
+DELIMITER;
+
+DROP TRIGGER IF EXISTS PreventAdminActionUpdate;
+DROP TRIGGER IF EXISTS DeleteAssociatedOrder;
 
 
 
