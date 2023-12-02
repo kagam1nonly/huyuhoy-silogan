@@ -167,7 +167,7 @@ ul, ol {
 }
 
 .cart-item-image {
-    width: 125px; /* Make image fill the container */
+    width: 125px; 
     height: 125px;
     margin-bottom: 10px; /* Add space between image and text */
 }
@@ -198,7 +198,7 @@ ul, ol {
     cursor: pointer;
 }
 
-.footer-container {
+.footer_container {
     position: relative;
     background-color: #ffffff; 
     width: 100%; /* Adjust the width to your preference */

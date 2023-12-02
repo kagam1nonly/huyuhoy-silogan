@@ -27,7 +27,7 @@ body, h1, h2, h3, p, ul, li {
   }
 
 body {
-    font-family: 'Dela Gothic One', cursive;
+    font-family: sans-serif;
     margin: 0;
     padding: 0;
 }
@@ -43,11 +43,49 @@ body {
     left: 0;
 }
 
+#navbar .dropdown {
+    position: relative;
+}
+
+#navbar .dropdown-content {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    background-color: #010101;
+    color: #fdc300;
+    left: 1px;
+    min-width: 160px;  
+    width: 160px; 
+    border-radius: 8px; /* Add border radius for a rounded appearance */
+}
+
+#navbar .dropdown-content a {
+    display: block;
+    padding: 10px;
+    margin-bottom: 5px; 
+    transition: background-color 0.3s;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+}
+
+#navbar .dropdown:hover .dropdown-content {
+    display: flex;
+    flex-direction: column; /* Display items in a column */
+}
+
+#navbar .dropdown-content a:hover {
+    background-color: #333; /* Change the background color on hover */
+}
+
+#navbar .username:hover {
+    background-color: #333; /* Change the background color on hover */
+}
+
+
 #navbar {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 30px;
+    margin-right: 60px;
     letter-spacing: 1.5px;
 
 }
@@ -109,7 +147,7 @@ i.lni {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center bottom;
-    background-image: url("../imgs/hero2.png");
+    background-image: url("../imgs/1.png");
     min-height: 91vh; 
     display: flex;
     flex-direction: column;
@@ -118,11 +156,40 @@ i.lni {
     justify-content: center;
 }
 
+
+.header {
+    position: absolute;
+    top: 748px;
+    right: 640px;
+    display: flex;
+    font-family: sans-serif;
+    font-size: 36px;
+    text-transform: uppercase;
+    color: white;
+    background-color: #000;
+    margin: 30px 0 50px 0;
+    letter-spacing: .5px;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    height: 10vh;
+    border-radius: 0.6rem;
+
+}
+
+.header p {
+    font-size: 30px;
+    font-weight: bold;
+}
+
 #meal {
-    min-height: 100%; /* Make it occupy the full viewport height */
+    min-height: 100% auto; 
     width: 100%; /* Make it occupy the full viewport width */
     display: flex;
-    /* background-color: rgba(128, 128, 128, 0.5); */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background: linear-gradient(rgba(163, 156, 156, 0.5), rgba(0, 0, 0, 0.5)), url("../imgs/2.png");
 }
 
 .menu-container {
@@ -131,7 +198,6 @@ i.lni {
     justify-content: flex-start;
     background-color: rgb(255, 255, 255);
     margin: 150px 150px 30px 150px;
-    border: 1px solid #000000;
     flex: 1px;
 }
 
@@ -152,6 +218,8 @@ i.lni {
 }
 
 .box h3 {
+    font-family: sans-serif;
+    font-size: 22px;
     margin-bottom: 20px;
 }
 
@@ -182,34 +250,12 @@ i.lni {
 }
 
 h2 {
-    font: caption;
-    color: #ffc400;
-}
-
-
-.header {
-    position: absolute;
-    top: 738px;
-    right: 600px;
-    display: flex;
-    background-color: #e6870e;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 36px;
-    text-transform: uppercase;
-    color: black;
-    margin: 30px 0 50px 0;
-    letter-spacing: 1.5px;
-    align-items: center;
-    justify-content: center;
-    padding: 15px;
-    height: 10vh;
-    border-bottom: 1px solid #eee;
-    background-color: #fdc300;
-}
-
-.header p {
-    font-size: 30px;
-    font-weight: bold;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    letter-spacing: .5px;
+    font-size: 20px;
+    color: #000000;
 }
 
 
@@ -244,12 +290,14 @@ h2 {
 
 .cline {
     margin-top: 56px;
+    margin-bottom: 56px;
     border: 2.5px solid #000000;
 }
 
 button {
+    font-size: 18px;
     font-weight: bold;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: sans-serif;
     width: 100%;
     position: relative;
     border: none;
@@ -288,30 +336,29 @@ button:hover {
     display: flex;
     flex-direction: column;
     background-color: black;
-    position: relative;
-    min-height: 200px;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
 }
 
 .footer-content {
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    width: 100%;
-    max-width: 1100px;
-}
-
-.footer-content .content-left {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 50%; /* Equal width for left and right */
-    padding: 20px; /* Adjust the padding as needed */
-    box-sizing: border-box; /* Include padding in width calculation */
+    max-width: 1100px;
+    margin: 0 auto; /* Center the content */
 }
 
-.footer p {
-    color: white;
+.footer-logo {
+    max-width: 128px;
+    height: 128px;
+    margin-right: 20px;
+}
+
+.content-right {
+    flex-grow: 1; /* Take remaining space */
+    padding: 20px; /* Adjust the padding as needed */
+    box-sizing: border-box; /* Include padding in width calculation */
 }
 
 .body-1 {

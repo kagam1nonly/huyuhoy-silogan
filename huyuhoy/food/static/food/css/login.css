@@ -1,275 +1,175 @@
 body {
     margin: 0;
     padding: 0;
+    font-family: sans-serif;
 }
 
 .hero {
-    display: block;
-    background-repeat: no-repeat;
-    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
     background-size: cover;
-    contain: content;
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    background: linear-gradient(rgba(163, 156, 156, 0.5), rgba(0, 0, 0, 0.5)), url("../imgs/6.png");
 }
 
 .left-container {
     display: flex;
-    height: 577px;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    height: 70%;
     max-width: 1100px;
-    border: 0.5px solid black;
     margin: auto;
-    margin-top: 50px;
-    margin-bottom: 50px;
+    padding: 25px;
+    border: 0.5px solid black;
     background-color: whitesmoke;
     border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+#create-account-header {
+    margin-top: 50px;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
 .form {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    width: 50%;
-    height: auto;
-    align-items: center;
+    background-color: white;
     border-radius: 10px;
-    margin: 50px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 40%;
+    height: 90%;
+    padding: 15px 100px 15px 100px;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    margin: 15px;
+}
+
+.form h2 {
+    color: #333;
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column; /* Display as column */
+    align-items: flex-start; /* Align text at the beginning */
+}
+
+.form-group label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin-top: 5px; /* Adjust as needed */
+}
+
+.form .sub-btn {
+    font-size: 18px;
+    font-weight: bold;
+    font-family: sans-serif;
+    width: 100%;
+    padding: 12px;
+    background-color: #e6870e;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px; /* Adjust as needed */
+}
+
+.form .sub-btn:hover {
+    background-color: #000;
+    color: #fff;
+    cursor: pointer;
 }
 
 .form a {
     text-decoration: none;
-    color: #000000;
-    margin-top: 10px;
+    color: #333;
     font-size: 14px;
+    margin-top: 10px;
+    display: inline-block;
 }
 
 .form a:hover {
     text-decoration: underline;
 }
 
-
-.form h2 {
-    color: #000000;
-    font-weight: normal;
-    font-size: 36px;
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    margin: 50px 30px 50px 30px;
-}
-
-.box {
-    padding: 10px;
-    width: 65%;
-    margin: 0 0 0 0;
-    border: 1px solid black;
-    outline: none;
-    border-radius: 10px;
-}
-
-.form h3 {
-    margin: 10px 100px;
-    align-self: flex-start;
-    font-family:Arial, Helvetica, sans-serif;
-}
-
-#submit {
-    padding: 12px 30px;
-    width: 40%;
-    margin-top: 40px;
-    background-color: whitesmoke;
-    color: black;
-    text-transform: uppercase;
-    letter-spacing: 0.5;
-    border-width: 0.1px;
-    border-color: black;
-    outline: none;
-    border-radius: 10px;
-    font-weight: bold;
-}
-
-.forgetpass :hover {
-    text-decoration: underline;
-}
-
-#submit:hover {
-    cursor: pointer;
-    box-shadow: 0 0 20px lightblue;
-    color: #e6870e;
-    background-color: #000000;
+ul li {
+    list-style: none;
 }
 
 .line {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    align-items: center; /* Center vertically */
-    justify-content: center; /* Center horizontally */
-    gap: 300px; /* Adjust the horizontal spacing as needed */
-    padding: 1px;
-    border-radius: 1px;
     width: 1px;
-    min-height: 1px; /* Set the height to create a horizontal line */
-    background-color: #000000; /* Line color */
-    margin-top: 50px;
-    margin-bottom: 50px;
+    height: 100%;
+    background-color: #333;
 }
 
 .right-container {
-    margin: 40px 50px 40px 50px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: khaki;
-    border-radius: 10px;
     width: 50%;
+    height: 90%;
+    text-align: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 30px;
 }
 
 .right-container h2 {
-    color:#000000;
-    font-size: 36px;
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    margin: 50px 0 60px 0;
+    color: #333;
+    font-size: 28px;
+    margin-top: 45px;
+    margin-bottom: 20px;
 }
 
 .right-container p {
     font-size: 16px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    text-align: center;
-    margin: 30px;
+    color: #555;
+    margin-bottom: 30px;
 }
 
 .right-container #delivery {
     width: 100px;
     height: 100px;
+    margin-bottom: 20px;
 }
 
 .right-container button {
-    margin: 10px;
     padding: 12px 30px;
-    width: 40%;
-    color: #fff;
-    border-radius: 10px;
-    border-width: 0.1px;
-    background-color: black;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: bold;
+    background-color: #e6870e;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 .right-container button:hover {
-    cursor: pointer;
-    box-shadow: 0 0 20px lightblue;
-    color:#e6870e;
+    background-color: #333;
 }
 
-/* MAKE RESPONSIVE  
-/* For mobile phones */
-
-/* For tablets */
-@media (min-width: 768px) and (max-width: 1023px) {
-    /* Your tablet-specific CSS goes here */
+@media (max-width: 768px) {
     .left-container {
-        display: flex;
-        height: 577px;
-        width: 768px;
-        border: 0.5px solid black;
-        margin: 50px 0 50px 90px;
-        padding: 20px;
-        background-color: #e6870e;
-    }
-
-    .right-container {
-        margin-top: 50px;
-        justify-content: center;
-        background-color: #e6870e;
-        width: 50%;
-    }
-    
-
-    .right-container h2 {
-        font-size: 28px;
-        font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-        margin: 50px 30px 60px 70px;
-        padding: 15px
-    }
-
-    .right-container p {
-        font-size: 14px;
-        font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        margin: 5px 30px 10px 35px;
-    }
-
-    .right-container #delivery {
-        width: 100px;
-        height: 100px;
-        margin: 10px 10px 10px 120px;
-    }
-
-    .right-container button {
-        margin: 10px 10px 50px 100px;
-        padding: 12px 30px;
-        width: 40%;
-        color:#e6870e;
-        border-radius: 10px;
-        border-color: white;
-        border-width: 0.1px;
-        background-color: black;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        font-weight: bold;
-    }
-    
-    #submit {
-        padding: 12px 30px;
-        width: 40%;
-        margin-top: 40px;
-        background-color: whitesmoke;
-        color: black;
-        text-transform: uppercase;
-        letter-spacing: 0.5;
-        border-width: 0.1px;
-        border-color: black;
-        outline: none;
-        border-radius: 10px;
-        font-weight: bold;
-    }
-
-    .footer .footer-main {
-        display: flex;
         flex-direction: column;
-        position: relative;
-        height: 230px;
-        background-color: black;
-    }
-    
-}
-
-/* For small screens (e.g., specific targeting of 400px width) */
-@media (min-width: 477px) and (max-width: 768px){
-    .hero .left-container {
-        display: flex;
-        flex-wrap: wrap;
-        width: 90%;
-        height: 1000px;
-        margin: 0 auto;
-        background-color: green;
     }
 
+    .form,
     .right-container {
         width: 90%;
-        margin: 0 auto;
+        height: auto;
+        margin: 20px auto;
     }
-
-    .form {
-        width: 90%;
-        margin: 20px;
-    }
-
-    .right-container button {
-        margin: 10px;
-        padding: 8px 20px;
-    }
-}
-
-/* For desktop screens */
-@media (min-width: 1024px) {
-    /* Your desktop-specific CSS goes here */
 }
