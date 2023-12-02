@@ -26,6 +26,11 @@
         <main class="table"> 
             <section class="table_header">
                 <h1>Payments</h1>
+                <h2>
+                    <i class="lni lni-wallet"></i>
+                    <i class="lni lni-wallet"></i>
+                    <i class="lni lni-wallet"></i>
+                </h2>
             </section>
             <section class="table_body2">
                 <table>
@@ -38,7 +43,7 @@
                             <th> Amount </th>
                             <th> Referrence No. </th>
                             <th> Payment Method </th>
-                            <th colspan="3"> Action </th>
+                            <th colspan="4"> Action </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -52,17 +57,17 @@
                             <td> {{ payment.ref_num|default:'' }} </td>
                             <td> {{ payment.method }} </td>
                             <td>
-                                <form method="POST" action="{% url 'adminpanel-order' %}">
+                                <form method="POST" action="{% url 'adminpanel-payment' %}">
                                     {% csrf_token %}
-                                    <input type="hidden" name="order_id" value="{{ order.id }}">
-                                    <input type="hidden" name="action" value="Complete">
-                                    <button type="submit" class="complete-button" onclick="return confirm('Are you sure you want to complete this order?')"><i class="lni lni-check-box"></i></button>
+                                    <input type="hidden" name="payment_id" value="{{ payment.id }}">
+                                    <input type="hidden" name="action" value="Confirm">
+                                    <button type="submit" class="complete-button" onclick="return confirm('Are you sure you want to Complete this Payment?')"><i class="lni lni-check-box"></i></button>
                                 </form>
-                                <form method="POST" action="{% url 'adminpanel-order' %}">
+                                <form method="POST" action="{% url 'adminpanel-payment' %}">
                                     {% csrf_token %}
-                                    <input type="hidden" name="order_id" value="{{ order.id }}">
+                                    <input type="hidden" name="payment_id" value="{{ payment.id }}">
                                     <input type="hidden" name="action" value="Delete">
-                                    <button type="submit" class="delete-button" onclick="return confirm('Are you sure you want to remove this order?')"><i class="lni lni-trash-can"></i></button>
+                                    <button type="submit" class="delete-button" onclick="return confirm('Are you sure you want to Remove this Payment?')"><i class="lni lni-trash-can"></i></button>
                                 </form>
                             </td>
                         </tr>
