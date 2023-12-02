@@ -3,8 +3,8 @@ import random
 from django.core.mail import send_mail
 from django.db import connection
 from django.shortcuts import render, redirect
-from django.http import JsonResponse, HttpResponse
-from .models import Meal, CartItem, Order, Customer, Payment
+from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
+from .models import Meal, CartItem, Order, Payment
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from .forms import CustomUserCreationForm
@@ -13,6 +13,8 @@ from django.contrib.auth import authenticate, logout
 from django.contrib.auth import login as auth_login
 from django.contrib import messages
 from django.urls import reverse
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 # import logging
 
 # logger = logging.getLogger(__name__)
@@ -20,9 +22,6 @@ from django.urls import reverse
 def generate_random_order_number(length):
     sample = 'ABCDEFGH0123456789'
     return ''.join(random.choice(sample) for i in range(length))
-
-def adminpanel_view(request):
-    return render(request, 'food/adminpanel.html')
 
 def base(request):
     return render(request, 'food/base.html')
@@ -246,10 +245,10 @@ def process_gcash_payment(request):
             # Check if a payment already exists for the order
             try:
                 # Try to get an existing payment for the order
-                payment = Payment.objects.get(order_payment__id=order.id)
+                payment = Payment.objects.get(order=order)
             except Payment.DoesNotExist:
                 # If the payment doesn't exist, create a new one
-                payment = Payment.objects.create(order_payment=order)
+                payment = Payment.objects.create(order=order)
 
             # Update the payment details
             payment.payment_status = 'Paid'
@@ -257,6 +256,9 @@ def process_gcash_payment(request):
             payment.ref_num = ref_num
             payment.method = 'GCASH'  # You may want to set the payment method explicitly
             payment.save()
+
+            order.payment = payment
+            order.save()
             return JsonResponse({'success': True, 'message': 'Payment processed successfully'})
         except Order.DoesNotExist:
             print(f"Order not found for order_number: {gorder_number}")
@@ -313,7 +315,38 @@ def send_email(request, order_id):
 
     send_mail(subject, message, from_email, recipient_list, fail_silently=False)
 
+@receiver(pre_delete, sender=User)
+def delete_associated_order_payment(sender, instance, **kwargs):
+    # Check if there is a related Payment
+    if hasattr(instance, 'order_payment'):
+        order = instance.order_payment
+        order.delete()
+
 def adminpanel_view(request):
+    if request.method == 'POST':
+        users = User.objects.all()
+        user_id = request.POST.get('user_id')
+        action = request.POST.get('action')
+        admin_id = request.user.id
+
+
+        if not user_id.isdigit():
+            return HttpResponseBadRequest("Invalid user_id provided")
+
+        print(f"user_id: {user_id}, action: {action}, admin_id: {admin_id}")
+
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return HttpResponseBadRequest("User not found")
+
+        if action == 'Delete':
+            Order.objects.filter(customer=user).delete()
+            Payment.objects.filter(order__customer=user).delete()
+            user.delete()
+            return redirect('adminpanel')
+
+    print(connection.queries)
     orders = Order.objects.all()  # You can add filters as needed
 
     # Calculate Total Revenue
@@ -331,78 +364,96 @@ def adminpanel_view(request):
         cursor.execute('SELECT CalculateTotalCustomers()')
         total_customers = cursor.fetchone()[0]
 
+    users = User.objects.all()
+
     return render(request, 'food/adminpanel.html', {
         'orders': orders,
         'total_revenue': total_revenue,
         'total_ordered_meals': total_ordered_meals,
         'total_customers': total_customers,
+        'users': users,
         })
 
+@receiver(pre_delete, sender=Order)
+def delete_associated_payment(sender, instance, **kwargs):
+    # Check if there is a related Payment
+    if hasattr(instance, 'payment_order'):
+        payment = instance.payment_order
+        payment.delete()
+
 def adminpanelorder_view(request):
-    if request.method == 'GET':
-        orders = Order.objects.all()
-        # Fetch orders and messages from the messages table
-        with connection.cursor() as cursor:
-            messages = None  # Initialize messages as None
-
-        # Pass the orders and messages to the template context
-        return render(request, 'food/adminpanel-order.html', {'orders': orders, 'messages': messages})
-
     if request.method == 'POST':
         orders = Order.objects.all()
         order_id = int(request.POST.get('order_id'))
         action = request.POST.get('action')
-        admin_id = request.user.id  # Get the admin's ID from the request or another source
+        admin_id = request.user.id
 
-        if not admin_id:
-            return JsonResponse({'success': False, 'message': 'Admin not authenticated.'})
+        print(f"order_id: {order_id}, action: {action}, admin_id: {admin_id}")
 
-        # Check if the order status allows the action
-        order = Order.objects.get(id=order_id)
+        try:
+            order = Order.objects.get(id=order_id)
+        except Order.DoesNotExist:
+            return HttpResponseBadRequest("Order not found")
 
-        if action == 'Delete':
-            try:
-                order.delete()
-                return redirect('adminpanel-order')
-            except Order.DoesNotExist:
-                return redirect('adminpanel-order')
-            
-        if action == 'Complete':
-            with connection.cursor() as cursor:
-                cursor.execute("SELECT message FROM messages")
-                messages = cursor.fetchone()
-                messages = messages[0] if messages else None  # Extract the message if it exists
-
-                # Send the completion email
-                if messages:
-                    try:
-                        send_email(request, order_id)  # Send the email to the customer
-                    except Exception as e:
-                        # Handle the email sending error, e.g., log it
-                        print(f"Error sending email: {str(e)}")
-
-                messages = ('Email sent.',) if messages else ('Email not sent.',)
-                return render(request, 'food/adminpanel-order.html', {'orders': orders, 'messages': messages})
-            
-        if order.status not in ('Pending', 'Processing'):
-            # Execute the message retrieval
-            with connection.cursor() as cursor:
-                cursor.execute("SELECT message FROM messages")
-                messages = cursor.fetchone()
-                messages = messages[0] if messages else None  # Extract the message if it exists
-                messages = ('Cannot perform this action on the order',) if messages else ('Cannot perform this action on the order',)
-                return render(request, 'food/adminpanel-order.html', {'orders': orders, 'messages': messages})
-
-        else:
+        if action == 'Accept' or action == 'Refuse' or action == 'Complete':
             with connection.cursor() as cursor:
                 cursor.callproc('AcceptRefuseOrder', [order_id, action, admin_id])
                 result = cursor.fetchone()
-                if isinstance(result[0], str) and 'successfully' in result[0]:
-                    return redirect('adminpanel-order')
-                else:
-                    return redirect('adminpanel-order')
-    return redirect('adminpanel-order')
+                print(f"Stored procedure result: {result}")
+                return redirect('adminpanel-order')
+                
+        if action == 'Delete':
+            print(f"Deleting Order {order_id}")
+            order.delete()
+            return redirect('adminpanel-order')
+
+    # Handle the GET request to display orders
+    orders = Order.objects.all()
+    return render(request, 'food/adminpanel-order.html', {'orders': orders})
+
+from django.db import transaction
+
+@receiver(pre_delete, sender=Payment)
+def delete_associated_order(sender, instance, **kwargs):
+    def delete_order():
+        try:
+            order_id = instance.order.id
+            order = Order.objects.get(id=order_id)
+            order.delete()
+            print(f"Successfully deleted Order with id {order_id}")
+        except Order.DoesNotExist:
+            print("Related Order does not exist.")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
+    # Schedule the delete operation to be executed after the current transaction is committed
+    transaction.on_commit(delete_order)
 
 def adminpanelpayment_view(request):
-    payments= Payment.objects.all()
+    if request.method == 'POST':
+        payments = Payment.objects.all()
+        payment_id = request.POST.get('payment_id')
+        action = request.POST.get('action')
+        admin_id = request.user.id
+
+        print(f"payment_id: {payment_id}, action: {action}, admin_id: {admin_id}")
+
+        try:
+            payment = Payment.objects.get(id=payment_id)
+        except Payment.DoesNotExist:
+            return HttpResponseBadRequest("Payment not found")
+
+        if action == 'Confirm':
+            with connection.cursor() as cursor:
+                cursor.callproc('ConfirmDeletePayment', [payment_id])
+                result = cursor.fetchone()
+                print(f"Stored procedure result: {result}")
+                return redirect('adminpanel-payment')
+                
+        if action == 'Delete':
+            payment.delete()
+            print(f"Deleting Payment {payment_id}")
+            return redirect('adminpanel-payment')
+
+    payments = Payment.objects.all()
     return render(request, 'food/adminpanel-payment.html', {'payments': payments})
