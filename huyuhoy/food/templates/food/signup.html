@@ -8,7 +8,7 @@
     <div class="hero">
         <div class="main-container">
             <form method="POST" action="{% url 'signup' %}" class="form">
-                <h2 id="createacct">Create account</h2>
+                <h2 id="create-account-header">Create account</h2>
                 {% csrf_token %}
                 {% for field in form %}
                 <div class="form-group">
