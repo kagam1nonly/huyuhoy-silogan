@@ -1,14 +1,14 @@
 import os
-import django_heroku
-django_heroku.settings(locals())
 
 import dj_database_url
-from pathlib import Path
+from pathlib import Path, PurePath
 
+import django_heroku
+django_heroku.settings(locals())
 # Static files (CSS, JavaScript, images)
 BASE_DIR = Path(__file__).resolve().parent.parent
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = PurePath.joinpath(BASE_DIR, 'staticfiles')
 
 
 # Quick-start development settings - unsuitable for production
@@ -20,7 +20,7 @@ SECRET_KEY = 'django-insecure-*+w&n7_xkl4g=4xksec1rw^uyqt^36_)$c&^3o(sp_xx6bmxp5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['huyuhoy-silogan-606d2c795644.herokuapp.com']
 
 # AUTH_USER_MODEL = 'food.Customer'
 # Application definition
