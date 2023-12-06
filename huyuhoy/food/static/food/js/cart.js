@@ -96,6 +96,21 @@ function updateCartCount() {
 
 var note = document.querySelector('#note');
 
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 function order() {
     updateCartCount(); 
     var msg = note.value;
@@ -141,6 +156,9 @@ function order() {
             url: url,
             type: "POST",
             data: orderData,
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')
+            },
             success: function(data) {
                 window.location.replace('/food/success')
                 localStorage.setItem('orders', JSON.stringify([]));
@@ -285,7 +303,11 @@ function gcashPay(orderNumber, event) {
                         emsg.innerHTML  = 'Payment processing failed. Please try again.';
                         emsg.style.display = 'block';
                         emsg.style.marginTop = '10px';
-                        loadingModal.style.transition = 'opacity 0.6s ease-in-out';
+                        setTimeout(function() {
+                            loadingModal.style.opacity = 0;
+                            loadingModal.style.pointerEvents = 'none';
+                            loadingModal.style.transition = 'opacity 0.6s ease-in-out';
+                        }, 4000);
                     }
                 },
                 error: function (xhr, status, error) {
@@ -294,10 +316,14 @@ function gcashPay(orderNumber, event) {
                     emsg.innerHTML  = 'Error processing payment. Please try again.';
                     emsg.style.display = 'block';
                     emsg.style.marginTop = '10px';
-                    loadingModal.style.transition = 'opacity 0.6s ease-in-out';
+                    setTimeout(function() {
+                        loadingModal.style.opacity = 0;
+                        loadingModal.style.pointerEvents = 'none';
+                        loadingModal.style.transition = 'opacity 0.6s ease-in-out';
+                    }, 4000);
                 }
             });
-        }, 3500); // 3000 milliseconds (3 seconds)
+        }, 4500); 
     }
 }
 

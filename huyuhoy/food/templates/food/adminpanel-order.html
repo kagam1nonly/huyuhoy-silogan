@@ -19,7 +19,7 @@
             <a href="{% url 'adminpanel' %}"><div class="button"><i class="lni lni-home"></i> Dashboard</div></a>
             <a href="{% url 'adminpanel-order' %}"><div class="button"><i class="lni lni-layers"></i> Orders</div></a>
             <a href="{% url 'adminpanel-payment' %}"><div class="button"><i class="lni lni-coin"></i> Payment</div></a>
-            <a href="{% url 'logout' %}"><div class="button"><i class="lni lni-cogs"></i> Log out</div></a>
+            <a href="{% url 'logout' %}"><div class="button" onclick="return confirm('Are you sure you want to Log out?')"><i class="lni lni-cogs"></i> Log out</div></a>
         </div>
     </div>
     <div class="main-content">

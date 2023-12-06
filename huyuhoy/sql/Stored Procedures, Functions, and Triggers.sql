@@ -1,21 +1,23 @@
 -- Functions
 
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` FUNCTION `CalculateTotalCustomers`() RETURNS int
+CREATE FUNCTION CalculateTotalCustomers() RETURNS INT
+READS SQL DATA
 BEGIN
     DECLARE total_customers INT;
     SELECT COUNT(*) INTO total_customers FROM auth_user WHERE is_superuser = 0;
     RETURN total_customers;
-END$$
+END $$
 DELIMITER ;
 
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` FUNCTION `CalculateTotalOrderedMeals`() RETURNS int
+CREATE FUNCTION `CalculateTotalOrderedMeals`() RETURNS int
+READS SQL DATA
 BEGIN
     DECLARE total_ordered_meals INT;
     SELECT COUNT(DISTINCT cartitem_id) INTO total_ordered_meals FROM food_cartitem;
     RETURN total_ordered_meals;
-END$$
+END $$
 DELIMITER ;
 
 DELIMITER $$

@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
 from .models import Meal, CartItem, Order, Payment
 from django.contrib.auth.models import User
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from .forms import CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, logout
@@ -49,7 +49,7 @@ def signup(request):
         ctx['form'] = form
     return render(request, 'food/signup.html', ctx)
 
-@csrf_exempt
+@csrf_protect
 def login_view(request):
     request.session.set_expiry(0)
     if request.method == 'POST':
@@ -59,7 +59,7 @@ def login_view(request):
         if user is not None:
             auth_login(request, user)
             print(user)
-            return render(request, 'food/index.html', context={'user': request.user})
+            return redirect(reverse('index'))
         else:
             messages.info(request, 'Username or Password is incorrect.')
             print(username)
@@ -95,8 +95,7 @@ def meal_view(request):
     ctx = {'meals': meals, 'isAuthenticated': isAuthenticated}
     return render(request, 'food/meal.html', ctx)
 
-
-@csrf_exempt
+@csrf_protect
 def order(request):
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         orders = json.loads(request.POST.get('orders', '[]'))
@@ -259,6 +258,10 @@ def process_gcash_payment(request):
 
             order.payment = payment
             order.save()
+
+             # Send email notification to the customer
+            payment_send_email(request, order.id)
+
             return JsonResponse({'success': True, 'message': 'Payment processed successfully'})
         except Order.DoesNotExist:
             print(f"Order not found for order_number: {gorder_number}")
@@ -299,28 +302,98 @@ def cancel_order(request, order_number):
 
     return redirect('view-order')
 
-def send_email(request, order_id):
-    subject = 'Order Completed'
-    message = 'Your order is completed.'
-    from_email = 'huyuhoy.business@gmail.com'
+def payment_send_email(request, order_id):
+    from django.core.mail import send_mail
 
-    # Retrieve the customer's email using the customer_id associated with the order
+    # Retrieve the customer's email and name using the customer_id associated with the order
     try:
         order = Order.objects.get(id=order_id)
         customer_id = order.customer_id
         customer = User.objects.get(id=customer_id)
-        recipient_list = [customer.email]  # Use the customer's email as the recipient
+        customer_name = customer.first_name
+        customer_email = customer.email
     except (Order.DoesNotExist, User.DoesNotExist):
-        recipient_list = []  # Set an empty recipient list if the order or customer does not exist
+        # Handle the case where the order or customer does not exist
+        return
 
+    # Compose the payment confirmation message
+    subject = f'Payment Confirmation - Order #{order.number}'
+
+    # Greeting for the customer
+    customer_greeting = f'Dear {customer_name},\n\n'
+
+    # Greeting for the admin/host
+    admin_greeting = f'Dear Admin,\n\n'
+
+    admin_message = f'A payment has been received for order #{order.number}.\n\n' \
+                    f'Order Details:\n' \
+                    f'Order Number: {order.number}\n' \
+                    f'Payment Method: {order.payment.method}\n' \
+                    f'Transaction Reference Number: {order.payment.ref_num}\n' \
+                    f'Total Amount Paid: {order.bill}\n\n' \
+                    f'Customer Details:\n' \
+                    f'Customer Name: {customer_name}\n' \
+                    f'Customer Email: {customer_email}\n\n' \
+                    f'Best regards,\n' \
+                    f'Huyuhoy Silogan'
+
+    customer_message = f'We hope this message finds you well. Thank you for choosing Huyuhoy Silogan!\n\n' \
+                      f'Your payment has been successfully processed, and we are thrilled to confirm your order #{order.number}.\n\n' \
+                      f'Order Details:\n' \
+                      f'Order Number: {order.number}\n' \
+                      f'Payment Method: {order.payment.method}\n' \
+                      f'Transaction Reference Number: {order.payment.ref_num}\n' \
+                      f'Total Amount Paid: {order.bill}\n\n' \
+                      f'Thank you once again for your order. We look forward to serving you again!\n\n' \
+                      f'Best regards,\n' \
+                      f'Huyuhoy Silogan'
+
+    # Set the sender email address
+    from_email = 'huyuhoy.business@gmail.com'
+
+    # Set the recipient list
+    recipient_list = [customer_email, 'huyuhoy.business@gmail.com']  # Add the host email address here
+
+    # Use send_mail to send the email
+    send_mail(subject, customer_greeting + customer_message, from_email, [customer_email], fail_silently=False)
+    send_mail(subject, admin_greeting + admin_message, from_email, ['huyuhoy.business@gmail.com'], fail_silently=False)
+
+def accept_send_email(request, newid):
+    from django.core.mail import send_mail
+
+    # Retrieve the customer's email and name using the customer_id associated with the order
+    try:
+        order = Order.objects.get(id=newid)
+        customer_id = order.customer_id
+        cartitems = CartItem.objects.filter(order_id=newid)
+        customer = User.objects.get(id=customer_id)
+        customer_email = customer.email
+    except (Order.DoesNotExist, User.DoesNotExist):
+        # Handle the case where the order or customer does not exist
+        return
+
+    # Compose the payment confirmation message
+    subject = f'Order Accepted - Order #{order.number}'
+    message = f'We are pleased to inform you that your order #{order.number} has been accepted.\n\n' \
+          f'Thank you for choosing Huyuhoy Silogan! We will begin processing your order shortly.\n\n' \
+          f'Order Details:\n' \
+          f'Order Number: {order.number}\n'
+    # Loop through the cart items and include them in the message
+    message += 'Order Items:\n'
+    for cartitem in cartitems:
+        message += f'- {cartitem.name} - Price: {cartitem.price}\n'
+
+    message += f'\nBest regards,\nHuyuhoy Silogan'
+
+    # Set the sender email address
+    from_email = 'huyuhoy.business@gmail.com'
+
+    # Set the recipient list
+    recipient_list = [customer_email]
+
+    # Use send_mail to send the email
     send_mail(subject, message, from_email, recipient_list, fail_silently=False)
 
-@receiver(pre_delete, sender=User)
-def delete_associated_order_payment(sender, instance, **kwargs):
-    # Check if there is a related Payment
-    if hasattr(instance, 'order_payment'):
-        order = instance.order_payment
-        order.delete()
 
 def adminpanel_view(request):
     if request.method == 'POST':
@@ -374,13 +447,6 @@ def adminpanel_view(request):
         'users': users,
         })
 
-@receiver(pre_delete, sender=Order)
-def delete_associated_payment(sender, instance, **kwargs):
-    # Check if there is a related Payment
-    if hasattr(instance, 'payment_order'):
-        payment = instance.payment_order
-        payment.delete()
-
 def adminpanelorder_view(request):
     if request.method == 'POST':
         orders = Order.objects.all()
@@ -400,6 +466,7 @@ def adminpanelorder_view(request):
                 cursor.callproc('AcceptRefuseOrder', [order_id, action, admin_id])
                 result = cursor.fetchone()
                 print(f"Stored procedure result: {result}")
+                accept_send_email(request, order.id)
                 return redirect('adminpanel-order')
                 
         if action == 'Delete':
