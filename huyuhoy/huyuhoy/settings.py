@@ -1,5 +1,7 @@
 import os
 import django_heroku
+django_heroku.settings(locals())
+
 import dj_database_url
 from pathlib import Path
 
@@ -149,8 +151,7 @@ STATICFILES_DIRS = [
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), )
-django_heroku.settings(locals())
-
+DISABLE_COLLECTSTATIC = False
 DISABLE_COLLECTSTATIC = os.environ.get('DISABLE_COLLECTSTATIC', '0') == '1'
  
 # Default primary key field type
