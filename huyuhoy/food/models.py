@@ -22,6 +22,7 @@ class Payment(models.Model):
     PAYMENT_STATUS_CHOICES = (
         ('Unpaid', 'Unpaid'),
         ('Paid', 'Paid'),
+        ('Pending', 'Pending'),
         ('Failed', 'Failed'),
         # Add more payment status choices if needed
     )
@@ -31,6 +32,7 @@ class Payment(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     ref_num = models.CharField(max_length=13, null=True, blank=True, default='')
     method = models.CharField(max_length=5, choices=PAYMENT_METHOD_CHOICES, null=True, default='Cash')
+    
 # Order Model
 class Order(models.Model):
     STATUS_CHOICES = (
@@ -65,4 +67,4 @@ class CartItem(models.Model):
 
     def __str__(self):
         return self.name
-
+    

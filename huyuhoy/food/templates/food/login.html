@@ -32,7 +32,11 @@
                 <h2>Create an Account</h2>
                 <p>By creating an account with our store, you will be able to move through the checkout process faster, store multiple shipping addresses, view and track your orders in your account, and more.</p>
                 <img src="{% static '/food/imgs/delivery-guy.png' %}" id="delivery" alt="">
-                <button onclick="window.location.href = '{% url 'signup' %}'">Create an account</button>
+                <a href="{% url 'signup' %}">
+                    <button>
+                        Create an account
+                    </button>   
+                </a>               
             </div>
         </div>
     </div>

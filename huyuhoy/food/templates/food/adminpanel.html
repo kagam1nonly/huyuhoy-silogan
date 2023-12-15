@@ -29,7 +29,7 @@
                 <i class="lni lni-wallet"></i>
             </div>
             <h3>Total Revenue</h3>
-            <p>₱ {{ total_revenue }}</p>
+            <p>₱ {{ total_revenue|default:"0" }}</p>
         </div>
         <div class="dashboard-box customer-box">
             <div class="circle">

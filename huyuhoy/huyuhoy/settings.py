@@ -1,14 +1,21 @@
 import os
-
 import dj_database_url
 from pathlib import Path, PurePath
-
 import django_heroku
-django_heroku.settings(locals())
+
 # Static files (CSS, JavaScript, images)
-BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 STATIC_URL = '/static/'
-STATIC_ROOT = PurePath.joinpath(BASE_DIR, 'staticfiles')
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'food', 'static'),
+    os.path.join(BASE_DIR, 'static'),
+]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
 # Quick-start development settings - unsuitable for production
@@ -20,7 +27,7 @@ SECRET_KEY = 'django-insecure-*+w&n7_xkl4g=4xksec1rw^uyqt^36_)$c&^3o(sp_xx6bmxp5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['huyuhoy-silogan-606d2c795644.herokuapp.com']
+ALLOWED_HOSTS = ['*']
 
 # AUTH_USER_MODEL = 'food.Customer'
 # Application definition
@@ -59,10 +66,6 @@ INSTALLED_APPS = [
     'food',
     'crispy_forms',
 ]
-
-config = {
-    'BASE_DIR': BASE_DIR,
-}
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_SECURE = False  # Change to True if using HTTPS
@@ -106,13 +109,18 @@ WSGI_APPLICATION = 'huyuhoy.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'huyuhoydb', 
-        'HOST': '127.0.0.1',
-        'USER': 'root',
-        'PASSWORD': 'alphabay02',
+        'NAME': 'e7dt3860y1gmgvf0',
+        'USER': 'yjeterwx2xywgtbk',
+        'PASSWORD': 'cb90rt8owxjctq5m',
+        'HOST': 'frwahxxknm9kwy6c.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
         'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
     }
 }
+
+
 
 APPEND_SLASH = False
 
@@ -146,16 +154,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
-
-FOOD_APP_STATIC = os.path.join(BASE_DIR, 'food', 'static')
-
-# Define the directory where your static files are located
-STATICFILES_DIRS = [
-    FOOD_APP_STATIC,
-]
-
-DISABLE_COLLECTSTATIC = False
  
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -164,6 +162,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+django_heroku.settings(locals())
 
 # WhiteNoise configuration
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

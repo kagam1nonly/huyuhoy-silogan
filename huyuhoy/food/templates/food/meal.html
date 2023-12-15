@@ -3,6 +3,8 @@
 {% load crispy_forms_tags %}
 {% include 'food/header.html' %} 
 {% block content %}
+    <title>Huyuhoy Silogan</title>
+    <link rel="icon" type="image/png" href="{% static 'imgs/huyuhoy-logo.jpg' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'food/css/meal.css' %}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -42,7 +44,11 @@
         <div class="order-total">
             <div class="order-header">
             <h3>Cart-items:</h3>
-            <button class="checkout" onclick="window.location.href='http://127.0.0.1:8000/order/'">Proceed to checkout</button>
+            <a href="{% url 'order' %}">
+                <button class="checkout">
+                Proceed to checkout
+              </button>
+            </a>
             </div>
             <div class="cart-items">
                 <ol id="mcart"></ol>

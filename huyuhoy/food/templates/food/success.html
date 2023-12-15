@@ -20,8 +20,12 @@
     </ul>
 
     <h4 class="total">Total: ₱{{ bill }}</h4>
-
-    <button class="yellow-btn" onclick="window.location.href='http://127.0.0.1:8000/meal/'">Continue Ordering</button>
+    <a href="{% url 'meal' %}">
+        <button>
+            Continue Ordering
+        </button>    
+    </a>
+    
 </div>
 
 {% endblock content %}

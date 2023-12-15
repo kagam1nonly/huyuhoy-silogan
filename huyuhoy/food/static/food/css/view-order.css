@@ -173,7 +173,7 @@ button {
 .loadingModal {
     position: fixed;
     top: 0;
-    left: 620px;
+    left: 625px;
     background-color: #ffffff;
     width: 300px;
     height: 50px;
@@ -193,7 +193,7 @@ button {
 .e-msg i {
     position: fixed;
     top: 13px;
-    left: 868px;
+    left: 870px;
     transform: scale(0.7);
     padding: 5px;
     color: dodgerblue;
@@ -258,9 +258,9 @@ button {
 .ref-num {
     align-items: center;
     text-align: center;
-    width: 150px;
-    height: 25px;
-    padding: 12px;
+    width: 135px;
+    height: 10px;
+    padding: 7px;
     position: absolute;
     top: 390px;
     left: 125px;

@@ -250,7 +250,7 @@ def process_gcash_payment(request):
                 payment = Payment.objects.create(order=order)
 
             # Update the payment details
-            payment.payment_status = 'Paid'
+            payment.payment_status = 'Pending'
             payment.amount = amount
             payment.ref_num = ref_num
             payment.method = 'GCASH'  # You may want to set the payment method explicitly
@@ -466,8 +466,11 @@ def adminpanelorder_view(request):
                 cursor.callproc('AcceptRefuseOrder', [order_id, action, admin_id])
                 result = cursor.fetchone()
                 print(f"Stored procedure result: {result}")
+
+            if action == 'Accept':
                 accept_send_email(request, order.id)
-                return redirect('adminpanel-order')
+
+            return redirect('adminpanel-order')
                 
         if action == 'Delete':
             print(f"Deleting Order {order_id}")
@@ -512,7 +515,7 @@ def adminpanelpayment_view(request):
 
         if action == 'Confirm':
             with connection.cursor() as cursor:
-                cursor.callproc('ConfirmDeletePayment', [payment_id])
+                cursor.callproc('ConfirmPayment', [payment_id])
                 result = cursor.fetchone()
                 print(f"Stored procedure result: {result}")
                 return redirect('adminpanel-payment')

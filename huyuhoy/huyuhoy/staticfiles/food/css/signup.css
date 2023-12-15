@@ -1,0 +1,165 @@
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f2f2f2;
+}
+
+ul li {
+    list-style: none;
+}
+
+
+.hero {
+    display: block;
+    max-width: 100%;
+    contain: content;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background: linear-gradient(rgba(163, 156, 156, 0.5), rgba(0, 0, 0, 0.5)), url("../imgs/5.png");
+}
+
+.main-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-height: 130vh;
+    width: 100%;
+    z-index: 1;
+}
+
+.form {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 600px;
+    padding: 20px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.8); /* Adjust the alpha channel for transparency */
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form a {
+    text-decoration: none;
+    color: black;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.form a:hover {
+    text-decoration: underline;
+}
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+#create-account-header {
+    font-size: 36px;
+    color: #333; /* Adjust the color as needed */
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.form h3 {
+    margin: 10px 80px;
+    align-self: flex-start;
+}
+
+#submit {
+    padding: 12px 30px;
+    width: 40%;
+    margin-top: 40px;
+    background-color: whitesmoke;
+    color: black;
+    text-transform: uppercase;
+    letter-spacing: 0.5;
+    border-width: 0.1px;
+    border-color: black;
+    outline: none;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+#submit:hover {
+    cursor: pointer;
+    box-shadow: 0 0 20px lightblue;
+    background-color: #fdc300;
+}
+
+label {
+    display: block; 
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.field {
+    width: 300px;
+    margin: 0 auto;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+    width: 100%; /* Make fields expand to full width */
+    padding: 10px; /* Add some padding for spacing */
+    border: 1px solid #ddd; /* Add a border to fields */
+    border-radius: 5px; /* Add rounded corners */
+}
+
+.first-class,
+.last-class,
+.email-class {
+    color: black;
+    background-color: #f8ffb9;
+}
+
+.first-class,
+.last-class,
+.email-class, ::placeholder {
+    color: black;
+}
+
+.sub-btn {
+    background-color: #e6870e; /* Set a button background color */
+    color: #fff; /* Set text color */
+    font-weight: 600;
+    width: 300px;
+    padding: 10px 20px; /* Add padding to the button */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 30px;
+}
+
+.errorlist {
+    list-style: none;
+    font-size: small;
+    color: red;
+
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+    .main-container {
+        display: flex;
+        height: auto;
+        width: 768px;
+        background-color: black; /* Set a background color */
+        border-radius: 5px; /* Add rounded corners */
+        margin: 100px 0 50px 90px;
+        padding: 20px;
+    }
+
+    #createacct {
+        width: 400px; /* Adjust to your desired width */
+        height: 55px; /* Adjust to your desired height */
+        overflow: hidden; /* Hide text that overflows the container */
+        bottom: 600px;
+        right: 350px;
+        font-size: 28px;
+    }
+}

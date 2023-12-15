@@ -1,0 +1,585 @@
+body {
+    margin: 0;
+}
+
+/* adminpanel-order */
+.main-container2 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    margin: 0;
+    height: 100vh;
+    background-color: #1d2123;
+    color: #8E9394;
+  }
+  
+.warning-container {
+    text-align: center;
+    align-items: center;
+    font-size: 48px;
+    margin-bottom: 30px;
+}
+  
+.warning-container span{
+    margin-right: 10px;
+    color: #f99;
+    font-size: 5rem;
+}
+  
+.h1 {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 2rem;
+}
+  
+.home-container {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    padding: 15px;
+    border-radius: 0.6rem;
+    background-color: rgba(142, 147, 148, 0.333);
+}
+  
+.home-btn {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 0.6rem;
+    background-color: #f99;
+    color: #fff;
+    cursor: pointer;
+  }
+
+.home-btn span {
+    font-size: 1.5rem;
+    text-align: center;
+    align-items: center;
+}
+
+.home-btn .return {
+    margin: 5px 0 0 5px;
+    text-transform: uppercase;
+    font-size: .8rem;
+}
+  
+  .home-btn:hover {
+    background-color: #f38888;
+  }
+
+/* Sidebar Styles */
+.sidebar {
+    flex: 0 0 200px; /* Fixed width for the sidebar */
+    background-color: rgba(29, 33, 35, 0.892); 
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header .logo {
+    width: 40px;
+    height: 40px;
+    margin-right: 80px;
+}
+
+.header i {
+    color: #8E9394;
+    font-size: 1.5rem;
+    margin-right: 5px;
+}
+
+.header h2 {
+    color: #8E9394;
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.line {
+    border-top: 1px solid #8E9394;
+    margin-bottom: 20px;
+}
+
+.side {
+    display: flex;
+    flex-direction: column;
+}
+
+.button {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #454d55; /* Button background color */
+    border-radius: 5px; /* Rounded corners */
+    margin-bottom: 10px;
+}
+
+.button i {
+    margin-right: 10px;
+}
+
+a {
+    text-decoration: none;
+    color: #8E9394;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: color 0.3s ease-in-out;
+}
+
+
+a:hover {
+    color: #85BCC7; /* Change the color on hover */
+}
+
+.messages {
+    margin-left: 370px;
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    z-index: 1;
+    width: 80%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content ul {
+    list-style-type: none;
+}
+
+.modal-content {
+    position: absolute;
+    left: 750px;
+    bottom: 400px;
+    color: red;
+    background-color: #fff;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 20px;
+    width: 22%;
+    max-width: 400px;
+}
+
+.modal-background {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+    display: none;
+}
+
+.close {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #888;
+    cursor: pointer;
+}
+
+.dashboard-container {
+    display: flex;
+    flex-direction: row;
+}
+
+/* Dashboard Box Styles */
+.dashboard-box {
+    width: 300px;
+    height: 100px;
+    padding: 20px;
+    margin: 0 0 50px 50px;
+    background-color: #fff; 
+    border-radius: .8rem;
+    text-align: center;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    position: relative; 
+}
+
+.dashboard-box i {
+    font-size: 2.2rem;
+    position: relative;
+}
+
+/* Circular div around the i */
+.dashboard-box .circle {
+    position: absolute;
+    top: 50%;
+    left: 18%;
+    transform: translate(-50%, -50%);
+    width: 60px; /* Adjust the size as needed */
+    height: 60px; /* Adjust the size as needed */
+    background-color: #3399ff; /* Change color as needed */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+/* Circular div around the i for revenue box */
+.dashboard-box.revenue-box .circle {
+    background-color: #ffcc00; 
+}
+
+.dashboard-box.revenue-box  {
+    animation: fadeInR 1s ease-in-out;
+    
+}
+
+@keyframes fadeInR {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.dashboard-box.revenue-box .circle i {
+    color: #333; /* Change color for the icon inside revenue box */
+}
+
+.dashboard-box.revenue-box h3 {
+    margin-left: 70px;
+}
+
+.dashboard-box.revenue-box p {
+    margin-left: 70px;
+}
+
+/* Circular div around the i for customer box */
+.dashboard-box.customer-box .circle {
+    background-color: #3399ff; 
+}
+.dashboard-box.customer-box  {
+    animation: fadeInC 1.5s ease-in-out;
+}
+
+@keyframes fadeInC {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.dashboard-box.customer-box .circle i {
+    color: #333; /* Change color for the icon inside customer box */
+}
+
+.dashboard-box.customer-box h3 {
+    margin-left: 70px;
+}
+
+.dashboard-box.customer-box p {
+    margin-left: 70px;
+}
+
+/* Circular div around the i for ordered food box */
+.dashboard-box.ordered-food-box .circle {
+    background-color: #33cc33;
+}
+
+.dashboard-box.ordered-food-box{
+    animation: fadeInO 2s ease-in-out;
+}
+
+@keyframes fadeInO {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.dashboard-box.ordered-food-box .circle i {
+    color: #333; /* Change color for the icon inside ordered food box */
+}
+
+.dashboard-box.ordered-food-box h3 {
+    margin-left: 70px;
+}
+
+.dashboard-box.ordered-food-box p {
+    margin-left: 70px;
+}
+
+.dashboard-box .circle i {
+    font-size: 1.8rem; /* Adjust the size as needed */
+    color: #fff; /* Change color as needed */
+}
+
+/* Update text color for the dashboard box */
+.dashboard-box h3 {
+
+    font-size: 18px;
+    color: #333;
+    margin-left: 40px;
+    margin-bottom: 10px;
+    margin-top: 10px; /* Adjust spacing as needed */
+}
+
+.dashboard-box p {
+    font-size: 24px;
+    letter-spacing: 1px;
+    font-weight: bold;
+    color: #333;
+}
+
+
+/* Main Container Styles */
+.main-container {
+    display: flex;
+}
+
+.my-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+/* Main Content Styles */
+.main-content {
+    flex: 1; /* Take up remaining space */
+    padding: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+.my-content {
+    flex: 1; /* Take up remaining space */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+#order-title {
+    margin: 0 0 30px 0;
+    top: 100px;
+    color: #333;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+main.table {
+    width: 79.2vw;
+    height: 94.4vh;
+    background-color: rgba(208, 208, 208, 0.333);
+}
+
+/* Table Styles */
+
+table, td, th { 
+    border-collapse: collapse;
+    padding: .8rem;
+    text-align: left;
+}
+
+thead th {
+    position: sticky;
+    top: 0;
+    left: 0;
+    background-color: #d5d1defe;
+}
+
+th[colspan="1"] {
+    width: auto; 
+}
+
+th[colspan="4"] {
+    width: 200px; 
+}
+
+tbody tr:nth-child(even) {
+    background-color: #0000000b;
+}
+
+tbody tr:hover {
+    background-color: rgba(194, 192, 204, 0.4);
+}
+
+td form {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.table_header {
+    width: 100%;
+    height: 12%;
+    background-color: #bfc4ca;
+    padding: .8rem 1rem;
+    border-radius: .6rem;
+}
+
+.table_header i {
+    transform: rotateY('angle');
+}
+
+.table_body {
+    width: 95%;
+    max-height: calc(89% - 1.6rem);
+    background-color: #fffb;
+    margin: .8rem auto;
+    padding: 0;
+    border-radius: .4rem;
+    overflow: auto;
+}
+
+.table_body::-webkit-scrollbar {
+    width: 1rem;
+    height: 1rem;
+}
+
+.table_body::-webkit-scrollbar-thumb {
+    border-radius: .5rem;
+    background-color: #0004;
+    visibility: hidden;
+}
+
+.table_body:hover::-webkit-scrollbar-thumb {
+    visibility: visible;
+}
+
+.table_body2 {
+    width: 70%;
+    max-height: calc(89% - 1.6rem);
+    background-color: #fffb;
+    margin: .8rem auto;
+    padding: 0;
+    border-radius: .4rem;
+    overflow: auto;
+}
+
+.table_body2::-webkit-scrollbar {
+    width: 1rem;
+    height: 1rem;
+}
+
+.table_body2::-webkit-scrollbar-thumb {
+    border-radius: .5rem;
+    background-color: #0004;
+    visibility: hidden;
+}
+
+.table_body2:hover::-webkit-scrollbar-thumb {
+    visibility: visible;
+}
+
+.table_body3 {
+    width: 90%;
+    max-height: calc(89% - 1.6rem);
+    background-color: #fffb;
+    margin: .8rem auto;
+    padding: 0;
+    border-radius: .4rem;
+    overflow: auto;
+    flex: 3;
+}
+
+.table_body3::-webkit-scrollbar {
+    width: 0.5rem;
+    height: 0.5rem;
+}
+
+.table_body3::-webkit-scrollbar-thumb {
+    border-radius: .5rem;
+    background-color: #0004;
+    visibility: hidden;
+}
+
+.table_body3:hover::-webkit-scrollbar-thumb {
+    visibility: visible;
+}
+
+.bill {
+    width: 75px;
+    overflow: auto;
+}
+
+.note {
+    width: 110px;
+    min-height: 30px;
+    justify-content: center;
+    overflow: auto;
+}
+
+.note::-webkit-scrollbar {
+    width: 2rem;
+    height: 2rem;
+}
+
+.note::-webkit-scrollbar-thumb {
+    border-radius: .5rem;
+    background-color: #0004;
+    visibility: hidden;
+}
+
+.note:hover::-webkit-scrollbar-thumb {
+    visibility: visible;
+}
+
+.status {
+    width: 100px;
+    padding: .4rem 0;
+    border-radius: 2rem;
+    text-align: center;
+}
+
+.status.Completed,
+.status.Accepted {
+    background-color: #86e49d;
+    color: #006b21;
+}
+
+.status.Canceled,
+.status.Refused {
+    background-color: #d893a3;
+    color: #b30021;
+}
+
+.status.Processing,
+.status.Pending {
+    background-color: #ebc474;
+}
+
+.accept-button,
+.refuse-button,
+.delete-button,
+.complete-button {
+    color: #6fcaea;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.accept-button:hover,
+.refuse-button:hover,
+.delete-button:hover,
+.complete-button:hover {
+    background-color: #85BCC7;
+    color: #fff;
+    cursor: pointer;
+}
+
+.accept-button i,
+.refuse-button i,
+.delete-button i,
+.complete-button i {
+    font-size: 1.8rem; 
+}
+
+@media (max-width: 1000px) {
+    td:not(:first-of-type) {
+        min-width: 12.1rem;
+    }
+}
+
+

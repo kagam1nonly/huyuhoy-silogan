@@ -111,6 +111,38 @@ BEGIN
 END$$
 DELIMITER ;
 
+DELIMITER //
+CREATE PROCEDURE ConfirmPayment(IN p_payment_id INT)
+BEGIN
+    DECLARE payment_count INT;
+
+    -- Check if the payment exists
+    SELECT COUNT(*)
+    INTO payment_count
+    FROM food_payment
+    WHERE id = p_payment_id;
+
+    -- Check if the payment exists
+    IF payment_count = 0 THEN
+        -- Update the payment status to 'Failed'
+        UPDATE food_payment
+        SET payment_status = 'Failed'
+        WHERE id = p_payment_id;
+
+        -- Optionally, you can return a message or result
+        SELECT 'Payment not found. Status updated to Failed' AS result;
+    ELSE
+        -- Update the payment status to 'Paid'
+        UPDATE food_payment
+        SET payment_status = 'Paid'
+        WHERE id = p_payment_id;
+
+        -- Optionally, you can return a message or result
+        SELECT 'Payment confirmed successfully' AS result;
+    END IF;
+END //
+DELIMITER ;
+
 -- Triggers 
 
 DELIMITER $$

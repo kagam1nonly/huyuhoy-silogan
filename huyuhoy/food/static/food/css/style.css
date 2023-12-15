@@ -159,7 +159,7 @@ i.lni {
 
 .header {
     position: absolute;
-    top: 748px;
+    top: 740px;
     right: 640px;
     display: flex;
     font-family: sans-serif;
@@ -232,8 +232,8 @@ i.lni {
 }
 
 .images {
-    max-height: 90%;
-    max-width: 90%;
+    max-height: 100%;
+    max-width: 100%;
     object-fit: cover;
     object-position: center;
 }
