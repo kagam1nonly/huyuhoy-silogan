@@ -1,7 +1,7 @@
 import os
-import dj_database_url
+# import dj_database_url
 from pathlib import Path, PurePath
-import django_heroku
+# import django_heroku
 
 # Static files (CSS, JavaScript, images)
 
@@ -109,10 +109,10 @@ WSGI_APPLICATION = 'huyuhoy.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'e7dt3860y1gmgvf0',
-        'USER': 'yjeterwx2xywgtbk',
-        'PASSWORD': 'cb90rt8owxjctq5m',
-        'HOST': 'frwahxxknm9kwy6c.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
+        'NAME': 'huyuhoydb',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',
         'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
@@ -163,7 +163,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-django_heroku.settings(locals())
+# django_heroku.settings(locals())
 
 # WhiteNoise configuration
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
