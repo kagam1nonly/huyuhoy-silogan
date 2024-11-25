@@ -207,6 +207,7 @@ function selectTransaction(type) {
 
 function selectPayment(type) {
     var paymentBoxes = document.querySelectorAll('.payment-box');
+    var paymText = document.getElementById('paym');
 
     // Remove the 'selected' class and reset background color from all boxes
     paymentBoxes.forEach(function (box) {
@@ -220,6 +221,13 @@ function selectPayment(type) {
     selectedBox.classList.add('selected');
     selectedBox.style.color = 'white';  
     selectedBox.style.backgroundColor = '#000';
+
+    // Update payment method text
+    if (type === 'gcash') {
+        paymText.textContent = 'GCash Payment';
+    } else if (type === 'cod') {
+        paymText.textContent = 'Cash on Delivery';
+    }
 }
 
 function cancelOrder(orderNumber) {
