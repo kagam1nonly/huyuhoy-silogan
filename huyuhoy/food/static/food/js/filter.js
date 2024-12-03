@@ -25,84 +25,63 @@ document.getElementById('cat-btn').innerHTML = filters.map((name, index) => {
 const products = [
     {
         id: 1,
-        image: 'media/meal_images/Sisilog.png',
+        image: 'media/meal_images/sisilog.png',
         title: 'Sisilog',
         price: 85,
         category: 'Silog' // Make sure category names match
     },
     {
         id: 1,
-        image: 'media/meal_images/Porksilog.png',
+        image: 'media/meal_images/porksilog.png',
         title: 'Pork Silog',
         price: 95,
         category: 'Silog'
     },
     {
         id: 1,
-        image: 'media/meal_images/Bangsilog.png',
+        image: 'media/meal_images/bangsilog.png',
         title: 'Bang Silog',
         price: 95,
         category: 'Silog'
     },
     {
         id: 1,
-        image: 'media/meal_images/Chickensilog.png',
-        title: 'Chicken Silog',
-        price: 95,
-        category: 'Silog'
-    },
-    {
-        id: 1,
-        image: 'media/meal_images/Cornsilog.png',
+        image: 'media/meal_images/cornsilog.png',
         title: 'Corn Silog',
         price: 95,
         category: 'Silog'
     },
     {
         id: 1,
-        image: 'media/meal_images/Tunasilog.png',
+        image: 'media/meal_images/tunasilog.png',
         title: 'Tuna Silog',
         price: 95,
         category: 'Silog'
     },
     {
         id: 2,
-        image: 'media/meal_images/Hungariansilog.png',
-        title: 'Hungarian Silog',
-        price: 90,
-        category: 'Breakfast'
-    },
-    {
-        id: 2,
-        image: 'media/meal_images/Hamsilog.png',
+        image: 'media/meal_images/hamsilog.png',
         title: 'Ham Silog',
         price: 90,
         category: 'Breakfast'
     },
     {
         id: 2,
-        image: 'media/meal_images/Spamsilog.png',
+        image: 'media/meal_images/spamsilog.png',
         title: 'Spam Silog',
         price: 90,
         category: 'Breakfast'
     },
     {
-        id: 2,
-        image: 'media/meal_images/Tocinosilog.png',
-        title: 'Tocino Silog',
-        price: 90,
-        category: 'Breakfast'
-    },
-    {
         id: 3,
-        image: 'media/meal_images/Quarterpound.png',
+        image: 'media/meal_images/quarterpound.png',
         title: 'Quarterpound Beef Patty',
         price: 90,
         category: 'Best Seller'
     },
     {
         id: 3,
-        image: 'media/meal_images/Porksteak.png',
+        image: 'media/meal_images/porksteak.png',
         title: 'Pork Steak',
         price: 90,
         category: 'Best Seller'

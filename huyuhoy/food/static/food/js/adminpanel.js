@@ -16,14 +16,15 @@ document.querySelectorAll('.accept-button, .refuse-button, .delete-button, .comp
         } else {
             if (action === 'Accept' || action === 'Refuse' || action === 'Complete' || action === 'Delete') {
                 if (confirm(`Are you sure you want to ${action.toLowerCase()} this order?`)) {
-                    submitForm(form);
+                    submitOrderForm(form); // Rename the first submitForm
                 }
             }
         }
     });
 });
 
-function submitForm(form) {
+// Renamed the first submitForm to submitOrderForm
+function submitOrderForm(form) {
     fetch(`/adminpanel-order/`, {
         method: 'POST',
         headers: {
@@ -44,7 +45,7 @@ function submitForm(form) {
     .then(data => {
         if (data.message) {
             alert(data.message);
-            window.location.reload();
+            window.location.reload();  // Reload the page to reflect changes
         }
     })
     .catch(error => {
@@ -52,3 +53,28 @@ function submitForm(form) {
         alert(error.message);
     });
 }
+
+// Renamed the second submitForm to submitPaymentForm
+// function submitPaymentForm(form) {
+//     fetch('/adminpanel-payment/', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/x-www-form-urlencoded',
+//             'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+//         },
+//         body: new URLSearchParams(new FormData(form))
+//     })
+//     .then(response => response.json())  // Parsing the JSON response
+//     .then(data => {
+//         if (data.message) {
+//             alert(data.message);  // Display success message
+//             window.location.reload();  // Reload the page to reflect changes
+//         } else if (data.error) {
+//             alert(data.error);  // Display error message
+//         }
+//     })
+//     .catch(error => {
+//         console.error('Error:', error);
+//         alert('An error occurred. Please try again later.');
+//     });
+// }

@@ -107,7 +107,14 @@ WSGI_APPLICATION = 'huyuhoy.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(default='postgres://u8o6qedjqt742s:p030c98fab3f09924b93d26b9238e5de203258c67e02dd92667202fa6306c8768@ce0lkuo944ch99.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/d4merkrj7jnr8k')
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'd4merkrj7jnr8k',
+        'USER': 'u8o6qedjqt742s',
+        'PASSWORD': 'p030c98fab3f09924b93d26b9238e5de203258c67e02dd92667202fa6306c8768',
+        'HOST': 'ce0lkuo944ch99.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',
+        'PORT': '5432',
+    }
 }
 
 

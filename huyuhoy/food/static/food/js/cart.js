@@ -224,24 +224,12 @@ function selectTransaction(type) {
     }
 }
 
-<<<<<<< Updated upstream
-function selectPayment(type) {
-    var paymentBoxes = document.querySelectorAll('.payment-box');
-=======
 function toggleDropdown() {
     const options = document.getElementById('dropdown-options');
     const arrow = document.getElementById('dropdown-arrow');
->>>>>>> Stashed changes
 
     console.log("Dropdown toggled."); // Log to check if function is triggered
 
-<<<<<<< Updated upstream
-    // Find the clicked box and add the 'selected' class and set background color
-    var selectedBox = document.querySelector('.' + type);
-    selectedBox.classList.add('selected');
-    selectedBox.style.color = 'white';  
-    selectedBox.style.backgroundColor = '#000';
-=======
     if (options.style.display === 'none' || options.style.display === '') {
         options.style.display = 'block';
         arrow.classList.add('open');
@@ -273,7 +261,6 @@ function selectCustomOption(value) {
     } else {
         console.log("Selected option not found for value:", value);
     }
->>>>>>> Stashed changes
 }
 
 function cancelOrder(orderNumber) {
@@ -406,4 +393,3 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
-
