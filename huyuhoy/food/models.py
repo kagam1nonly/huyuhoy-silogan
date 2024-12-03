@@ -1,5 +1,7 @@
 from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser, Group, Permission
 
 # Meal Model.
 class Meal(models.Model):
@@ -47,7 +49,11 @@ class Order(models.Model):
         ('Pickup', 'Pickup'),
     )
 
-    customer = models.ForeignKey(User, on_delete=models.CASCADE)
+    customer = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='orders'
+    )
     number = models.CharField(max_length=6, unique=True)  # Make it unique
     bill = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateTimeField(auto_now_add=True)
@@ -67,4 +73,7 @@ class CartItem(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+class CustomUser(AbstractUser):
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    address = models.CharField(max_length=255, blank=True, null=True)

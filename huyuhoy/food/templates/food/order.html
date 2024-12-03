@@ -39,17 +39,24 @@
                 <div class="selection-message"></div>
                 <div id="address-box" style="display: none;">
                     <i class="lni lni-map-marker"></i><label for="address" class="address">Delivery Address:</label>
+                    {% if user.address %}
+                    <textarea id="addressInput" placeholder="E.g. 123 Rizal Street" rows="1" required>{{ user.address }}</textarea>
+                    {% else %}
                     <textarea id="addressInput" placeholder="E.g. 123 Rizal Street" rows="1" required></textarea>
+                    {% endif %}
                 </div>
-                <h2 class="type" id="paym" style="display: none;">Payment method</h2>
-                <div class="payment" id="payment-box" style="display: none;">
-                    <div class="cod payment-box" onclick="selectPayment('cod')" data-payment-method="COD">
-                        <span>Cash on Delivery</span>
+                <h2 class="Payment method" id="paym" style="display: none;">Payment method</h2>
+                <div class="custom-dropdown" style="display: none;">
+                    <div class="selected-option" onclick="toggleDropdown()">
+                        <span>Select Payment Method</span>
+                        <i class="lni lni-chevron-down" id="dropdown-arrow"></i>
                     </div>
-                    <div class="gcash payment-box" onclick="selectPayment('gcash')" data-payment-method="GCASH">
-                        <span id="gcash">GCash</span>
+                    <div class="dropdown-options" id="dropdown-options" style="display: none;">
+                        <div class="option" onclick="selectCustomOption('cod')" data-payment-method="COD">Cash on Delivery</div>
+                        <div class="option" onclick="selectCustomOption('gcash')" data-payment-method="GCASH">GCash</div>
                     </div>
                 </div>
+                
                 <div class="form-group">
                     <label for="note" class="note">Special Note: </label>
                     <textarea id="note" placeholder="E.g. No mayo please" class="noteInput" name="note" rows="4"></textarea>

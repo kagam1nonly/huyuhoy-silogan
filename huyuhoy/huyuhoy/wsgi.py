@@ -1,6 +1,8 @@
-# wsgi.py
+import os
 from django.core.wsgi import get_wsgi_application
-from whitenoise import WhiteNoise
 
+# Set the default settings module for the 'django' program.
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'huyuhoy.settings')
+
+# Get the WSGI application for the project.
 application = get_wsgi_application()
-application = WhiteNoise(application)

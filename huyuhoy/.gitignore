@@ -14,6 +14,8 @@ env/
 .pyvenv/
 .venv/
 pip-wheel-metadata/
+.env
+
 
 # IDE-specific files and directories (adjust as needed)
 .vscode/

@@ -3,6 +3,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f2f2f2;
+    min-height: 100vh; 
 }
 
 ul li {
@@ -13,6 +14,7 @@ ul li {
 .hero {
     display: block;
     max-width: 100%;
+    height: auto;
     contain: content;
     background-size: cover;
     background-repeat: no-repeat;
@@ -24,9 +26,11 @@ ul li {
     display: flex;
     justify-content: center;
     align-items: center;
-    max-height: 130vh;
+    max-height: 180vh;
+    height: auto;
     width: 100%;
     z-index: 1;
+    padding: 20px;
 }
 
 .form {
@@ -36,7 +40,6 @@ ul li {
     width: 600px;
     padding: 20px;
     margin-top: 30px;
-    margin-bottom: 30px;
     align-items: center;
     background-color: rgba(255, 255, 255, 0.8); /* Adjust the alpha channel for transparency */
     border-radius: 10px;
@@ -106,10 +109,11 @@ label {
 input[type="text"],
 input[type="password"],
 input[type="email"] {
-    width: 100%; /* Make fields expand to full width */
-    padding: 10px; /* Add some padding for spacing */
-    border: 1px solid #ddd; /* Add a border to fields */
-    border-radius: 5px; /* Add rounded corners */
+    width: 100%;
+    padding: 10px; 
+    border: 1px solid #ddd; 
+    border-radius: 5px; 
+    background-color: white;
 }
 
 .first-class,
@@ -124,6 +128,25 @@ input[type="email"] {
 .email-class, ::placeholder {
     color: black;
 }
+
+.btn-map {
+    background-color: #e6870e; /* Set a button background color */
+    color: #fff; /* Set text color */
+    font-weight: 600;
+    width: 300px;
+    padding: 10px 20px; /* Add padding to the button */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 0;
+}
+
+#map {
+    height: 400px;
+    max-width: 100%;
+    width: 100%;
+    margin-top: 20px; /* Add some margin to separate the form and map */
+  }
 
 .sub-btn {
     background-color: #e6870e; /* Set a button background color */

@@ -1,13 +1,14 @@
 {% load static %}
-{% include 'food/header.html' %} <!-- Include the header -->
+{% include 'food/header.html' %}
 {% block content %}
-    <div>
+<div>
     <link rel="stylesheet" type="text/css" href="{% static '/food/css/signup.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Moul&display=swap" rel="stylesheet">
-    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
     <div class="hero">
         <div class="main-container">
-            <form method="POST" action="{% url 'signup' %}" class="form">
+            <form method="POST" action="{% url 'signup' %}" class="form" data-form-id="myForm" id="registration-form">
                 <h2 id="create-account-header">Create account</h2>
                 {% csrf_token %}
                 {% for field in form %}
@@ -16,7 +17,11 @@
                         {{ field.label_tag }}
                     </div>
                     <div class="field">
+                        {% if field.name == 'address' %}
+                        <input type="text" id="id_address" name="address" value="{{ field.value|default_if_none:'' }}">
+                        {% else %}
                         {{ field }}
+                        {% endif %}
                         {% if field.errors %}
                         <ul class="errorlist">
                             {% for error in field.errors %}
@@ -27,9 +32,15 @@
                     </div>
                 </div>
                 {% endfor %}
+                <button type="button" class="btn-map" onclick="openMap()">Choose on Map</button>
+                <div id="map" style="height: 400px; width: 100%; display: none;"></div>
                 <button type="submit" class="sub-btn">Submit</button>
             </form>
         </div>
     </div>
 {% endblock content %}
-{% include 'food/footer.html' %} <!-- Include the footer -->
+{% include 'food/footer.html' %}
+
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+<script src="{% static '/food/js/signup.js' %}"></script>

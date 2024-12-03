@@ -1,10 +1,10 @@
 import os
-# import dj_database_url
+import dj_database_url
 from pathlib import Path, PurePath
-# import django_heroku
-
-# Static files (CSS, JavaScript, images)
-
+import django_heroku
+import pymysql
+import psycopg2
+pymysql.install_as_MySQLdb()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -27,9 +27,9 @@ SECRET_KEY = 'django-insecure-*+w&n7_xkl4g=4xksec1rw^uyqt^36_)$c&^3o(sp_xx6bmxp5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['huyuhoy-silogan-b4c16b630940.herokuapp.com', '127.0.0.1']
 
-# AUTH_USER_MODEL = 'food.Customer'
+AUTH_USER_MODEL = 'food.CustomUser'
 # Application definition
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -107,17 +107,7 @@ WSGI_APPLICATION = 'huyuhoy.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'huyuhoydb',
-        'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST': 'localhost',
-        'PORT': '3306',
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        },
-    }
+    'default': dj_database_url.config(default='postgres://u8o6qedjqt742s:p030c98fab3f09924b93d26b9238e5de203258c67e02dd92667202fa6306c8768@ce0lkuo944ch99.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/d4merkrj7jnr8k')
 }
 
 
@@ -163,7 +153,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# django_heroku.settings(locals())
+django_heroku.settings(locals())
 
 # WhiteNoise configuration
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

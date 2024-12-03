@@ -112,45 +112,62 @@ function getCookie(name) {
 }
 
 function order() {
-    updateCartCount(); 
+    updateCartCount();
     var msg = note.value;
     var orders = localStorage.getItem('orders');
     var total = localStorage.getItem('total');
     var selectedTransaction = document.querySelector('.transaction-box.selected');
-    var selectedPayment = document.querySelector('.payment-box.selected');
+    var selectedPayment = document.querySelector('.selected-option span').innerText.trim(); // Updated to use dropdown selection
 
     if (!selectedTransaction) {
         alert('Please select a transaction type (Delivery or Pickup) before submitting your order.');
         return;
     }
 
-    // Check if the selected transaction type is "Delivery" before checking payment
-    if (selectedTransaction.textContent.trim().toLowerCase() === 'delivery' && selectedPayment) {
-        var address = document.getElementById('addressInput').value;
-        var paymentMethod = selectedPayment.getAttribute('data-payment-method');
-    } else {
-        var address = null;
-        var paymentMethod = null;
+    var address = null;
+
+    // Check if the transaction is "Delivery"
+    if (selectedTransaction.textContent.trim().toLowerCase() === 'delivery') {
+        address = document.getElementById('addressInput').value.trim();
+        if (!address) {
+            alert('Please enter your delivery address.');
+            return;
+        }
+    }
+
+    // Validate payment method for delivery
+    if (selectedTransaction.textContent.trim().toLowerCase() === 'delivery' && selectedPayment === 'Select Payment Method') {
+        alert('Please select a payment method.');
+        return;
     }
 
     console.log(selectedTransaction);
     console.log(selectedPayment);
 
-    var url = '/food/order';
-    var orderData = {};
-    orderData['orders'] = orders;
-    orderData['note'] = msg;
-    orderData['bill'] = total;
-    orderData['transaction'] = selectedTransaction.textContent.trim(); 
-    orderData['address'] = address;
-    orderData['payment_method'] = paymentMethod;
+    // Payment method mapping (updated)
+    var paymentMethod = '';
+    if (selectedPayment.toLowerCase() === 'cash on delivery' || selectedPayment.toLowerCase() === 'cod') {
+        paymentMethod = 'COD'; // Map "Cash on Delivery" to "cod"
+    } else if (selectedPayment.toLowerCase() === 'gcash') {
+        paymentMethod = 'GCASH'; // Map "GCash" to "gcash"
+    }
 
-    // Check if orders are empty
-    if (orders === null || orders === '[]') {
+    var url = '/food/order';
+    var orderData = {
+        orders: orders,
+        note: msg,
+        bill: total,
+        transaction: selectedTransaction.textContent.trim(),
+        address: address,
+        payment_method: paymentMethod // Use the correct mapped payment method
+    };
+
+    // Check if cart is empty
+    if (!orders || orders === '[]') {
         alert('Your cart is empty. Please add items to your cart before submitting your order.');
         return;
     }
-    
+
     if (confirm('Are you sure you want to submit your order?')) {
         $.ajax({
             url: url,
@@ -159,22 +176,28 @@ function order() {
             headers: {
                 'X-CSRFToken': getCookie('csrftoken')
             },
-            success: function(data) {
-                window.location.replace('/food/success')
+            success: function (data) {
+                window.location.replace('/food/success');
                 localStorage.setItem('orders', JSON.stringify([]));
                 localStorage.setItem('total', 0);
                 console.log(orders);
                 console.log(msg);
+            },
+            error: function (error) {
+                alert('An error occurred while submitting your order. Please try again.');
             }
-        })
+        });
     }
 }
+
+
 
 function selectTransaction(type) {
     var transactionBoxes = document.querySelectorAll('.transaction-box');
     var addressBox = document.getElementById('address-box');
-    var paymentBox = document.getElementById('payment-box');
     var paym = document.getElementById('paym');
+    var dropdownContainer = document.querySelector('.custom-dropdown');
+    var paymentMethodLabel = document.getElementById('paym'); // Label for payment method selection
 
     // Remove the 'selected' class and reset background color from all boxes
     transactionBoxes.forEach(function (box) {
@@ -189,37 +212,68 @@ function selectTransaction(type) {
     selectedBox.style.color = 'white';  
     selectedBox.style.backgroundColor = '#000';
 
-    // Update selection message outside the boxes
-    var selectionMessage = document.querySelector('.selection-message');
-    //selectionMessage.innerHTML = 'Selected: <span class="type2">' + type.charAt(0).toUpperCase() + type.slice(1) + '</span>';
-
-
+    // Show or hide the address box and payment dropdown based on the transaction type
     if (type.toLowerCase() === 'delivery') {
-        addressBox.style.display = 'block';
-        paymentBox.style.display = 'block';
-        paym.style.display = 'block';
+        addressBox.style.display = 'block';  // Show address box
+        paym.style.display = 'block';  
+        dropdownContainer.style.display = 'block';   // Show payment dropdown
     } else {
-        addressBox.style.display = 'none';
-        paymentBox.style.display = 'none';
-        paym.style.display = 'none';
+        addressBox.style.display = 'none';  // Hide address box
+        paym.style.display = 'none';        // Hide payment method selection
+        dropdownContainer.style.display = 'none';    // Hide payment dropdown
     }
 }
 
+<<<<<<< Updated upstream
 function selectPayment(type) {
     var paymentBoxes = document.querySelectorAll('.payment-box');
+=======
+function toggleDropdown() {
+    const options = document.getElementById('dropdown-options');
+    const arrow = document.getElementById('dropdown-arrow');
+>>>>>>> Stashed changes
 
-    // Remove the 'selected' class and reset background color from all boxes
-    paymentBoxes.forEach(function (box) {
-        box.classList.remove('selected');
-        box.style.color = 'white';
-        box.style.backgroundColor = ''; // Reset background color
-    });
+    console.log("Dropdown toggled."); // Log to check if function is triggered
 
+<<<<<<< Updated upstream
     // Find the clicked box and add the 'selected' class and set background color
     var selectedBox = document.querySelector('.' + type);
     selectedBox.classList.add('selected');
     selectedBox.style.color = 'white';  
     selectedBox.style.backgroundColor = '#000';
+=======
+    if (options.style.display === 'none' || options.style.display === '') {
+        options.style.display = 'block';
+        arrow.classList.add('open');
+    } else {
+        options.style.display = 'none';
+        arrow.classList.remove('open');
+    }
+}
+function selectCustomOption(value) {
+    // Convert the passed value to uppercase to match data-payment-method attribute
+    const formattedValue = value.toUpperCase();
+    
+    // Correctly select the option by data-payment-method (now case-insensitive)
+    const selectedOption = document.querySelector(`.option[data-payment-method="${formattedValue}"]`);
+    
+    if (selectedOption) {
+        const paymentMethod = selectedOption.getAttribute('data-payment-method');
+        const selectedText = selectedOption.innerText;
+
+        // Update the displayed selected option in the dropdown
+        document.querySelector('.selected-option span').innerText = selectedText;
+
+        // Close the dropdown
+        document.getElementById('dropdown-options').style.display = 'none';
+        document.getElementById('dropdown-arrow').classList.remove('open');
+
+        // Log the selected payment method for debugging
+        console.log(`Selected payment method: ${paymentMethod}`);
+    } else {
+        console.log("Selected option not found for value:", value);
+    }
+>>>>>>> Stashed changes
 }
 
 function cancelOrder(orderNumber) {

@@ -5,7 +5,7 @@ from django.db import connection
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
 from .models import Meal, CartItem, Order, Payment
-from django.contrib.auth.models import User
+from .models import CustomUser as User
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from .forms import CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
@@ -37,8 +37,9 @@ def signup(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            print(f"User details: {user.username}, {user.email}, {user.first_name}, {user.last_name}")
+            user = form.save(commit=False)
+            user.save()
+            print(f"User details: {user.username}, {user.email}, {user.first_name}, {user.last_name}, {user.phone}, {user.address}")
             print('Success')
             return redirect(reverse('login'))
         else:
@@ -272,33 +273,29 @@ def process_gcash_payment(request):
     else:
         return JsonResponse({'success': False, 'message': 'Invalid request method'})
 
+
+from django.shortcuts import get_object_or_404
 @csrf_exempt
 def cancel_order(request, order_number):
     if request.method == 'POST':
-        try:
-            # Retrieve the customer ID (you may need to adapt this part)
-            customer_id = request.user.id
+        # Try to get the order object
+        order = get_object_or_404(Order, number=order_number, customer=request.user)
 
-            with connection.cursor() as cursor:
-                # Call the stored procedure to cancel the order
-                cursor.callproc('CancelCustomerOrder', [order_number, customer_id])
-                cursor.execute('SELECT @result;')
-                result = cursor.fetchone()[0]
+        # Check if the order is not in 'Canceled' status
+        if order.status != 'Canceled':
+            return JsonResponse({
+                'success': False,
+                'message': 'You cannot delete this order because it is not canceled.'
+            })
 
-            # Check if the cancellation was successful
-            if result == 'Order canceled successfully':
-                # Remove the order
-                try:
-                    order = Order.objects.get(number=order_number, customer=customer_id)
-                    order.delete()
-                except Order.DoesNotExist:
-                    print('No order id found')
-                    pass  # Handle the case where the order is already deleted or not found
+        # If the order is in 'Canceled' status, proceed with the deletion
+        order.delete()
+        return JsonResponse({
+            'success': True,
+            'message': 'Order canceled successfully.'
+        })
 
-            print('Outside if')
-            return redirect('view-order')
-        except Exception as e:
-            return JsonResponse({'success': False, 'error_message': str(e)})
+    return JsonResponse({'success': False, 'message': 'Invalid request method.'})
 
     return redirect('view-order')
 
@@ -447,6 +444,7 @@ def adminpanel_view(request):
         'users': users,
         })
 
+
 def adminpanelorder_view(request):
     if request.method == 'POST':
         orders = Order.objects.all()
@@ -459,7 +457,7 @@ def adminpanelorder_view(request):
         try:
             order = Order.objects.get(id=order_id)
         except Order.DoesNotExist:
-            return HttpResponseBadRequest("Order not found")
+            return JsonResponse({'error': 'Order not found'}, status=400)
 
         if action == 'Accept' or action == 'Refuse' or action == 'Complete':
             with connection.cursor() as cursor:
@@ -470,16 +468,28 @@ def adminpanelorder_view(request):
             if action == 'Accept':
                 accept_send_email(request, order.id)
 
-            return redirect('adminpanel-order')
+            new_status = order.status
+            if action == 'Accept':
+                new_status = 'Processing'
+            elif action == 'Refuse':
+                new_status = 'Refused'
+            elif action == 'Complete':
+                new_status = 'Completed'
+
+            if action == 'Accept':
+                return JsonResponse({'message': f'Order accepted successfully', 'new_status': new_status})
+            else:
+                return JsonResponse({'message': f'Order {action.lower()}d successfully', 'new_status': new_status})
                 
         if action == 'Delete':
             print(f"Deleting Order {order_id}")
             order.delete()
-            return redirect('adminpanel-order')
+            return JsonResponse({'message': f'Order {order_id} deleted successfully'})
 
     # Handle the GET request to display orders
     orders = Order.objects.all()
     return render(request, 'food/adminpanel-order.html', {'orders': orders})
+
 
 from django.db import transaction
 
@@ -487,15 +497,24 @@ from django.db import transaction
 def delete_associated_order(sender, instance, **kwargs):
     def delete_order():
         try:
+            # Fetch the related order
             order_id = instance.order.id
             order = Order.objects.get(id=order_id)
+            
+            # Check if the order status is not 'Pending', 'Completed', or 'Processing'
+            if order.status in ['Pending', 'Completed', 'Processing']:
+                print(f"Order with id {order_id} cannot be deleted because it is in '{order.status}' status.")
+                return HttpResponseBadRequest("Order cannot be deleted because it is in a restricted status.")
+            
+            # If the status is eligible, proceed with deletion
             order.delete()
             print(f"Successfully deleted Order with id {order_id}")
+            
         except Order.DoesNotExist:
             print("Related Order does not exist.")
         except Exception as e:
             print(f"An error occurred: {e}")
-
+    
     # Schedule the delete operation to be executed after the current transaction is committed
     transaction.on_commit(delete_order)
 

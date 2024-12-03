@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from .models import CustomUser
 
 class CustomUserCreationForm(UserCreationForm):
     address = forms.CharField(max_length=255, required=True, widget=forms.TextInput(attrs={'class': 'custom-class', 'placeholder': 'Enter your address'}))
@@ -9,43 +10,28 @@ class CustomUserCreationForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'class': 'custom-class', 'placeholder': 'Enter your first name'}))
     last_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'class': 'custom-class', 'placeholder': 'Enter your last name'}))
 
-
     class Meta:
-        model = User
+        model = CustomUser
         fields = ['first_name', 'last_name', 'email', 'phone', 'username', 'password1', 'password2', 'address']
-
-    def __init__(self, *args, **kwargs):
-        super(CustomUserCreationForm, self).__init__(*args, **kwargs)
-        # Add placeholders and styles for fields in UserCreationForm
-        self.fields['first_name'].widget.attrs['placeholder'] = 'Enter your first name'
-        self.fields['last_name'].widget.attrs['placeholder'] = 'Enter your last name'
-        self.fields['email'].widget.attrs['placeholder'] = 'Enter your email'
-        self.fields['username'].widget.attrs['placeholder'] = 'Choose a username'
-        self.fields['password1'].widget.attrs['placeholder'] = 'Enter your password'
-        self.fields['password2'].widget.attrs['placeholder'] = 'Confirm your password'
-        # Add custom styles if needed
-        self.fields['first_name'].widget.attrs['class'] = 'first-class'
-        self.fields['last_name'].widget.attrs['class'] = 'last-class'
-        self.fields['email'].widget.attrs['class'] = 'email-class'
-        self.fields['username'].widget.attrs['class'] = 'user-class'
-        self.fields['password1'].widget.attrs['class'] = 'pass1-class'
-        self.fields['password2'].widget.attrs['class'] = 'pass2-class'
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if not email:
+            print("Email field is required.")
             raise forms.ValidationError('This field is required.')
         return email
 
     def clean_phone(self):
         phone = self.cleaned_data.get('phone')
         if not phone:
+            print("Phone field is required.")
             raise forms.ValidationError('This field is required.')
         return phone
 
     def clean_address(self):
         address = self.cleaned_data.get('address')
         if not address:
+            print("Address field is required.")
             raise forms.ValidationError('This field is required.')
         return address
     
