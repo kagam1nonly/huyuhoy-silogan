@@ -60,7 +60,7 @@ class Order(models.Model):
     note = models.TextField(blank=True, null=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
     transaction = models.CharField(max_length=10, choices=TRANSACTION_CHOICES, default='Pickup')
-    payment = models.OneToOneField('Payment', on_delete=models.CASCADE, default='', related_name='order_payment')
+    payment = models.OneToOneField('Payment', on_delete=models.CASCADE, null=True, blank=True, related_name='order_payment')
     address = models.CharField(max_length=120, null=True, default='')
 
 # CartItem Model 
