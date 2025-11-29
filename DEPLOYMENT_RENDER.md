@@ -26,10 +26,10 @@ git commit -m "Prepare for Render deployment"
 git push origin main
 ```
 
-2. Verify on GitHub that your repo has:
+2. Verify on GitHub that your repo has these **files at the project root**:
    - `Procfile` (tells Render how to run your app)
-   - Updated `requirements.txt` (includes `gunicorn`, `dj-database-url`, `psycopg2-binary`, `whitenoise`)
-   - Updated `huyuhoy/settings.py` (reads `DATABASE_URL` from env vars)
+   - `requirements.txt` (includes `gunicorn`, `dj-database-url`, `psycopg2-binary`, `whitenoise`)
+   - `huyuhoy/settings.py` (reads `DATABASE_URL` from env vars)
 
 ---
 
