@@ -60,11 +60,18 @@ def login_view(request):
         if user is not None:
             auth_login(request, user)
             print(user)
-            return redirect(reverse('index'))
+            # Redirect to next page if available, otherwise go to index
+            next_page = request.GET.get('next', 'index')
+            return redirect(next_page)
         else:
             messages.info(request, 'Username or Password is incorrect.')
             print(username)
             print(password)
+    
+    # Show message if redirected from a protected page
+    if 'next' in request.GET:
+        messages.info(request, 'Please log in to continue.')
+    
     return render(request, 'food/login.html')
 
 def logout_view(request):
@@ -203,26 +210,23 @@ def calculate_total_order_amount(user_id):
             print("Error:", e)
             return None
 
-@login_required
+@login_required(login_url='login')
 def view_order(request):
-    if request.user.is_authenticated:
-        orders = Order.objects.filter(customer=request.user)
-        user_id = request.user.id
-        # Calculate the total bill using the stored procedure
-        total_bill = calculate_total_order_amount(user_id)
+    orders = Order.objects.filter(customer=request.user)
+    user_id = request.user.id
+    # Calculate the total bill using the stored procedure
+    total_bill = calculate_total_order_amount(user_id)
 
-        if total_bill is not None:
-            print("Total bill: ", total_bill)
-        else:
-            print("Failed to retrieve total bill")
-
-        if not orders:
-            print('Please log in to view your orders.')
-
-        ctx = {'orders': orders, 'total_bill': total_bill}
-        return render(request, 'food/view-order.html', ctx)
+    if total_bill is not None:
+        print("Total bill: ", total_bill)
     else:
-        return HttpResponse('Please log in to view your orders.')
+        print("Failed to retrieve total bill")
+
+    if not orders:
+        print('No orders found for this user.')
+
+    ctx = {'orders': orders, 'total_bill': total_bill}
+    return render(request, 'food/view-order.html', ctx)
     
 @csrf_exempt
 def process_gcash_payment(request):

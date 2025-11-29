@@ -147,7 +147,7 @@ i.lni {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center bottom;
-    background-image: url("../imgs/1.png");
+    background-image: url("../imgs/heropage.png");
     min-height: 91vh; 
     display: flex;
     flex-direction: column;
