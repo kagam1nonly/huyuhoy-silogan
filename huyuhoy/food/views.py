@@ -465,7 +465,7 @@ def adminpanelorder_view(request):
 
         if action == 'Accept' or action == 'Refuse' or action == 'Complete':
             with connection.cursor() as cursor:
-                cursor.callproc('AcceptRefuseOrder', [order_id, action, admin_id])
+                cursor.callproc('AcceptRefuseOrder', [order_id, (action, 'varchar'), admin_id])
                 result = cursor.fetchone()
                 print(f"Stored procedure result: {result}")
 
