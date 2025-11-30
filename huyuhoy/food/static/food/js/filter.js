@@ -52,18 +52,18 @@ const products = [
         category: 'Silog'
     },
     {
-        id: 1,
-        image: 'media/meal_images/tunasilog.png',
-        title: 'Tuna Silog',
-        price: 99,
-        category: 'Silog'
-    },
-    {
         id: 2,
         image: 'media/meal_images/cornsilog.png',
         title: 'Corn Silog',
         price: 65,
         category: 'Breakfast'
+    },
+    {
+        id: 1,
+        image: 'media/meal_images/tunasilog.png',
+        title: 'Tuna Silog',
+        price: 99,
+        category: 'Silog'
     },
     {
         id: 2,
