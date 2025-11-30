@@ -553,9 +553,23 @@ def adminpanelpayment_view(request):
 
         if action == 'Confirm':
             with connection.cursor() as cursor:
-                cursor.callproc('ConfirmPayment', [(payment_id, 'integer')])
-                result = cursor.fetchone()
-                print(f"Stored procedure result: {result}")
+                # 🟢 FIX: Use cursor.execute with positional placeholders (%s)
+                # This approach forces the driver to handle the type conversion correctly
+                sql = "SELECT ConfirmPayment(%s);" 
+                
+                # Ensure payment_id is converted to an actual integer first for safety, 
+                # although the driver should handle the string '3'
+                try:
+                    payment_id_int = int(payment_id)
+                except (ValueError, TypeError):
+                    return HttpResponseBadRequest("Invalid Payment ID format")
+                
+                cursor.execute(sql, [payment_id_int])
+                
+                # If ConfirmPayment returns a value, fetch it (optional)
+                # result = cursor.fetchone() 
+                # print(f"Stored procedure result: {result}")
+                
                 return redirect('adminpanel-payment')
                 
         if action == 'Delete':
