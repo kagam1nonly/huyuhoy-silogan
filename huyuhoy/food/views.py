@@ -451,71 +451,64 @@ def adminpanel_view(request):
 
 def adminpanelorder_view(request):
     if request.method == 'POST':
-        orders = Order.objects.all()
-        order_id = int(request.POST.get('order_id'))
-        action = request.POST.get('action')
-        admin_id = request.user.id
+        # 1. Get and validate inputs
+        try:
+            order_id = int(request.POST.get('order_id'))
+            action = request.POST.get('action')
+            admin_id = request.user.id
+        except (TypeError, ValueError):
+            return JsonResponse({'error': 'Invalid Order ID provided.'}, status=400)
 
-        print(f"order_id: {order_id}, action: {action}, admin_id: {admin_id}")
-
+        # 2. Get the Order object
         try:
             order = Order.objects.get(id=order_id)
         except Order.DoesNotExist:
             return JsonResponse({'error': 'Order not found'}, status=400)
 
-        if action == 'Accept' or action == 'Refuse' or action == 'Complete':
+        print(f"order_id: {order_id}, action: {action}, admin_id: {admin_id}")
+
+        if action in ['Accept', 'Refuse', 'Complete']:
+            # Use the safer execute method for table-returning functions (Fix for past issues)
             with connection.cursor() as cursor:
-                # Alternative Fix: Using cursor.execute is generally safer than callproc for complex types
                 sql = "SELECT * FROM AcceptRefuseOrder(%s, %s, %s);"
-                params = [order_id, action, admin_id]
-                cursor.execute(sql, params)
+                # Python integers (order_id, admin_id) map fine, 'action' is a string.
+                cursor.execute(sql, [order_id, action, admin_id]) 
                 result = cursor.fetchone()
                 print(f"Stored procedure result: {result}")
 
             if action == 'Accept':
-                accept_send_email(request, order.id)
+                accept_send_email(request, order.id) # Assuming this function is stable
 
-            new_status = order.status
-            if action == 'Accept':
-                new_status = 'Processing'
-            elif action == 'Refuse':
-                new_status = 'Refused'
-            elif action == 'Complete':
-                new_status = 'Completed'
+            # Determine status for client feedback
+            new_status = {'Accept': 'Processing', 'Refuse': 'Refused', 'Complete': 'Completed'}.get(action, order.status)
 
-            if action == 'Accept':
-                return JsonResponse({'message': f'Order accepted successfully', 'new_status': new_status})
-            else:
-                return JsonResponse({'message': f'Order {action.lower()}d successfully', 'new_status': new_status})
-                
-        if action == 'Delete':
+            return JsonResponse({'message': f'Order {action.lower()}ed successfully', 'new_status': new_status})
+            
+        elif action == 'Delete':
+            # 3. Handle Deletion with robust error catching
             if order.status != 'Canceled':
-                return JsonResponse({'error': 'Only canceled orders can be deleted.'}, status=400)
+                return JsonResponse({'error': 'Order must be Canceled to be deleted.'}, status=400)
             
             try:
-                # This will fail if the Order model has a protected foreign key relationship
                 order.delete()
+                print(f"Deleting Order {order_id}")
                 return JsonResponse({'message': f'Order {order_id} deleted successfully'})
             except Exception as e:
-                # Catch any database dependency errors (like ProtectedError)
+                # Catching the Exception here and using type(e).__name__ for clean reporting
+                # This ensures no UnboundLocalError on the exception variable.
+                error_name = type(e).__name__
                 return JsonResponse({
-                    'error': f'Cannot delete order due to server error or remaining dependencies (Error: {type(e).__name__}).'
+                    'error': f'Cannot delete order due to server error or remaining dependencies (Error: {error_name}).'
                 }, status=400)
-    
-    try:
-        # This will fail if the Order model has a protected foreign key relationship
-        order.delete()
-        return JsonResponse({'message': f'Order {order_id} deleted successfully'})
-    except Exception as e:
-        # Catch any database dependency errors (like ProtectedError)
-        return JsonResponse({
-            'error': f'Cannot delete order due to server error or remaining dependencies (Error: {type(e).__name__}).'
-        }, status=400)
+        
+        else:
+            # 4. Critical: Catch any unknown actions and return a response immediately
+            return JsonResponse({'error': f'Invalid action provided: {action}'}, status=400)
 
-    # Handle the GET request to display orders
+
+    # 5. Handle the GET request to display orders
     orders = Order.objects.all()
     return render(request, 'food/adminpanel-order.html', {'orders': orders})
-
 
 from django.db import transaction
 
