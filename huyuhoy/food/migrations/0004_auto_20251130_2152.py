@@ -1,0 +1,71 @@
+from django.db import migrations
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        # This dependency must point to the PREVIOUS migration file's name.
+        # Example: ('food', '0005_name_of_previous_migration'), 
+        ('food', '0005_previous_migration_name_here'), 
+    ]
+
+    operations = [
+        migrations.RunSQL(
+            sql="""
+            -- 1. Drop the function to allow for clean replacement
+            DROP FUNCTION IF EXISTS AcceptRefuseOrder(INT, VARCHAR, INT); 
+            
+            -- 2. Create the corrected function
+            CREATE OR REPLACE FUNCTION AcceptRefuseOrder(
+                order_id INT,
+                action VARCHAR,
+                admin_id INT
+            )
+            RETURNS TABLE(result TEXT) AS $$
+            DECLARE
+                is_admin INT;
+                order_exists INT;
+                new_status VARCHAR;
+            BEGIN
+                -- Check if the admin exists and is authorized
+                SELECT COUNT(*) INTO is_admin
+                FROM food_customuser -- <--- CRITICAL FIX: Changed from auth_user
+                WHERE id = admin_id AND is_superuser = true;
+
+                IF is_admin = 1 THEN
+                    -- Check if the order exists
+                    SELECT COUNT(*) INTO order_exists
+                    FROM food_order
+                    WHERE id = order_id;
+
+                    IF order_exists = 1 THEN
+                        -- Update the order status based on the action
+                        IF action = 'Accept' THEN
+                            UPDATE food_order
+                            SET status = 'Processing'
+                            WHERE id = order_id;
+                            new_status := 'Accept';
+                        ELSIF action = 'Refuse' THEN
+                            UPDATE food_order
+                            SET status = 'Canceled'
+                            WHERE id = order_id;
+                            new_status := 'Refuse';
+                        ELSIF action = 'Complete' THEN
+                            UPDATE food_order
+                            SET status = 'Completed'
+                            WHERE id = order_id;
+                            new_status := 'Complete';
+                        END IF;
+
+                        RETURN QUERY SELECT ('Order ' || new_status || 'ed successfully')::TEXT;
+                    ELSE
+                        RETURN QUERY SELECT 'Order not found'::TEXT;
+                    END IF;
+                ELSE
+                    RETURN QUERY SELECT 'Admin not authorized'::TEXT;
+                END IF;
+            END;
+            $$ LANGUAGE plpgsql;
+            """,
+            reverse_sql="DROP FUNCTION IF EXISTS AcceptRefuseOrder(INT, VARCHAR, INT);"
+        ),
+    ]
