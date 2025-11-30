@@ -34,13 +34,16 @@ function submitOrderForm(form) {
         body: new URLSearchParams(new FormData(form))
     })
     .then(response => {
-        if (response.ok) {
-            return response.json();
-        } else {
-            return response.json().then(data => {
-                throw new Error(data.error || 'An error occurred. Please try again later.');
+        if (!response.ok) {
+            return response.text().then(text => {
+                throw new Error(`Server error (${response.status}): ${text.substring(0, 100)}`);
             });
         }
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            throw new Error('Server did not return JSON');
+        }
+        return response.json();
     })
     .then(data => {
         if (data.message) {
