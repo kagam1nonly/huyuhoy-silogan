@@ -538,7 +538,7 @@ def adminpanelpayment_view(request):
 
         if action == 'Confirm':
             with connection.cursor() as cursor:
-                cursor.callproc('ConfirmPayment', [payment_id])
+                cursor.callproc('ConfirmPayment', [(payment_id, 'integer')])
                 result = cursor.fetchone()
                 print(f"Stored procedure result: {result}")
                 return redirect('adminpanel-payment')
