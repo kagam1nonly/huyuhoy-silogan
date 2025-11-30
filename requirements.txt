@@ -8,14 +8,11 @@ django-crispy-forms==2.1.0  # Pinned full version
 djangorestframework==3.14.0
 gunicorn==21.2.0
 idna==3.4
-<<<<<<< Updated upstream
 packaging==23.2=
 psycopg2-binary==2.9.9
-=======
 packaging==23.2
 Pillow==10.1.0
 psycopg2==2.9.9             # Switched from -binary to stable psycopg2
->>>>>>> Stashed changes
 pytz==2023.3
 requests==2.31.0
 sqlparse==0.4.4
