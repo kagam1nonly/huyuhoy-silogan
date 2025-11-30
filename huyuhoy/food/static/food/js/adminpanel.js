@@ -56,28 +56,3 @@ function submitOrderForm(form) {
         alert(error.message);
     });
 }
-
-// Renamed the second submitForm to submitPaymentForm
-// function submitPaymentForm(form) {
-//     fetch('/adminpanel-payment/', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/x-www-form-urlencoded',
-//             'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-//         },
-//         body: new URLSearchParams(new FormData(form))
-//     })
-//     .then(response => response.json())  // Parsing the JSON response
-//     .then(data => {
-//         if (data.message) {
-//             alert(data.message);  // Display success message
-//             window.location.reload();  // Reload the page to reflect changes
-//         } else if (data.error) {
-//             alert(data.error);  // Display error message
-//         }
-//     })
-//     .catch(error => {
-//         console.error('Error:', error);
-//         alert('An error occurred. Please try again later.');
-//     });
-// }

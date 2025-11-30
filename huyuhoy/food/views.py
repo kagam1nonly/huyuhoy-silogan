@@ -465,7 +465,10 @@ def adminpanelorder_view(request):
 
         if action == 'Accept' or action == 'Refuse' or action == 'Complete':
             with connection.cursor() as cursor:
-                cursor.callproc('AcceptRefuseOrder', [order_id, (action, 'varchar'), admin_id])
+                # Alternative Fix: Using cursor.execute is generally safer than callproc for complex types
+                sql = "SELECT * FROM AcceptRefuseOrder(%s, %s, %s);"
+                params = [order_id, action, admin_id]
+                cursor.execute(sql, params)
                 result = cursor.fetchone()
                 print(f"Stored procedure result: {result}")
 
@@ -486,9 +489,28 @@ def adminpanelorder_view(request):
                 return JsonResponse({'message': f'Order {action.lower()}d successfully', 'new_status': new_status})
                 
         if action == 'Delete':
-            print(f"Deleting Order {order_id}")
-            order.delete()
-            return JsonResponse({'message': f'Order {order_id} deleted successfully'})
+            if order.status != 'Canceled':
+                return JsonResponse({'error': 'Only canceled orders can be deleted.'}, status=400)
+            
+            try:
+                # This will fail if the Order model has a protected foreign key relationship
+                order.delete()
+                return JsonResponse({'message': f'Order {order_id} deleted successfully'})
+            except Exception as e:
+                # Catch any database dependency errors (like ProtectedError)
+                return JsonResponse({
+                    'error': f'Cannot delete order due to server error or remaining dependencies (Error: {type(e).__name__}).'
+                }, status=400)
+    
+    try:
+        # This will fail if the Order model has a protected foreign key relationship
+        order.delete()
+        return JsonResponse({'message': f'Order {order_id} deleted successfully'})
+    except Exception as e:
+        # Catch any database dependency errors (like ProtectedError)
+        return JsonResponse({
+            'error': f'Cannot delete order due to server error or remaining dependencies (Error: {type(e).__name__}).'
+        }, status=400)
 
     # Handle the GET request to display orders
     orders = Order.objects.all()
