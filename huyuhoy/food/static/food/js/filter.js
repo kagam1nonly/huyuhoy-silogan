@@ -27,63 +27,63 @@ const products = [
         id: 1,
         image: 'media/meal_images/sisilog.png',
         title: 'Sisilog',
-        price: 85,
-        category: 'Silog' // Make sure category names match
+        price: 99,
+        category: 'Silog' 
     },
     {
         id: 1,
         image: 'media/meal_images/porksilog.png',
         title: 'Pork Silog',
-        price: 95,
+        price:110,
         category: 'Silog'
     },
     {
         id: 1,
         image: 'media/meal_images/bangsilog.png',
         title: 'Bang Silog',
-        price: 95,
+        price: 80,
         category: 'Silog'
     },
     {
         id: 1,
         image: 'media/meal_images/cornsilog.png',
         title: 'Corn Silog',
-        price: 95,
+        price: 65,
         category: 'Silog'
     },
     {
         id: 1,
         image: 'media/meal_images/tunasilog.png',
         title: 'Tuna Silog',
-        price: 95,
+        price: 99,
         category: 'Silog'
     },
     {
         id: 2,
-        image: 'media/meal_images/hamsilog.png',
-        title: 'Ham Silog',
-        price: 90,
+        image: 'media/meal_images/cornsilog.png',
+        title: 'Corn Silog',
+        price: 65,
         category: 'Breakfast'
     },
     {
         id: 2,
         image: 'media/meal_images/spamsilog.png',
         title: 'Spam Silog',
-        price: 90,
+        price: 110,
         category: 'Breakfast'
     },
     {
         id: 3,
         image: 'media/meal_images/quarterpound.png',
         title: 'Quarterpound Beef Patty',
-        price: 90,
+        price: 120,
         category: 'Best Seller'
     },
     {
         id: 3,
         image: 'media/meal_images/porksteak.png',
         title: 'Pork Steak',
-        price: 90,
+        price: 120,
         category: 'Best Seller'
     },
 ];
