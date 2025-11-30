@@ -25,7 +25,7 @@ document.getElementById('cat-btn').innerHTML = filters.map((name, index) => {
 const products = [
     {
         id: 1,
-        image: 'media/meal_images/sisilog.png',
+        image: 'food/static/food/imgs/sisilog.png',
         title: 'Sisilog',
         price: 99,
         category: 'Silog' 
@@ -39,7 +39,7 @@ const products = [
     },
     {
         id: 1,
-        image: 'media/meal_images/bangsilog.png',
+        image: 'food/static/food/imgs/bangsilog.png',
         title: 'Bang Silog',
         price: 80,
         category: 'Silog'
