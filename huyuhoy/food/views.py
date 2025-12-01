@@ -238,54 +238,46 @@ def process_gcash_payment(request):
         ref_num = request.POST.get('ref_num')
         gorder_number = request.POST.get('order_number')
         
+        # --- Authentication Check (Crash Point 1) ---
+        if not request.user.is_authenticated:
+            print("ERROR: Unauthenticated user attempted payment.")
+            return JsonResponse({'success': False, 'message': 'Please log in to submit a payment.'})
+            
         try:
-            # DEBUG 1: Test conversion
-            cleaned_amount_str = amount_str.replace('₱', '').replace('$', '').strip()
-            amount_decimal = Decimal(cleaned_amount_str) 
-            # If the code reaches here, amount conversion is OK.
-            
-            # Retrieve the customer ID and Order
-            customer_id = request.user.id
-            order = Order.objects.get(number=gorder_number, customer_id=customer_id)
-            
-            # DEBUG 2: Test Order Retrieval
-            # return JsonResponse({'success': False, 'message': 'DEBUG_ORDER_FOUND'}) 
-            
-            # Check if a payment already exists for the order
+            # 1. Convert Amount String to Decimal (Crash Point 2)
             try:
-                payment = Payment.objects.get(order=order)
-            except Payment.DoesNotExist:
-                payment = Payment.objects.create(order=order)
-                
-            # DEBUG 3: Test Payment Object Creation/Retrieval
-            # return JsonResponse({'success': False, 'message': 'DEBUG_PAYMENT_OBJ_READY'}) 
+                cleaned_amount_str = amount_str.replace('₱', '').replace('$', '').strip()
+                amount_decimal = Decimal(cleaned_amount_str) 
+            except InvalidOperation:
+                print(f"ERROR: Invalid amount format received: {amount_str}")
+                return JsonResponse({'success': False, 'message': 'Invalid amount format provided.'})
+            
+            # 2. Retrieve the customer ID and Order
+            customer_id = request.user.id # Safely retrieved after authentication check
 
-            # Update the payment details (The original suspected point of failure)
-            payment.payment_status = 'Pending'
-            payment.amount = amount_decimal 
-            payment.ref_num = ref_num
-            payment.method = 'GCASH'
-            payment.save() # <--- If the crash happens here, DEBUG_PAYMENT_OBJ_READY will NOT show.
+            # DEBUG 2: Test Order Retrieval (UNCOMMENT THIS LINE ONLY, THEN TEST)
+            return JsonResponse({'success': False, 'message': 'DEBUG_ORDER_FOUND'}) 
             
-            # DEBUG 4: Test Payment Save
-            # return JsonResponse({'success': False, 'message': 'DEBUG_PAYMENT_SAVED'}) 
-            
-            # Link Order to Payment
-            order.payment = payment
-            order.save()
-            
-            # DEBUG 5: Test Order Save
-            # return JsonResponse({'success': False, 'message': 'DEBUG_ORDER_SAVED_OK'}) 
-            
-            # Send email notification to the customer
-            payment_send_email(request, order.id)
+            order = Order.objects.get(number=gorder_number, customer_id=customer_id)
+            print(f"Found Order: {order}")
+
+            # ... (rest of the successful logic for payment object creation and saving) ...
 
             return JsonResponse({'success': True, 'message': 'Payment processed successfully'})
             
-        # ... (rest of the except blocks: InvalidOperation, Order.DoesNotExist) ...
+        except Order.DoesNotExist:
+            print(f"Order not found for order_number: {gorder_number} and customer_id: {customer_id}")
+            return JsonResponse({'success': False, 'message': 'Order not found or unauthorized'})
+            
         except Exception as e:
-            # The general error handler will still catch the crash
+            # Final fallback for unexpected errors
+            import sys
+            error_type, error_value, error_traceback = sys.exc_info()
+            print(f"CRITICAL ERROR processing payment: {error_type.__name__}: {str(error_value)}")
             return JsonResponse({'success': False, 'message': 'GENERIC_CRASH_FAILED'})
+            
+    else:
+        return JsonResponse({'success': False, 'message': 'Invalid request method'})
 
 
 from django.shortcuts import get_object_or_404
