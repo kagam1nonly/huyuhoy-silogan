@@ -238,14 +238,15 @@ def process_gcash_payment(request):
         ref_num = request.POST.get('ref_num')
         gorder_number = request.POST.get('order_number')
         
-        # --- Authentication Check (Crash Point 1) ---
+        # --- Authentication Check ---
         if not request.user.is_authenticated:
             print("ERROR: Unauthenticated user attempted payment.")
             return JsonResponse({'success': False, 'message': 'Please log in to submit a payment.'})
             
         try:
-            # 1. Convert Amount String to Decimal (Crash Point 2)
+            # 1. Convert Amount String to Decimal (Robust Fix) 💰
             try:
+                # Clean the string by removing currency symbols and whitespace
                 cleaned_amount_str = amount_str.replace('₱', '').replace('$', '').strip()
                 amount_decimal = Decimal(cleaned_amount_str) 
             except InvalidOperation:
@@ -253,15 +254,39 @@ def process_gcash_payment(request):
                 return JsonResponse({'success': False, 'message': 'Invalid amount format provided.'})
             
             # 2. Retrieve the customer ID and Order
-            customer_id = request.user.id # Safely retrieved after authentication check
-
-            # DEBUG 2: Test Order Retrieval (UNCOMMENT THIS LINE ONLY, THEN TEST)
-            return JsonResponse({'success': False, 'message': 'DEBUG_ORDER_FOUND'}) 
-            
+            customer_id = request.user.id
             order = Order.objects.get(number=gorder_number, customer_id=customer_id)
             print(f"Found Order: {order}")
 
-            # ... (rest of the successful logic for payment object creation and saving) ...
+            # 3. Handle Payment Object Creation/Update
+            try:
+                # Try to get an existing payment for the order
+                payment = Payment.objects.get(order=order)
+            except Payment.DoesNotExist:
+                # If the payment doesn't exist, create a new one
+                # Note: This might crash if 'order' is a NOT NULL field in Payment
+                payment = Payment.objects.create(order=order)
+            
+            # ----------------------------------------------------
+            # DEBUG STEP 3: Check if Payment object was successfully created/retrieved
+            # NOTE: If the crash happened during 'Payment.objects.create(order=order)'
+            #       the code would have failed before this line.
+            # ----------------------------------------------------
+            return JsonResponse({'success': False, 'message': 'DEBUG_PAYMENT_OBJ_READY'}) 
+
+            # 4. Update the payment details (Original suspected crash point: now uses Decimal)
+            payment.payment_status = 'Pending'
+            payment.amount = amount_decimal # Using the safe Decimal value
+            payment.ref_num = ref_num
+            payment.method = 'GCASH'
+            payment.save() # <--- If the crash is due to a constraint violation (length, NOT NULL) it happens here.
+            
+            # 5. Link Order to Payment
+            order.payment = payment
+            order.save()
+
+            # 6. Send email notification
+            payment_send_email(request, order.id)
 
             return JsonResponse({'success': True, 'message': 'Payment processed successfully'})
             
@@ -270,10 +295,10 @@ def process_gcash_payment(request):
             return JsonResponse({'success': False, 'message': 'Order not found or unauthorized'})
             
         except Exception as e:
-            # Final fallback for unexpected errors
-            import sys
-            error_type, error_value, error_traceback = sys.exc_info()
-            print(f"CRITICAL ERROR processing payment: {error_type.__name__}: {str(error_value)}")
+            # Final fallback for unexpected errors (This is the GENERIC_CRASH_FAILED path)
+            print(f"CRITICAL ERROR processing payment. Type: {type(e).__name__}, Message: {str(e)}")
+            # We cannot use traceback.print_exc() without console access, 
+            # so we rely on printing the error type/message above.
             return JsonResponse({'success': False, 'message': 'GENERIC_CRASH_FAILED'})
             
     else:
