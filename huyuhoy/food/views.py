@@ -15,6 +15,7 @@ from django.contrib import messages
 from django.urls import reverse
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
+from decimal import Decimal, InvalidOperation
 # import logging
 
 # logger = logging.getLogger(__name__)
@@ -233,49 +234,71 @@ def view_order(request):
 @csrf_exempt
 def process_gcash_payment(request):
     if request.method == 'POST':
-        amount = request.POST.get('amount')
+        amount_str = request.POST.get('amount')
         ref_num = request.POST.get('ref_num')
         gorder_number = request.POST.get('order_number')
-        print(f"Received amount: {amount}")
+        
+        # --- DEBUG PRINT STATEMENTS (Keep these for troubleshooting) ---
+        print(f"Received amount (str): {amount_str}")
         print(f"Received ref_num: {ref_num}")
         print(f"Received order_number: {gorder_number}")
-
+        
         try:
-            # Retrieve the customer ID from the current user
-            customer_id = request.user.id
+            # 1. Convert Amount String to Decimal 💰
+            # Safely remove any currency symbols (like '₱' or '$') and convert to Decimal.
+            cleaned_amount_str = amount_str.replace('₱', '').replace('$', '').strip()
+            amount_decimal = Decimal(cleaned_amount_str) 
 
-            # Find the order based on the order number and customer ID
+            # 2. Retrieve the customer ID and Order
+            customer_id = request.user.id
             order = Order.objects.get(number=gorder_number, customer_id=customer_id)
             print(f"Found Order: {order}")
 
-            # Check if a payment already exists for the order
+            # 3. Handle Payment Object Creation/Update
             try:
                 # Try to get an existing payment for the order
                 payment = Payment.objects.get(order=order)
             except Payment.DoesNotExist:
                 # If the payment doesn't exist, create a new one
                 payment = Payment.objects.create(order=order)
-
-            # Update the payment details
+            
+            # 4. Update the payment details 
             payment.payment_status = 'Pending'
-            payment.amount = amount
+            payment.amount = amount_decimal # <--- FIXED: Assigning the Decimal object
             payment.ref_num = ref_num
-            payment.method = 'GCASH'  # You may want to set the payment method explicitly
-            payment.save()
+            payment.method = 'GCASH'
+            payment.save() # The save should now succeed without a type error
 
+            # 5. Link Order to Payment
             order.payment = payment
             order.save()
 
-             # Send email notification to the customer
+            # Send email notification
             payment_send_email(request, order.id)
 
             return JsonResponse({'success': True, 'message': 'Payment processed successfully'})
+            
+        except InvalidOperation:
+            # Handle error if the string conversion to Decimal fails (e.g., input is 'abc')
+            error_msg = f"Error: Invalid amount format received: {amount_str}"
+            print(error_msg)
+            return JsonResponse({'success': False, 'message': 'Invalid amount format'})
+            
         except Order.DoesNotExist:
-            print(f"Order not found for order_number: {gorder_number}")
-            return JsonResponse({'success': False, 'message': 'Order not found'})
+            # Handle error if the order is not found
+            error_msg = f"Order not found for order_number: {gorder_number} and customer_id: {customer_id}"
+            print(error_msg)
+            return JsonResponse({'success': False, 'message': 'Order not found or unauthorized'})
+            
         except Exception as e:
-            print(f"Error processing payment: {str(e)}")
+            # Handle all other unexpected errors (e.g., database constraint violations)
+            import traceback
+            print(f"CRITICAL ERROR processing payment: {str(e)}")
+            print("--- Full Traceback ---")
+            traceback.print_exc() # Print the full stack trace to the console for detailed debugging
+            print("----------------------")
             return JsonResponse({'success': False, 'message': 'Error processing payment'})
+            
     else:
         return JsonResponse({'success': False, 'message': 'Invalid request method'})
 
