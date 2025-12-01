@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
             BEGIN
                 -- Check if the admin exists and is authorized
                 SELECT COUNT(*) INTO is_admin
-                FROM auth_user
+                FROM food_customuser
                 WHERE id = admin_id AND is_superuser = true;
 
                 IF is_admin = 1 THEN
