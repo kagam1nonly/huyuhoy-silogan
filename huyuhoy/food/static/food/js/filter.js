@@ -25,63 +25,63 @@ document.getElementById('cat-btn').innerHTML = filters.map((name, index) => {
 const products = [
     {
         id: 1,
-        image: 'media/meal_images/sisilog.png',
+        image: 'static/food/imgs/sisilog.png',
         title: 'Sisilog',
         price: 99,
         category: 'Silog' 
     },
     {
         id: 1,
-        image: 'media/meal_images/porksilog.png',
+        image: 'static/food/imgs/porksilog.png',
         title: 'Pork Silog',
         price:110,
         category: 'Silog'
     },
     {
         id: 1,
-        image: 'media/meal_images/bangsilog.png',
+        image: 'static/food/imgs/bangsilog.png',
         title: 'Bang Silog',
         price: 80,
         category: 'Silog'
     },
     {
         id: 1,
-        image: 'media/meal_images/cornsilog.png',
+        image: 'static/food/imgs/cornsilog.png',
         title: 'Corn Silog',
         price: 65,
         category: 'Silog'
     },
     {
         id: 2,
-        image: 'media/meal_images/cornsilog.png',
+        image: 'static/food/imgs/cornsilog.png',
         title: 'Corn Silog',
         price: 65,
         category: 'Breakfast'
     },
     {
         id: 1,
-        image: 'media/meal_images/tunasilog.png',
+        image: 'static/food/imgs/tunasilog.png',
         title: 'Tuna Silog',
         price: 99,
         category: 'Silog'
     },
     {
         id: 2,
-        image: 'media/meal_images/spamsilog.png',
+        image: 'static/food/imgs/spamsilog.png',
         title: 'Spam Silog',
         price: 110,
         category: 'Breakfast'
     },
     {
         id: 3,
-        image: 'media/meal_images/quarterpound.png',
+        image: 'static/food/imgs/quarterpound.png',
         title: 'Quarterpound Beef Patty',
         price: 120,
         category: 'Best Seller'
     },
     {
         id: 3,
-        image: 'media/meal_images/porksteak.png',
+        image: 'static/food/imgs/porksteak.png',
         title: 'Pork Steak',
         price: 120,
         category: 'Best Seller'
