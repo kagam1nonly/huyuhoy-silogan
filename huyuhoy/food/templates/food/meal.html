@@ -20,7 +20,8 @@
                     <h4 class="product-title" id="meal{{ meal.meal_id }}">{{ meal.name }}</h4>
 
                     <!-- Add hidden data element with meal data -->
-                    <span id="meal-data" data-meal-name="{{ meal.name }}" data-meal-image="{% static 'food/imgs/' %}{% if 'Pork Silog' == meal.name %}Porksilog.png{% elif 'Bang Silog' == meal.name %}bangsilog.png{% elif 'Corn Silog' == meal.name %}cornsilog.png{% elif 'Tuna Silog' == meal.name %}tunasilog.png{% elif 'Spam Silog' == meal.name %}spamsilog.png{% elif 'Sisilog' == meal.name %}sisilog.png{% elif 'Quarterpound Beef Patty' == meal.name %}quarterpound.png{% elif 'Pork Steak' == meal.name %}porksteak.png{% else %}placeholder.png{% endif %}" style="display: none;"></span>
+                    {% if 'Pork Silog' == meal.name %}{% static 'food/imgs/Porksilog.png' as meal_img %}{% elif 'Bang Silog' == meal.name %}{% static 'food/imgs/bangsilog.png' as meal_img %}{% elif 'Corn Silog' == meal.name %}{% static 'food/imgs/cornsilog.png' as meal_img %}{% elif 'Tuna Silog' == meal.name %}{% static 'food/imgs/tunasilog.png' as meal_img %}{% elif 'Spam Silog' == meal.name %}{% static 'food/imgs/spamsilog.png' as meal_img %}{% elif 'Sisilog' == meal.name %}{% static 'food/imgs/sisilog.png' as meal_img %}{% elif 'Quarterpound Beef Patty' == meal.name %}{% static 'food/imgs/quarterpound.png' as meal_img %}{% elif 'Pork Steak' == meal.name %}{% static 'food/imgs/porksteak.png' as meal_img %}{% else %}{% static 'food/imgs/placeholder.png' as meal_img %}{% endif %}
+                    <span id="meal-data" data-meal-name="{{ meal.name }}" data-meal-image="{{ meal_img }}" style="display: none;"></span>
 
                     <div class="product-radio">
                         <label class="form-check-label">
@@ -35,7 +36,7 @@
                         </label>
                     </div>
                     <div>
-                        <button class="btn" onclick="addMeal('{{ meal.meal_id }}', '{{ meal.name }}', '{% static 'food/imgs/' %}{% if 'Pork Silog' == meal.name %}Porksilog.png{% elif 'Bang Silog' == meal.name %}bangsilog.png{% elif 'Corn Silog' == meal.name %}cornsilog.png{% elif 'Tuna Silog' == meal.name %}tunasilog.png{% elif 'Spam Silog' == meal.name %}spamsilog.png{% elif 'Sisilog' == meal.name %}sisilog.png{% elif 'Quarterpound Beef Patty' == meal.name %}quarterpound.png{% elif 'Pork Steak' == meal.name %}porksteak.png{% else %}placeholder.png{% endif %}', '{{ meal.withRice }}', '{{ meal.withOutRice }}');">Add to cart</button>
+                        <button class="btn" onclick="addMeal('{{ meal.meal_id }}', '{{ meal.name }}', '{{ meal_img }}', '{{ meal.withRice }}', '{{ meal.withOutRice }}');">Add to cart</button>
 
                     </div>
                 </div>
