@@ -67,14 +67,14 @@ class Migration(migrations.Migration):
         migrations.RunSQL(
             sql="""
             CREATE OR REPLACE FUNCTION CalculateTotalBillForCustomer(
-                customer_id INT
+                p_customer_id INT
             )
             RETURNS TABLE(total_bill NUMERIC) AS $$
             BEGIN
                 RETURN QUERY
                 SELECT COALESCE(SUM(bill), 0)::NUMERIC
                 FROM food_order
-                WHERE food_order.customer_id = CalculateTotalBillForCustomer.customer_id AND status = 'Processing';
+                WHERE food_order.customer_id = p_customer_id AND status = 'Processing';
             END;
             $$ LANGUAGE plpgsql;
             """,
