@@ -1,0 +1,408 @@
+ul, ol {
+    list-style: none;
+}
+
+.meal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 50px;
+    background-color: #F5B335;
+    border: 2px solid #000;
+    transform: rotate(-3deg);
+    color: #000;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    transition: background-color 0.3s, color 0.3s;
+    margin: 30px 150px;
+}
+
+.meal:hover {
+    text-decoration: none;
+    background-color: #000;
+    color: #fff;
+    cursor: pointer;
+}
+
+.meal i {
+    margin-left: 10px;
+}
+#cartitems {
+    width: 240px; /* Adjust to your desired width */
+    height: 40px; /* Adjust to your desired height */
+    overflow: hidden; /* Hide text that overflows the container */
+    bottom: 510px;
+    right: 970px;
+    display: flex;
+    position: absolute;
+    transform: rotate(-3deg); /* Rotate the text counterclockwise by 90 degrees */
+    background-color: #000000;
+    font-size: 36px;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    color: #fff;
+    margin: 30px 0 50px 0;
+    letter-spacing: 1.5px;
+    padding: 15px;
+}
+
+.order-container {
+    position: relative;
+    background-color: rgb(255, 255, 255);
+    width: 80%; /* Adjust the width to your preference */
+    min-height: 700px;
+    margin: 80px 100px 150px 150px;
+    border: #000000;
+    border: 1px solid;
+}   
+
+.order-header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    width: 100%;
+    border-bottom: 1px solid #000;
+}
+
+.order-header #permanent {
+    background-color: whitesmoke;
+    color: black; 
+    margin: 10px 10px 10px 200px; /* Add some spacing around the elements */
+    white-space: nowrap;
+}
+
+.order-column {
+    text-align: center;
+    padding: 10px;
+    font-weight: bold;
+    display: flex; /* Display columns horizontally */
+    justify-content: center;
+    align-items: center;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+}
+
+/* Style for the submit button */
+.submit-button {
+    display: inline-block;
+    width: 180px;
+    padding: 10px;
+    height: 70px;
+    font-size: 22px;
+    font-weight: 530;
+    white-space: nowrap;
+    background-color:#F5B335;
+    color: #000000;    
+    border: 2px solid #000;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 50px;
+}
+
+/* Updated CSS for Horizontal Order Columns */
+.head-container {
+    width: 95%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px;
+    border-radius: 5px;
+    min-height: 250px;
+    margin: 15px;
+}
+
+.head-meal {
+    position: relative;
+    text-align: center;
+    font-weight: bold;
+    padding: 10px;
+    display: flex;
+    flex-direction: column; /* Display content vertically */
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap; /* Prevent text from wrapping */
+    overflow: hidden; /* Hide overflowed content */
+    background-color: #F5B335; /* Set a background color */
+    color: #fff; /* Set text color to white */
+    border-radius: 5px; /* Add rounded corners */
+}
+
+
+.cart-item-container {
+    width: 320px; /* Adjust the width to your preference */
+    margin: 80px auto 0 auto; /* Center the container horizontally */
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    flex-wrap: wrap; 
+    justify-content: space-between;
+    align-items: center; 
+    border: 1px solid #ccc; 
+
+}
+
+.inner-meal {
+    flex-wrap: wrap;
+    width: 98%; 
+    padding: 10px;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.cart-item-image {
+    width: 125px; 
+    height: 125px;
+    margin-bottom: 10px; /* Add space between image and text */
+}
+
+.cart-item-name,
+.cart-item-rice,
+.cart-item-price {
+    text-align: right;
+}
+
+
+.remove-btn {
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    border: none;
+    background-color: #fdc300;
+    padding: 7px 15px;
+    cursor: pointer;
+    color: black;
+    margin-left: 282px;
+    transition: background-color 0.3s, color 0.3s;
+    box-sizing: border-box;
+}
+
+.remove-btn:hover {
+    background-color: #000;
+    color: #fff;
+    cursor: pointer;
+}
+
+.footer_container {
+    position: relative;
+    background-color: #ffffff; 
+    width: 100%; /* Adjust the width to your preference */
+    margin: 0 auto; /* Center the rectangle horizontally */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Add a subtle shadow for depth */
+}
+
+#order-form .type {
+    color: #000000;
+    margin-top: 50px;
+    font-size: 36px;
+    font-weight: bold;
+    text-decoration: none;
+    word-spacing: 1.5px;
+}
+
+.transaction {
+    margin-top: 50px;
+    display: flex;
+    font-size: 22px;
+}
+
+.transaction-box {
+    flex: 1;
+    padding: 15px;
+    margin: 10px;
+    text-align: center;
+    cursor: pointer;
+    background-color: #F5B335;
+    border: 2px solid #000;
+    border-radius: 10px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.transaction-box:hover {
+    background-color: #000;
+    color: #fff;
+}
+
+.selected {
+    border: 2px solid rgb(130, 215, 251);
+    box-shadow: 0 0 10px rgba(11, 7, 131, 0.5);
+    transition: border 0.3s, box-shadow 0.3s; /* Add smooth transitions */
+}
+
+.payment-box .selected {
+    border: 2px solid rgb(130, 215, 251);
+    box-shadow: 0 0 10px rgba(11, 7, 131, 0.5);
+    transition: border 0.3s, box-shadow 0.3s; /* Add smooth transitions */
+}
+
+.transaction span {
+    letter-spacing: 1px;
+}
+
+    /* Styles for the address box */
+#address-box {
+    display: flex;
+    text-align: center;
+    align-items: center;
+}
+
+#order-form .address {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.type2 {
+    text-decoration: underline;
+}
+
+#address-box i {
+    position: relative;
+    top: 8px;
+}
+
+#addressInput {
+    font-size: 20px;
+    width: 70%;
+    padding: 20px;
+    border: 2px solid #ccc transparent;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin-top: 15px;
+    height: 70px; 
+    resize: none; 
+    overflow-y: hidden; 
+    overflow-x: auto;
+    white-space: nowrap; 
+}
+/* Additional styles for the selection message if needed */
+.selection-message {
+    text-align: center;
+    font-size: 18px;
+    color: dimgray;
+    font-weight: 600px;
+    margin-bottom: 50px;
+}
+
+.type {
+    font-size: 18px;
+    text-decoration: underline;
+}
+
+.payment {
+    width: 250px;
+    margin-top: 50px;
+    display: flex;
+    flex-direction: row;
+    font-size: 22px;
+}
+
+.payment-box {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 28px;
+    margin: 15px 10px;
+    cursor: pointer;
+    background-color: #F5B335;
+    border: 2px solid #000;
+    border-radius: 10px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.gcash .payment-box span {
+    display: block;
+    padding-top: 50px;
+}
+
+#order-form {
+    border-top: #000 1px solid;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: auto; /* Let the form content determine the height */
+    padding: 15px; /* Add padding to the form */
+    min-height: 200px;
+    background-color: #fff;
+}
+
+.form-group {
+    display: flex;
+    margin-bottom: 50px;
+    text-align: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.note {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 50px;
+    margin-bottom: 10px;    
+}
+
+#note {
+    resize: none;
+    justify-content: center;
+    text-align: center;
+    width: 100%; /* Make the textarea fill the container width */
+    padding: 30px; /* Add padding to the textarea */
+    font-size: 20px; /* Increase the font size */
+    border: 2px solid #ccc transparent; /* Add a border for a clean look */
+    border-radius: 5px; /* Add rounded corners */
+}
+
+.order-total {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position: relative;
+    color: #fff;
+    height: 35px;
+    font-weight: bold;
+    font-size: 20px;
+    margin: 0;
+    padding: 0 12px 20px 15px;
+}
+
+.btn-group {
+    margin: 0;
+}
+
+a {
+    color: black;
+    font-size: 18px;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #000000;
+    text-decoration: underline;
+    box-shadow: 5px 8px 12px 5px rgba(0, 0, 0, 0.2);
+}
+
+.login {
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: #F5B335;
+}
