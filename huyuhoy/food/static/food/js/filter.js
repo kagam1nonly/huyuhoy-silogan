@@ -45,13 +45,6 @@ const products = [
         category: 'Silog'
     },
     {
-        id: 1,
-        image: '/static/food/imgs/cornsilog.png',
-        title: 'Corn Silog',
-        price: 65,
-        category: 'Silog'
-    },
-    {
         id: 2,
         image: '/static/food/imgs/cornsilog.png',
         title: 'Corn Silog',
