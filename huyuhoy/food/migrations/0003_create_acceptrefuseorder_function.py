@@ -39,20 +39,24 @@ class Migration(migrations.Migration):
                             UPDATE food_order
                             SET status = 'Processing'
                             WHERE id = order_id;
-                            new_status := 'Accept';
+                            new_status := 'Accepted'; -- Changed from 'Accept' to 'Accepted'
                         ELSIF action = 'Refuse' THEN
                             UPDATE food_order
                             SET status = 'Canceled'
                             WHERE id = order_id;
-                            new_status := 'Refuse';
+                            new_status := 'Refused'; -- Changed from 'Refuse' to 'Refused'
                         ELSIF action = 'Complete' THEN
                             UPDATE food_order
                             SET status = 'Completed'
                             WHERE id = order_id;
-                            new_status := 'Complete';
+                            new_status := 'Completed'; -- Changed from 'Complete' to 'Completed'
+                        ELSE
+                            RETURN QUERY SELECT 'Invalid action specified'::TEXT;
+                            RETURN;
                         END IF;
 
-                        RETURN QUERY SELECT ('Order ' || new_status || 'ed successfully')::TEXT;
+                        -- Return the success message. Removed the 'ed' suffix from concatenation.
+                        RETURN QUERY SELECT ('Order ' || new_status || ' successfully')::TEXT;
                     ELSE
                         RETURN QUERY SELECT 'Order not found'::TEXT;
                     END IF;
@@ -74,6 +78,8 @@ class Migration(migrations.Migration):
                 RETURN QUERY
                 SELECT COALESCE(SUM(bill), 0)::NUMERIC
                 FROM food_order
+                -- Assuming 'Processing' is the correct status for calculating total pending bill.
+                -- If it should be 'Completed' or another status, adjust here.
                 WHERE food_order.customer_id = p_customer_id AND status = 'Processing';
             END;
             $$ LANGUAGE plpgsql;
@@ -95,12 +101,12 @@ class Migration(migrations.Migration):
                 FROM food_payment
                 WHERE id = p_payment_id;
 
-                -- If payment doesn't exist, mark as failed
+                -- If payment doesn't exist, update is skipped, but the message needs to be clear.
                 IF payment_count = 0 THEN
-                    UPDATE food_payment
-                    SET payment_status = 'Failed'
-                    WHERE id = p_payment_id;
-                    RETURN QUERY SELECT 'Payment not found. Status updated to Failed'::TEXT;
+                    -- Note: The original code had an UPDATE here for an ID that doesn't exist,
+                    -- which will affect 0 rows. It's safer to just return the message.
+                    -- UPDATE food_payment SET payment_status = 'Failed' WHERE id = p_payment_id;
+                    RETURN QUERY SELECT 'Payment not found. Payment status not updated.'::TEXT; -- Improved message
                 ELSE
                     -- Update the payment status to 'Paid'
                     UPDATE food_payment
