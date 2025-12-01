@@ -272,13 +272,17 @@ def process_gcash_payment(request):
             # NOTE: If the crash happened during 'Payment.objects.create(order=order)'
             #       the code would have failed before this line.
             # ----------------------------------------------------
-            return JsonResponse({'success': False, 'message': 'DEBUG_PAYMENT_OBJ_READY'}) 
+            # return JsonResponse({'success': False, 'message': 'DEBUG_PAYMENT_OBJ_READY'}) 
 
             # 4. Update the payment details (Original suspected crash point: now uses Decimal)
             payment.payment_status = 'Pending'
             payment.amount = amount_decimal # Using the safe Decimal value
             payment.ref_num = ref_num
             payment.method = 'GCASH'
+            
+            # DEBUG 4: Check before save (UNCOMMENT THIS LINE ONLY)
+            return JsonResponse({'success': False, 'message': 'DEBUG_BEFORE_SAVE'})
+
             payment.save() # <--- If the crash is due to a constraint violation (length, NOT NULL) it happens here.
             
             # 5. Link Order to Payment
