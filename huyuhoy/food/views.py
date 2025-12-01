@@ -238,69 +238,54 @@ def process_gcash_payment(request):
         ref_num = request.POST.get('ref_num')
         gorder_number = request.POST.get('order_number')
         
-        # --- DEBUG PRINT STATEMENTS (Keep these for troubleshooting) ---
-        print(f"Received amount (str): {amount_str}")
-        print(f"Received ref_num: {ref_num}")
-        print(f"Received order_number: {gorder_number}")
-        
         try:
-            # 1. Convert Amount String to Decimal 💰
-            # Safely remove any currency symbols (like '₱' or '$') and convert to Decimal.
+            # DEBUG 1: Test conversion
             cleaned_amount_str = amount_str.replace('₱', '').replace('$', '').strip()
             amount_decimal = Decimal(cleaned_amount_str) 
-
-            # 2. Retrieve the customer ID and Order
+            # If the code reaches here, amount conversion is OK.
+            
+            # Retrieve the customer ID and Order
             customer_id = request.user.id
             order = Order.objects.get(number=gorder_number, customer_id=customer_id)
-            print(f"Found Order: {order}")
-
-            # 3. Handle Payment Object Creation/Update
+            
+            # DEBUG 2: Test Order Retrieval
+            # return JsonResponse({'success': False, 'message': 'DEBUG_ORDER_FOUND'}) 
+            
+            # Check if a payment already exists for the order
             try:
-                # Try to get an existing payment for the order
                 payment = Payment.objects.get(order=order)
             except Payment.DoesNotExist:
-                # If the payment doesn't exist, create a new one
                 payment = Payment.objects.create(order=order)
-            
-            # 4. Update the payment details 
+                
+            # DEBUG 3: Test Payment Object Creation/Retrieval
+            # return JsonResponse({'success': False, 'message': 'DEBUG_PAYMENT_OBJ_READY'}) 
+
+            # Update the payment details (The original suspected point of failure)
             payment.payment_status = 'Pending'
-            payment.amount = amount_decimal # <--- FIXED: Assigning the Decimal object
+            payment.amount = amount_decimal 
             payment.ref_num = ref_num
             payment.method = 'GCASH'
-            payment.save() # The save should now succeed without a type error
-
-            # 5. Link Order to Payment
+            payment.save() # <--- If the crash happens here, DEBUG_PAYMENT_OBJ_READY will NOT show.
+            
+            # DEBUG 4: Test Payment Save
+            # return JsonResponse({'success': False, 'message': 'DEBUG_PAYMENT_SAVED'}) 
+            
+            # Link Order to Payment
             order.payment = payment
             order.save()
-
-            # Send email notification
+            
+            # DEBUG 5: Test Order Save
+            # return JsonResponse({'success': False, 'message': 'DEBUG_ORDER_SAVED_OK'}) 
+            
+            # Send email notification to the customer
             payment_send_email(request, order.id)
 
             return JsonResponse({'success': True, 'message': 'Payment processed successfully'})
             
-        except InvalidOperation:
-            # Handle error if the string conversion to Decimal fails (e.g., input is 'abc')
-            error_msg = f"Error: Invalid amount format received: {amount_str}"
-            print(error_msg)
-            return JsonResponse({'success': False, 'message': 'Invalid amount format'})
-            
-        except Order.DoesNotExist:
-            # Handle error if the order is not found
-            error_msg = f"Order not found for order_number: {gorder_number} and customer_id: {customer_id}"
-            print(error_msg)
-            return JsonResponse({'success': False, 'message': 'Order not found or unauthorized'})
-            
+        # ... (rest of the except blocks: InvalidOperation, Order.DoesNotExist) ...
         except Exception as e:
-            # Handle all other unexpected errors (e.g., database constraint violations)
-            import traceback
-            print(f"CRITICAL ERROR processing payment: {str(e)}")
-            print("--- Full Traceback ---")
-            traceback.print_exc() # Print the full stack trace to the console for detailed debugging
-            print("----------------------")
-            return JsonResponse({'success': False, 'message': 'Error processing payment'})
-            
-    else:
-        return JsonResponse({'success': False, 'message': 'Invalid request method'})
+            # The general error handler will still catch the crash
+            return JsonResponse({'success': False, 'message': 'GENERIC_CRASH_FAILED'})
 
 
 from django.shortcuts import get_object_or_404
