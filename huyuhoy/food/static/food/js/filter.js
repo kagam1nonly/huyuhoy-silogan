@@ -32,7 +32,7 @@ const products = [
     },
     {
         id: 1,
-        image: '/static/food/imgs/porksilog.png',
+        image: '/static/food/imgs/Porksilog.png',
         title: 'Pork Silog',
         price:110,
         category: 'Silog'
