@@ -100,7 +100,19 @@ def meal_view(request):
     isAuthenticated = request.user.is_authenticated
     print(isAuthenticated)
 
-    ctx = {'meals': meals, 'isAuthenticated': isAuthenticated}
+    # Map meal names to static image paths
+    meal_image_map = {
+        'Sisilog': '/static/food/imgs/sisilog.png',
+        'Pork Silog': '/static/food/imgs/porksilog.png',
+        'Bang Silog': '/static/food/imgs/bangsilog.png',
+        'Corn Silog': '/static/food/imgs/cornsilog.png',
+        'Tuna Silog': '/static/food/imgs/tunasilog.png',
+        'Spam Silog': '/static/food/imgs/spamsilog.png',
+        'Quarterpound Beef Patty': '/static/food/imgs/quarterpound.png',
+        'Pork Steak': '/static/food/imgs/porksteak.png'
+    }
+
+    ctx = {'meals': meals, 'isAuthenticated': isAuthenticated, 'meal_image_map': meal_image_map}
     return render(request, 'food/meal.html', ctx)
 
 @csrf_protect

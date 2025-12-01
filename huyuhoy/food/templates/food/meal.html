@@ -1,6 +1,7 @@
 {% extends 'food/base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
+{% load custom_filters %}
 {% include 'food/header.html' %} 
 {% block content %}
     <title>Huyuhoy Silogan</title>
@@ -16,7 +17,7 @@
         <div class="meal-container">
                 {% for meal in meals %}
                 <div class="product-card">
-                    <img class="product-image" src="{{ request.scheme }}://{{ request.get_host }}{{ meal.pImage.url }}" alt="{{ meal.name }}">
+                    <img class="product-image" src="{{ meal_image_map|get_item:meal.name|default:meal.pImage.url }}" alt="{{ meal.name }}">
                     <h4 class="product-title" id="meal{{ meal.meal_id }}">{{ meal.name }}</h4>
 
                     <!-- Add hidden data element with meal data -->
