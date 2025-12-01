@@ -100,19 +100,7 @@ def meal_view(request):
     isAuthenticated = request.user.is_authenticated
     print(isAuthenticated)
 
-    # Map meal names to static image paths
-    meal_image_map = {
-        'Sisilog': '/static/food/imgs/sisilog.png',
-        'Pork Silog': '/static/food/imgs/porksilog.png',
-        'Bang Silog': '/static/food/imgs/bangsilog.png',
-        'Corn Silog': '/static/food/imgs/cornsilog.png',
-        'Tuna Silog': '/static/food/imgs/tunasilog.png',
-        'Spam Silog': '/static/food/imgs/spamsilog.png',
-        'Quarterpound Beef Patty': '/static/food/imgs/quarterpound.png',
-        'Pork Steak': '/static/food/imgs/porksteak.png'
-    }
-
-    ctx = {'meals': meals, 'isAuthenticated': isAuthenticated, 'meal_image_map': meal_image_map}
+    ctx = {'meals': meals, 'isAuthenticated': isAuthenticated}
     return render(request, 'food/meal.html', ctx)
 
 @csrf_protect
@@ -210,9 +198,11 @@ def calculate_total_order_amount(user_id):
     print("user_id:", user_id)
     with connection.cursor() as cursor:
         try:
-            # Verify the user_id before calling the stored procedure
-
-            cursor.callproc('CalculateTotalBillForCustomer', [user_id])
+            # Use raw SQL to call the function with proper syntax
+            cursor.execute(
+                "SELECT * FROM CalculateTotalBillForCustomer(%s)",
+                [user_id]
+            )
             print("Stored procedure called successfully")
             result = cursor.fetchone()
             print("Total Amount:", result[0])
