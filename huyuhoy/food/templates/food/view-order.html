@@ -100,6 +100,27 @@
         var modalId = 'payModal' + orderNumber;
         var modalElement = document.getElementById(modalId);
         modalElement.style.display = 'none';
+        
+        // Mark payment as no longer processing for this order
+        if (typeof paymentProcessing !== 'undefined') {
+            paymentProcessing[orderNumber] = false;
+        }
+        
+        // Clear all pending payment timeouts when modal is closed
+        if (typeof paymentTimeouts !== 'undefined') {
+            paymentTimeouts.forEach(function(timeoutId) {
+                clearTimeout(timeoutId);
+            });
+            paymentTimeouts = [];
+        }
+        
+        // Also hide loadingModal when payment modal closes
+        var loadingModal = document.querySelector('.loadingModal');
+        if (loadingModal) {
+            loadingModal.style.display = 'none';
+            loadingModal.style.opacity = 0;
+        }
+        
         console.log('Modal hidden');
     }
 
