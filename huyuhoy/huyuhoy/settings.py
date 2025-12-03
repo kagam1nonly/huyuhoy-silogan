@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'huyuhoy.wsgi.application'
 # TOGGLE BETWEEN LOCAL AND HOSTED DATABASE:
 # Set USE_LOCAL_DB = True to use local SQLite
 # Set USE_LOCAL_DB = False to use hosted PostgreSQL database
-USE_LOCAL_DB = False  # ⚠️ SWITCH THIS TO TOGGLE DATABASE
+USE_LOCAL_DB = True  # ⚠️ SWITCH THIS TO TOGGLE DATABASE
 
 if USE_LOCAL_DB:
     # LOCAL SQLite DATABASE (for local development without hosted DB)

@@ -321,17 +321,35 @@ function cancelOrder(orderNumber) {
     }
 }
 
+// Track ongoing timeouts to clear them on retry
+var paymentTimeouts = [];
+var paymentProcessing = {};
+
 function gcashPay(orderNumber, event) {
     event.preventDefault();
+    
+    // Clear any pending timeouts from previous attempts
+    paymentTimeouts.forEach(function(timeoutId) {
+        clearTimeout(timeoutId);
+    });
+    paymentTimeouts = [];
+    
+    // Mark this order as currently processing
+    paymentProcessing[orderNumber] = true;
+    
     var loadingModal = document.querySelector(".loadingModal");
     var loader = document.querySelector(".loadingModal .loader");
     var emsg = document.querySelector(".loadingModal .e-msg");
+    
+    // Completely reset modal state before showing
     loadingModal.style.display = 'block';
     loadingModal.style.opacity = 1;
     loadingModal.style.transition = 'opacity 0.3s ease-in-out';
     loadingModal.style.pointerEvents = 'auto';
     loader.style.display = 'block';
     emsg.style.display = 'none';
+    emsg.innerHTML = '';
+    emsg.style.color = '';
 
     var amountElement = document.getElementById('amount' + orderNumber);
     var amount = amountElement.textContent.split(':')[1].trim();
@@ -347,11 +365,18 @@ function gcashPay(orderNumber, event) {
         emsg.innerHTML  = 'Please enter a valid reference number.';
         emsg.style.marginTop = '15px';
         emsg.style.display = 'block';
-        setTimeout(function() {
+        emsg.style.color = '#dc3545';
+        // Clear error message and hide modal after 3 seconds
+        var errorTimeout = setTimeout(function() {
+            // Only proceed if payment is still being processed
+            if (!paymentProcessing[orderNumber]) return;
+            
+            emsg.innerHTML = '';
+            emsg.style.display = 'none';
+            loadingModal.style.display = 'none';
             loadingModal.style.opacity = 0;
-            loadingModal.style.pointerEvents = 'none';
-            loadingModal.style.transition = 'opacity 0.6s ease-in-out';
-        }, 5000);
+        }, 3000);
+        paymentTimeouts.push(errorTimeout);
         return;
     } else {
         loadingModal.style.opacity = 1;
@@ -389,24 +414,41 @@ function gcashPay(orderNumber, event) {
                         emsg.style.color = '#28a745';
                         
                         // Wait for user to see the success message, then close modal and reload
-                        setTimeout(function() {
+                        var successTimeout = setTimeout(function() {
+                            // Only proceed if payment is still being processed (modal not manually closed)
+                            if (!paymentProcessing[orderNumber]) return;
+                            
                             loadingModal.style.opacity = 0;
-                            hideModal(orderNumber);
-                            setTimeout(function() {
+                            var nestedTimeout = setTimeout(function() {
+                                // Check again before final actions
+                                if (!paymentProcessing[orderNumber]) return;
+                                
+                                loadingModal.style.display = 'none';
+                                loadingModal.style.pointerEvents = 'none';
+                                loadingModal.style.transition = '';
+                                hideModal(orderNumber);
                                 location.reload();
                             }, 300);
+                            paymentTimeouts.push(nestedTimeout);
                         }, 5000);
+                        paymentTimeouts.push(successTimeout);
                     } else {
                         console.error('Payment processing failed:', response.message);
                         emsg.innerHTML  = 'Payment processing failed: ' + (response.message || 'Please try again.');
                         emsg.style.display = 'block';
                         emsg.style.marginTop = '10px';
                         emsg.style.color = '#dc3545';
-                        setTimeout(function() {
+                        // Hide modal after error message
+                        var failureTimeout = setTimeout(function() {
+                            // Only proceed if payment is still being processed
+                            if (!paymentProcessing[orderNumber]) return;
+                            
+                            emsg.innerHTML = '';
+                            emsg.style.display = 'none';
+                            loadingModal.style.display = 'none';
                             loadingModal.style.opacity = 0;
-                            loadingModal.style.pointerEvents = 'none';
-                            loadingModal.style.transition = 'opacity 0.6s ease-in-out';
                         }, 4000);
+                        paymentTimeouts.push(failureTimeout);
                     }
                 }, remainingTime);
             },
@@ -423,11 +465,17 @@ function gcashPay(orderNumber, event) {
                     emsg.style.display = 'block';
                     emsg.style.marginTop = '10px';
                     emsg.style.color = '#dc3545';
-                    setTimeout(function() {
+                    // Hide modal after error message
+                    var ajaxErrorTimeout = setTimeout(function() {
+                        // Only proceed if payment is still being processed
+                        if (!paymentProcessing[orderNumber]) return;
+                        
+                        emsg.innerHTML = '';
+                        emsg.style.display = 'none';
+                        loadingModal.style.display = 'none';
                         loadingModal.style.opacity = 0;
-                        loadingModal.style.pointerEvents = 'none';
-                        loadingModal.style.transition = 'opacity 0.6s ease-in-out';
                     }, 4000);
+                    paymentTimeouts.push(ajaxErrorTimeout);
                 }, remainingTime);
             }
         }); 
