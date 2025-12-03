@@ -356,55 +356,81 @@ function gcashPay(orderNumber, event) {
     } else {
         loadingModal.style.opacity = 1;
         loadingModal.style.pointerEvents = 'auto';
-        setTimeout(function () {
-            loader.style.display = 'none'; // Hide loader after 3 seconds
-            $.ajax({
-                type: 'POST',
-                url: '/process-gcash-payment/',
-                data: {
-                    'amount': amount,
-                    'ref_num': refNum,
-                    'order_number': orderNumber
-                },
-                dataType: 'json',
-                success: function (response) {
+        
+        // Track when the request started
+        var requestStartTime = Date.now();
+        var minLoaderDisplayTime = 3000; // Show loader for at least 1 second
+        
+        // Make AJAX call
+        $.ajax({
+            type: 'POST',
+            url: '/process-gcash-payment/',
+            data: {
+                'amount': amount,
+                'ref_num': refNum,
+                'order_number': orderNumber
+            },
+            dataType: 'json',
+            success: function (response) {
+                // Calculate how long the request took
+                var elapsedTime = Date.now() - requestStartTime;
+                var remainingTime = Math.max(0, minLoaderDisplayTime - elapsedTime);
+                
+                // Wait for minimum display time before hiding loader
+                setTimeout(function() {
+                    loader.style.display = 'none'; // Hide loader when response received
+                    
                     if (response.success) {
                         console.log('Payment processed successfully');
-                        emsg.innerHTML = 'Payment has been processed <i class="lni lni-checkmark-circle"></i>';
+                        emsg.innerHTML = 'Payment has been processed successfully! <i class="lni lni-checkmark-circle"></i>';
                         emsg.style.display = 'block';
                         emsg.style.marginTop = '15px';
                         emsg.style.marginRight = '25px';
+                        emsg.style.color = '#28a745';
+                        
+                        // Wait for user to see the success message, then close modal and reload
                         setTimeout(function() {
                             loadingModal.style.opacity = 0;
-                            loadingModal.style.pointerEvents = 'none';
-                            loadingModal.style.transition = 'opacity 0.6s ease-in-out';
-                        }, 4000);
+                            hideModal(orderNumber);
+                            setTimeout(function() {
+                                location.reload();
+                            }, 300);
+                        }, 5000);
                     } else {
                         console.error('Payment processing failed:', response.message);
-                        emsg.innerHTML  = 'Payment processing failed. Please try again.';
+                        emsg.innerHTML  = 'Payment processing failed: ' + (response.message || 'Please try again.');
                         emsg.style.display = 'block';
                         emsg.style.marginTop = '10px';
+                        emsg.style.color = '#dc3545';
                         setTimeout(function() {
                             loadingModal.style.opacity = 0;
                             loadingModal.style.pointerEvents = 'none';
                             loadingModal.style.transition = 'opacity 0.6s ease-in-out';
                         }, 4000);
                     }
-                },
-                error: function (xhr, status, error) {
+                }, remainingTime);
+            },
+            error: function (xhr, status, error) {
+                // Calculate remaining time for error case too
+                var elapsedTime = Date.now() - requestStartTime;
+                var remainingTime = Math.max(0, minLoaderDisplayTime - elapsedTime);
+                
+                setTimeout(function() {
+                    loader.style.display = 'none'; // Hide loader on error
                     console.log(error);
                     console.error('Error processing payment:', error);
                     emsg.innerHTML  = 'Error processing payment. Please try again.';
                     emsg.style.display = 'block';
                     emsg.style.marginTop = '10px';
+                    emsg.style.color = '#dc3545';
                     setTimeout(function() {
                         loadingModal.style.opacity = 0;
                         loadingModal.style.pointerEvents = 'none';
                         loadingModal.style.transition = 'opacity 0.6s ease-in-out';
                     }, 4000);
-                }
-            });
-        }, 4500); 
+                }, remainingTime);
+            }
+        }); 
     }
 }
 
