@@ -2,8 +2,9 @@ import os
 import dj_database_url
 from pathlib import Path, PurePath
 
-# Load environment variables early (assuming you call load_dotenv() somewhere, 
-# or rely on Render/python-dotenv to load them)
+# Load environment variables from .env file (for local development)
+from dotenv import load_dotenv
+load_dotenv()  # This loads variables from .env file into os.environ
 
 # --- DIRECTORIES ---
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -79,15 +80,35 @@ TEMPLATES = [
 WSGI_APPLICATION = 'huyuhoy.wsgi.application'
 
 # --- DATABASE CONFIGURATION ---
-# Using dj_database_url handles both local (e.g., SQLite if no URL is set) 
-# and production (PostgreSQL via DATABASE_URL) scenarios.
+# TOGGLE BETWEEN LOCAL AND HOSTED DATABASE:
+# Set USE_LOCAL_DB = True to use local SQLite
+# Set USE_LOCAL_DB = False to use hosted PostgreSQL database
+USE_LOCAL_DB = True  # ⚠️ SWITCH THIS TO TOGGLE DATABASE
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),
-        conn_max_age=600  # Sets max connection lifetime
-    )
-}
+if USE_LOCAL_DB:
+    # LOCAL SQLite DATABASE (for local development without hosted DB)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
+else:
+    # HOSTED PostgreSQL DATABASE (requires DATABASE_URL in environment)
+    # This works both locally (if DATABASE_URL is set) and on Render
+    import ssl
+    
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.environ.get('DATABASE_URL'),
+            conn_max_age=600  # Sets max connection lifetime
+        )
+    }
+    
+    # Add SSL settings for PostgreSQL connections (fixes SSL errors on Windows)
+    if DATABASES['default']:
+        DATABASES['default'].setdefault('OPTIONS', {})
+        DATABASES['default']['OPTIONS']['sslmode'] = 'prefer'  # Use SSL if available, fallback if not
 # ------------------------------
 
 # ... (EMAIL_BACKEND, LOGGING, etc. unchanged) ...
@@ -100,6 +121,20 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 APPEND_SLASH = False
 
+
+# --- EMAIL CONFIGURATION ---
+if DEBUG:
+    # For local development: print emails to console instead of sending
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    # For production: use actual SMTP email backend
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = 'smtp.gmail.com'
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'huyuhoybiz@gmail.com')
+    EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+# ------------------------------
 
 # --- PRODUCTION SECURITY AND STATIC FILES ---
 if not DEBUG:
