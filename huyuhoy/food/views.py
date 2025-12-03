@@ -527,13 +527,21 @@ def adminpanelorder_view(request):
         print(f"order_id: {order_id}, action: {action}, admin_id: {admin_id}")
 
         if action in ['Accept', 'Refuse', 'Complete']:
-            # Check payment status before accepting order
-            if action == 'Accept':
+            # Check payment status before accepting or completing order
+            if action in ['Accept', 'Complete']:
                 try:
                     payment = Payment.objects.get(order=order)
-                    if payment.payment_status != 'Paid':
+                    
+                    # For Complete action with COD/CASH, auto-mark as Paid (cash received on delivery/pickup)
+                    if action == 'Complete' and payment.method in ['COD', 'CASH'] and payment.payment_status != 'Paid':
+                        payment.payment_status = 'Paid'
+                        payment.amount = order.bill
+                        payment.save()
+                    # For GCASH or other methods, payment must be confirmed first
+                    elif payment.payment_status != 'Paid':
+                        action_verb = 'accepting' if action == 'Accept' else 'completing'
                         return JsonResponse({
-                            'error': 'Payment must be confirmed before accepting the order. Please confirm payment first.'
+                            'error': f'Payment must be confirmed before {action_verb} the order. Please confirm payment first.'
                         }, status=400)
                 except Payment.DoesNotExist:
                     return JsonResponse({
