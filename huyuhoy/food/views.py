@@ -199,16 +199,25 @@ def calculate_total_order_amount(user_id):
     print("user_id:", user_id)
     with connection.cursor() as cursor:
         try:
-            # Use raw SQL to call the function with proper syntax
-            cursor.execute(
-                "SELECT * FROM CalculateTotalBillForCustomer(%s)",
-                [user_id]
-            )
-            print("Stored procedure called successfully")
-            result = cursor.fetchone()
-            print("Total Amount:", result[0])
-            
-            return result[0]
+            if connection.vendor == 'postgresql':
+                # Use PostgreSQL stored function
+                cursor.execute(
+                    "SELECT * FROM CalculateTotalBillForCustomer(%s)",
+                    [user_id]
+                )
+                print("Stored procedure called successfully")
+                result = cursor.fetchone()
+                print("Total Amount:", result[0])
+                return result[0]
+            else:
+                # Use direct SQL query for SQLite and other databases
+                cursor.execute(
+                    "SELECT COALESCE(SUM(bill), 0) FROM food_order WHERE customer_id = %s AND status = 'Processing'",
+                    [user_id]
+                )
+                result = cursor.fetchone()
+                print("Total Amount:", result[0])
+                return result[0]
         except Exception as e:
             print("Error:", e)
             return None
@@ -288,8 +297,12 @@ def process_gcash_payment(request):
             order.payment = payment
             order.save()
 
-            # 6. Send email notification
-            payment_send_email(request, order.id)
+            # 6. Send email notification (wrapped in try-except to not block payment)
+            try:
+                payment_send_email(request, order.id)
+            except Exception as email_error:
+                print(f"WARNING: Email failed but payment succeeded. Error: {email_error}")
+                # Continue - payment was successful even if email failed
 
             return JsonResponse({'success': True, 'message': 'Payment processed successfully'})
             
@@ -299,10 +312,10 @@ def process_gcash_payment(request):
             
         except Exception as e:
             # Final fallback for unexpected errors (This is the GENERIC_CRASH_FAILED path)
+            import traceback
             print(f"CRITICAL ERROR processing payment. Type: {type(e).__name__}, Message: {str(e)}")
-            # We cannot use traceback.print_exc() without console access, 
-            # so we rely on printing the error type/message above.
-            return JsonResponse({'success': False, 'message': 'GENERIC_CRASH_FAILED'})
+            print(f"Full traceback:\n{traceback.format_exc()}")
+            return JsonResponse({'success': False, 'message': f'Payment failed: {str(e)}'})
             
     else:
         return JsonResponse({'success': False, 'message': 'Invalid request method'})
@@ -380,14 +393,14 @@ def payment_send_email(request, order_id):
                       f'Huyuhoy Silogan'
 
     # Set the sender email address
-    from_email = 'huyuhoy.business@gmail.com'
+    from_email = 'huyuhoybiz@gmail.com'
 
     # Set the recipient list
-    recipient_list = [customer_email, 'huyuhoy.business@gmail.com']  # Add the host email address here
+    recipient_list = [customer_email, 'huyuhoybiz@gmail.com']  # Add the host email address here
 
     # Use send_mail to send the email
     send_mail(subject, customer_greeting + customer_message, from_email, [customer_email], fail_silently=False)
-    send_mail(subject, admin_greeting + admin_message, from_email, ['huyuhoy.business@gmail.com'], fail_silently=False)
+    send_mail(subject, admin_greeting + admin_message, from_email, ['huyuhoybiz@gmail.com'], fail_silently=False)
 
 def accept_send_email(request, newid):
     from django.core.mail import send_mail
@@ -417,7 +430,7 @@ def accept_send_email(request, newid):
     message += f'\nBest regards,\nHuyuhoy Silogan'
 
     # Set the sender email address
-    from_email = 'huyuhoy.business@gmail.com'
+    from_email = 'huyuhoybiz@gmail.com'
 
     # Set the recipient list
     recipient_list = [customer_email]
@@ -453,20 +466,36 @@ def adminpanel_view(request):
     print(connection.queries)
     orders = Order.objects.all()  # You can add filters as needed
 
-    # Calculate Total Revenue
-    with connection.cursor() as cursor:
-        cursor.execute('SELECT CalculateTotalRevenue()')
-        total_revenue = cursor.fetchone()[0]
+    # Calculate statistics based on database type
+    if connection.vendor == 'postgresql':
+        # Use PostgreSQL stored functions
+        with connection.cursor() as cursor:
+            cursor.execute('SELECT CalculateTotalRevenue()')
+            total_revenue = cursor.fetchone()[0]
 
-    # Calculate Total Ordered Meals
-    with connection.cursor() as cursor:
-        cursor.execute('SELECT CalculateTotalOrderedMeals()')
-        total_ordered_meals = cursor.fetchone()[0]
+        with connection.cursor() as cursor:
+            cursor.execute('SELECT CalculateTotalOrderedMeals()')
+            total_ordered_meals = cursor.fetchone()[0]
 
-    # Calculate Total Customers
-    with connection.cursor() as cursor:
-        cursor.execute('SELECT CalculateTotalCustomers()')
-        total_customers = cursor.fetchone()[0]
+        with connection.cursor() as cursor:
+            cursor.execute('SELECT CalculateTotalCustomers()')
+            total_customers = cursor.fetchone()[0]
+    else:
+        # Use direct SQL queries for SQLite and other databases
+        with connection.cursor() as cursor:
+            # Calculate Total Revenue (sum of all completed orders)
+            cursor.execute("SELECT COALESCE(SUM(bill), 0) FROM food_order WHERE status = 'Completed'")
+            total_revenue = cursor.fetchone()[0]
+
+        with connection.cursor() as cursor:
+            # Calculate Total Ordered Meals (count of all cart items)
+            cursor.execute("SELECT COALESCE(COUNT(*), 0) FROM food_cartitem")
+            total_ordered_meals = cursor.fetchone()[0]
+
+        with connection.cursor() as cursor:
+            # Calculate Total Customers (count of all users)
+            cursor.execute("SELECT COALESCE(COUNT(*), 0) FROM food_customuser")
+            total_customers = cursor.fetchone()[0]
 
     users = User.objects.all()
 
@@ -498,16 +527,43 @@ def adminpanelorder_view(request):
         print(f"order_id: {order_id}, action: {action}, admin_id: {admin_id}")
 
         if action in ['Accept', 'Refuse', 'Complete']:
-            # Use the safer execute method for table-returning functions (Fix for past issues)
-            with connection.cursor() as cursor:
-                sql = "SELECT * FROM AcceptRefuseOrder(%s, %s, %s);"
-                # Python integers (order_id, admin_id) map fine, 'action' is a string.
-                cursor.execute(sql, [order_id, action, admin_id]) 
-                result = cursor.fetchone()
-                print(f"Stored procedure result: {result}")
+            # Check payment status before accepting order
+            if action == 'Accept':
+                try:
+                    payment = Payment.objects.get(order=order)
+                    if payment.payment_status != 'Paid':
+                        return JsonResponse({
+                            'error': 'Payment must be confirmed before accepting the order. Please confirm payment first.'
+                        }, status=400)
+                except Payment.DoesNotExist:
+                    return JsonResponse({
+                        'error': 'No payment found for this order. Please ensure payment is submitted and confirmed.'
+                    }, status=400)
+            
+            if connection.vendor == 'postgresql':
+                # Use PostgreSQL stored function
+                with connection.cursor() as cursor:
+                    sql = "SELECT * FROM AcceptRefuseOrder(%s, %s, %s);"
+                    cursor.execute(sql, [order_id, action, admin_id]) 
+                    result = cursor.fetchone()
+                    print(f"Stored procedure result: {result}")
+            else:
+                # Use direct SQL for SQLite and other databases
+                # Check if admin is authorized
+                if not request.user.is_superuser:
+                    return JsonResponse({'error': 'Admin not authorized'}, status=403)
+                
+                # Update order status based on action
+                status_map = {
+                    'Accept': 'Processing',
+                    'Refuse': 'Canceled',
+                    'Complete': 'Completed'
+                }
+                order.status = status_map.get(action)
+                order.save()
 
             if action == 'Accept':
-                accept_send_email(request, order.id) # Assuming this function is stable
+                accept_send_email(request, order.id)
 
             # Determine status for client feedback
             new_status = {'Accept': 'Processing', 'Refuse': 'Refused', 'Complete': 'Completed'}.get(action, order.status)
@@ -582,25 +638,22 @@ def adminpanelpayment_view(request):
             return HttpResponseBadRequest("Payment not found")
 
         if action == 'Confirm':
-            with connection.cursor() as cursor:
-                # 🟢 FIX: Use cursor.execute with positional placeholders (%s)
-                # This approach forces the driver to handle the type conversion correctly
-                sql = "SELECT ConfirmPayment(%s);" 
+            try:
+                payment_id_int = int(payment_id)
+            except (ValueError, TypeError):
+                return HttpResponseBadRequest("Invalid Payment ID format")
+            
+            if connection.vendor == 'postgresql':
+                # Use PostgreSQL stored function
+                with connection.cursor() as cursor:
+                    sql = "SELECT ConfirmPayment(%s);" 
+                    cursor.execute(sql, [payment_id_int])
+            else:
+                # Use direct SQL for SQLite and other databases
+                payment.payment_status = 'Paid'
+                payment.save()
                 
-                # Ensure payment_id is converted to an actual integer first for safety, 
-                # although the driver should handle the string '3'
-                try:
-                    payment_id_int = int(payment_id)
-                except (ValueError, TypeError):
-                    return HttpResponseBadRequest("Invalid Payment ID format")
-                
-                cursor.execute(sql, [payment_id_int])
-                
-                # If ConfirmPayment returns a value, fetch it (optional)
-                # result = cursor.fetchone() 
-                # print(f"Stored procedure result: {result}")
-                
-                return redirect('adminpanel-payment')
+            return redirect('adminpanel-payment')
                 
         if action == 'Delete':
             payment.delete()
