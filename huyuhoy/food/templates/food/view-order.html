@@ -30,11 +30,16 @@
                 <ul>
                     {% for cartitem in order.cart_items.all %}
                     <li>
-                        {% if cartitem.rice == 'withOutRice' %}
-                        Item: {{ cartitem.name }} x With Out Rice x ₱{{ cartitem.price }}
+                        Item: {{ cartitem.name }}
+                        {% if cartitem.unlirice %}
+                         | 🍚 Unlimited Rice
                         {% else %}
-                        Item: {{ cartitem.name }} x With Rice x ₱{{ cartitem.price }}
+                         | Regular Rice
                         {% endif %}
+                        {% if cartitem.drinks != 'None' %}
+                         | 🥤 {{ cartitem.drinks }}
+                        {% endif %}
+                         | ₱{{ cartitem.price }}
                     </li>
                     {% endfor %}
                 </ul>

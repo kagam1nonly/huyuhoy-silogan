@@ -38,12 +38,18 @@
                 </div>
                 <div class="selection-message"></div>
                 <div id="address-box" style="display: none;">
-                    <i class="lni lni-map-marker"></i><label for="address" class="address">Delivery Address:</label>
-                    {% if user.address %}
-                    <textarea id="addressInput" placeholder="E.g. 123 Rizal Street" rows="1" required>{{ user.address }}</textarea>
-                    {% else %}
-                    <textarea id="addressInput" placeholder="E.g. 123 Rizal Street" rows="1" required></textarea>
-                    {% endif %}
+                    <div class="address-label-wrapper">
+                        <label for="address" class="address">
+                            <i class="lni lni-map-marker"></i> Delivery Address:
+                        </label>
+                    </div>
+                    <div class="address-input-wrapper">
+                        {% if user.address %}
+                        <textarea id="addressInput" placeholder="E.g. 123 Rizal Street" rows="1" required>{{ user.address }}</textarea>
+                        {% else %}
+                        <textarea id="addressInput" placeholder="E.g. 123 Rizal Street" rows="1" required></textarea>
+                        {% endif %}
+                    </div>
                 </div>
                 <h2 class="Payment method" id="paym" style="display: none;">Payment method</h2>
                 <div class="custom-dropdown" style="display: none;">

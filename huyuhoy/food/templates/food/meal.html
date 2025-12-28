@@ -23,21 +23,40 @@
                     {% if 'Pork Silog' == meal.name %}{% static 'food/imgs/Porksilog.png' as meal_img %}{% elif 'Bang Silog' == meal.name %}{% static 'food/imgs/bangsilog.png' as meal_img %}{% elif 'Corn Silog' == meal.name %}{% static 'food/imgs/cornsilog.png' as meal_img %}{% elif 'Tuna Silog' == meal.name %}{% static 'food/imgs/tunasilog.png' as meal_img %}{% elif 'Spam Silog' == meal.name %}{% static 'food/imgs/spamsilog.png' as meal_img %}{% elif 'Sisilog' == meal.name %}{% static 'food/imgs/sisilog.png' as meal_img %}{% elif 'Quarterpound Beef Patty' == meal.name %}{% static 'food/imgs/quarterpound.png' as meal_img %}{% elif 'Pork Steak' == meal.name %}{% static 'food/imgs/porksteak.png' as meal_img %}{% else %}{% static 'food/imgs/placeholder.png' as meal_img %}{% endif %}
                     <span id="meal-data" data-meal-name="{{ meal.name }}" data-meal-image="{{ meal_img }}" style="display: none;"></span>
 
-                    <div class="product-radio">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="radio" name="mealOption{{ meal.meal_id }}" value="{{ meal.withRice }}" unchecked>
-                            ₱ {{ meal.withRice }} <span> With Rice </span>
-                        </label>
+                    <div class="product-price-section">
+                        <div class="price-display">
+                            <span class="price-label">Base Price:</span>
+                            <span class="price-value">₱ {{ meal.withOutRice }}</span>
+                        </div>
+                        <div class="price-display">
+                            <span class="price-label">With Rice:</span>
+                            <span class="price-value">₱ {{ meal.withRice }}</span>
+                        </div>
                     </div>
-                    <div class="product-radio">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="radio" name="mealOption{{ meal.meal_id }}" value="{{ meal.withOutRice }}" unchecked>
-                            ₱ {{ meal.withOutRice }} <span> Without Rice </span>
-                        </label>
+                    
+                    <div class="product-options">
+                        <div class="option-group">
+                            <label class="checkbox-label">
+                                <input class="form-check-input unlirice-checkbox" type="checkbox" id="unlirice{{ meal.meal_id }}" unchecked>
+                                <span class="checkbox-text">🍚 Unlimited Rice</span>
+                            </label>
+                        </div>
+                        
+                        <div class="option-group">
+                            <label class="select-label">
+                                <span class="select-text">🥤 Choose Drink:</span>
+                                <select class="form-select drinks-select" id="drinks{{ meal.meal_id }}">
+                                    <option value="None">None</option>
+                                    <option value="Sprite">Sprite</option>
+                                    <option value="Coke">Coke</option>
+                                    <option value="Mountain Dew">Mountain Dew</option>
+                                </select>
+                            </label>
+                        </div>
                     </div>
+                    
                     <div>
                         <button class="btn" onclick="addMeal('{{ meal.meal_id }}', '{{ meal.name }}', '{{ meal_img }}', '{{ meal.withRice }}', '{{ meal.withOutRice }}');">Add to cart</button>
-
                     </div>
                 </div>
                 {% endfor %}
