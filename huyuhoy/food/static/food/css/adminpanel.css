@@ -499,6 +499,20 @@ td form {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
 
+.table_header h1 {
+    color: #fdc300;
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.table_header h2 {
+    color: #fdc300;
+    margin: 0;
+}
+
 .table_header i {
     transform: rotateY('angle');
 }
