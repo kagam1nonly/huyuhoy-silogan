@@ -45,26 +45,31 @@ function migrateOldImagePaths() {
 // Run migration when page loads
 migrateOldImagePaths(); 
 function addMeal(mid, mealName, mealImageUrl, withRice, withOutRice) {
-    var radio = 'mealOption' + mid;
-    var selectedRadio = document.querySelector('input[name="' + radio + '"]:checked');
-
-    if (!selectedRadio) {
-        alert('Please select a meal option before adding to the cart.');
-        return;
-    }
-
-    var price = parseFloat(selectedRadio.value);
-    var rice = selectedRadio.value === withRice ? 'With Rice' : 'Without Rice';
-
+    // Get unlimited rice checkbox status
+    var unliriceCheckbox = document.getElementById('unlirice' + mid);
+    var unlirice = unliriceCheckbox ? unliriceCheckbox.checked : false;
+    
+    // Get drinks selection
+    var drinksSelect = document.getElementById('drinks' + mid);
+    var drinks = drinksSelect ? drinksSelect.value : 'None';
+    
+    // Calculate price based on unlimited rice
+    var price = unlirice ? parseFloat(withRice) : parseFloat(withOutRice);
+    
     // Calculate and update the total price
     total = parseFloat(total) + price;
+
+    // Create display text for options
+    var riceText = unlirice ? '🍚 Unlimited Rice' : 'Regular Rice';
+    var drinkText = drinks !== 'None' ? '🥤 ' + drinks : '';
+    var optionsText = riceText + (drinkText ? ' | ' + drinkText : '');
 
     var listItem = document.createElement('li');
     listItem.className = 'cart-item';
     listItem.innerHTML = '<img src="' + mealImageUrl + '" alt="' + mealName + '" class="cart-item-image">' +
         '<div class="cart-item-details">' +
         '<p class="cart-item-name">' + mealName + '</p>' +
-        '<p class="cart-item-rice">(' + rice + ')</p>' +
+        '<p class="cart-item-options">(' + optionsText + ')</p>' +
         '<p class="cart-item-price">₱' + price.toFixed(2) + '</p>' +
         '</div>' +
         '<button class="remove-button" onclick="removeMeal(this)">x</button>';
@@ -73,11 +78,12 @@ function addMeal(mid, mealName, mealImageUrl, withRice, withOutRice) {
 
     mtotal.innerHTML = "Total: <div class='total'>₱" + total.toFixed(2) + "</div>";
 
-    // Update the local storage
+    // Update the local storage with new fields
     cartItems.push({
         name: mealName,
         mealImageURL: mealImageUrl,
-        rice: rice,
+        unlirice: unlirice,
+        drinks: drinks,
         price: price,
     });
 
@@ -95,13 +101,26 @@ function displayCart() {
 
     for (let i = 0; i < cartItems.length; i++) {
         var item = cartItems[i];
+        
+        // Handle both old and new format
+        var riceText, drinkText, optionsText;
+        if (item.hasOwnProperty('unlirice')) {
+            // New format
+            riceText = item.unlirice ? '🍚 Unlimited Rice' : 'Regular Rice';
+            drinkText = (item.drinks && item.drinks !== 'None') ? '🥤 ' + item.drinks : '';
+            optionsText = riceText + (drinkText ? ' | ' + drinkText : '');
+        } else {
+            // Old format compatibility
+            riceText = item.rice || 'Regular Rice';
+            optionsText = riceText;
+        }
 
         var listItem = document.createElement('li');
         listItem.className = 'cart-item';
         listItem.innerHTML = '<img src="' + item.mealImageURL + '" alt="' + item.name + '" class="cart-item-image" width="125" height="125">' +
             '<div class="cart-item-details">' +
             '<p class="cart-item-name">' + item.name + '</p>' +
-            '<p class="cart-item-rice">(' + item.rice + ')</p>' + 
+            '<p class="cart-item-options">(' + optionsText + ')</p>' + 
             '<p class="cart-item-price">₱' + item.price + '.00</p>' +
             '</div>' +
             '<button class="remove-button" onclick="removeMeal(' + i + ')">x</button>';

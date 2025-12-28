@@ -81,9 +81,18 @@ function displayCart() {
         mealName.textContent = cartItem.name;
         mealName.classList.add('cart-item-name'); // Add a class to the meal name
 
-        var mealRice = document.createElement('h3');
-        mealRice.textContent = cartItem.rice;
-        mealRice.classList.add('cart-item-rice'); 
+        var mealOptions = document.createElement('h3');
+        // Handle both old and new format
+        if (cartItem.hasOwnProperty('unlirice')) {
+            // New format
+            var riceText = cartItem.unlirice ? '🍚 Unlimited Rice' : 'Regular Rice';
+            var drinkText = (cartItem.drinks && cartItem.drinks !== 'None') ? '🥤 ' + cartItem.drinks : '';
+            mealOptions.textContent = riceText + (drinkText ? ' | ' + drinkText : '');
+        } else {
+            // Old format compatibility
+            mealOptions.textContent = cartItem.rice || 'Regular Rice';
+        }
+        mealOptions.classList.add('cart-item-options'); 
         
         var mealPrice = document.createElement('h3');
         mealPrice.textContent = '₱' + cartItem.price;
@@ -97,12 +106,17 @@ function displayCart() {
             removeMeal(i);
         };
 
+        // Create details wrapper for text content
+        var detailsWrapper = document.createElement('div');
+        detailsWrapper.classList.add('cart-item-details');
+        detailsWrapper.appendChild(mealName);
+        detailsWrapper.appendChild(mealOptions);
+        detailsWrapper.appendChild(mealPrice);
+
         // Append elements to the container in the desired order
         cartItemContainer.appendChild(rmvButton);
         cartItemContainer.appendChild(mealImage);
-        cartItemContainer.appendChild(mealName);
-        cartItemContainer.appendChild(mealRice);
-        cartItemContainer.appendChild(mealPrice);
+        cartItemContainer.appendChild(detailsWrapper);
 
         // Append the cart item container to their respective containers
         img.appendChild(cartItemContainer);

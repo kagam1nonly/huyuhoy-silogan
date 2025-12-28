@@ -99,7 +99,7 @@ const displayItems = (items) => {
                 </div>
                 <div class='bottom'>
                     <h2>₱${price}.00</h2>
-                    <button class='add-btn' onclick="window.location.href='meal/'">Order now</button>
+                    <button class='add-btn' onclick="window.location.href='meal/'">ORDER NOW</button>
                 </div>
             </div>`;
     }).join('');
