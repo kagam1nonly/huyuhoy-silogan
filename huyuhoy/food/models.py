@@ -78,14 +78,24 @@ class Order(models.Model):
 
 # CartItem Model  
 class CartItem(models.Model):
+    DRINK_CHOICES = [
+        ('None', 'None'),
+        ('Sprite', 'Sprite'),
+        ('Coke', 'Coke'),
+        ('Mountain Dew', 'Mountain Dew'),
+    ]
+    
     cartitem_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=120)
-    rice = models.CharField(max_length=60)
+    unlirice = models.BooleanField(default=False, verbose_name="Unlimited Rice")
+    drinks = models.CharField(max_length=20, choices=DRINK_CHOICES, default='None')
     price = models.DecimalField(max_digits=10, decimal_places=2)
     order = models.ForeignKey('Order', on_delete=models.CASCADE, related_name='cart_items')
 
     def __str__(self):
-        return self.name
+        rice_status = "Unlimited Rice" if self.unlirice else "Regular"
+        drink_info = f" | {self.drinks}" if self.drinks != 'None' else ""
+        return f"{self.name} ({rice_status}{drink_info}) - ₱{self.price}"
 
 # Custom User Model
 class CustomUser(AbstractUser):
