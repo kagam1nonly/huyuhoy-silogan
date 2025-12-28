@@ -3,33 +3,33 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    max-width: 650px;
-    margin: 40px auto;
-    padding: 40px 30px;
+    max-width: 700px;
+    margin: 60px auto;
+    padding: 50px 40px;
     text-align: center;
-    background-color: #fff;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    min-height: calc(100vh - 240px);
+    background: linear-gradient(135deg, #ffffff 0%, #fffef9 100%);
+    box-shadow: 0 4px 15px rgba(253, 195, 0, 0.1);
+    border: 2px solid #f0e5c9;
+    border-radius: 12px;
+    min-height: calc(100vh - 280px);
 }
 
 .s-wrapper h3 {
     font-family: 'Arial', 'Helvetica', sans-serif;
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 700;
-    color: #000;
-    margin-bottom: 8px;
-    text-transform: uppercase;
+    color: #212529;
+    margin: 0 0 20px 0;
     letter-spacing: 0.5px;
 }
 
 .s-wrapper h4 {
     font-family: 'Arial', 'Helvetica', sans-serif;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 600;
-    color: #333;
-    margin: 12px 0;
-    letter-spacing: 0.5px;
+    color: #212529;
+    margin: 15px 0;
+    letter-spacing: 0.3px;
 }
 
 .track-order-box {
@@ -42,69 +42,76 @@
     align-items: center;
     justify-content: center;
     text-decoration: none !important;
-    background-color: #fdc300;
-    color: #000 !important;
-    padding: 12px 30px;
-    border-radius: 4px;
+    background: linear-gradient(135deg, #fdc300 0%, #f5b335 100%);
+    color: #212529 !important;
+    padding: 14px 32px;
+    border-radius: 8px;
     font-family: 'Arial', 'Helvetica', sans-serif;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.8px;
     transition: all 0.3s ease;
-    gap: 8px;
+    gap: 10px;
+    box-shadow: 0 3px 8px rgba(253, 195, 0, 0.25);
 }
 
 .track-btn:hover,
 .track-btn:focus,
 .track-btn:active {
-    background-color: #e5af00;
+    background: linear-gradient(135deg, #e5af00 0%, #d9a020 100%);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    color: #000 !important;
+    box-shadow: 0 5px 12px rgba(253, 195, 0, 0.35);
+    color: #212529 !important;
     text-decoration: none !important;
 }
 
 .track-btn i {
-    font-size: 18px;
+    font-size: 20px;
 }
 
 .ordered-items {
     list-style: none;
     padding: 0;
-    margin: 20px 0;
+    margin: 25px 0;
     width: 100%;
-    background-color: #f8f8f8;
-    border-radius: 4px;
-    padding: 20px 15px;
-    max-height: 200px;
+    background: linear-gradient(135deg, #fffef9 0%, #ffffff 100%);
+    border: 1px solid #f0e5c9;
+    border-radius: 8px;
+    padding: 20px;
+    max-height: 250px;
     overflow-y: auto;
 }
 
 .item-name {
     font-family: 'Arial', 'Helvetica', sans-serif;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
-    color: #333;
+    color: #212529;
     text-align: left;
-    margin: 8px 0;
-    padding: 10px 15px;
-    background-color: #fff;
-    border-left: 3px solid #fdc300;
-    border-radius: 2px;
+    margin: 0 0 10px 0;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #ffffff 0%, #fffef9 100%);
+    border: 2px solid #f0e5c9;
+    border-left: 4px solid #fdc300;
+    border-radius: 6px;
+}
+
+.item-name:last-child {
+    margin-bottom: 0;
 }
 
 .total {
     font-family: 'Arial', 'Helvetica', sans-serif;
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 700;
-    color: #000;
-    margin: 20px 0;
-    padding: 15px;
-    background-color: #fdc300;
-    border-radius: 4px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    color: #212529;
+    margin: 25px 0 20px 0;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #fdc300 0%, #f5b335 100%);
+    border-radius: 8px;
+    letter-spacing: 0.8px;
+    box-shadow: 0 3px 8px rgba(253, 195, 0, 0.25);
 }
 
 .s-wrapper a {
@@ -115,23 +122,24 @@
 }
 
 .s-wrapper button {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 600;
     font-family: 'Arial', 'Helvetica', sans-serif;
-    background-color: #000;
+    background: linear-gradient(135deg, #212529 0%, #343a40 100%);
     color: #fff;
-    padding: 12px 30px;
+    padding: 14px 32px;
     width: 100%;
-    border: none;
-    border-radius: 4px;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
     cursor: pointer;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.8px;
     transition: all 0.3s ease;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
 }
 
 .s-wrapper button:hover {
-    background-color: #333;
+    background: linear-gradient(135deg, #343a40 0%, #495057 100%);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
 }
