@@ -16,7 +16,7 @@
         <div class="line"></div>
         <div class="side">
             <a href="{% url 'adminpanel' %}"><div class="button"><i class="lni lni-home"></i> Dashboard</div></a>
-            <a href="{% url 'adminpanel-order' %}"><div class="button"><i class="lni lni-layers"></i> Orders</div></a>
+            <a href="{% url 'adminpanel-order' %}"><div class="button active"><i class="lni lni-layers"></i> Orders</div></a>
             <a href="{% url 'adminpanel-payment' %}"><div class="button"><i class="lni lni-coin"></i> Payment</div></a>
             <a href="{% url 'logout' %}"><div class="button" onclick="return confirm('Are you sure you want to Log out?')"><i class="lni lni-cogs"></i> Log out</div></a>
         </div>
@@ -59,33 +59,35 @@
                             <td> {{ order.payment.method }} </td>
                             <td> <strong class="bill">{{ order.bill }}</strong> </td>
                             <td>
-                                <form method="POST" action="{% url 'adminpanel-order' %}">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="order_id" value="{{ order.id }}">
-                                    <input type="hidden" name="action" value="Accept">
-                                    <button type="submit" class="accept-button" onclick="return confirm('Are you sure you want to accept this order?')"><i class="lni lni-thumbs-up"></i></button>
-                                </form>
-                                
-                                <form method="POST" action="{% url 'adminpanel-order' %}">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="order_id" value="{{ order.id }}">
-                                    <input type="hidden" name="action" value="Refuse">
-                                    <button type="submit" class="refuse-button" onclick="return confirm('Are you sure you want to refuse this order?')"><i class="lni lni-thumbs-down"></i></button>
-                                </form>
-                                
-                                <form method="POST" action="{% url 'adminpanel-order' %}">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="order_id" value="{{ order.id }}">
-                                    <input type="hidden" name="action" value="Delete">
-                                    <button type="submit" class="delete-button" onclick="return confirm('Are you sure you want to remove this order?')"><i class="lni lni-trash-can"></i></button>
-                                </form>
-            
-                                <form method="POST" action="{% url 'adminpanel-order' %}">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="order_id" value="{{ order.id }}">
-                                    <input type="hidden" name="action" value="Complete">
-                                    <button type="submit" class="complete-button" onclick="return confirm('Are you sure you want to complete this order?')"><i class="lni lni-checkmark-circle"></i></button>
-                                </form>
+                                <div>
+                                    <form method="POST" action="{% url 'adminpanel-order' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="order_id" value="{{ order.id }}">
+                                        <input type="hidden" name="action" value="Accept">
+                                        <button type="submit" class="accept-button" onclick="return confirm('Are you sure you want to accept this order?')"><i class="lni lni-thumbs-up"></i></button>
+                                    </form>
+                                    
+                                    <form method="POST" action="{% url 'adminpanel-order' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="order_id" value="{{ order.id }}">
+                                        <input type="hidden" name="action" value="Refuse">
+                                        <button type="submit" class="refuse-button" onclick="return confirm('Are you sure you want to refuse this order?')"><i class="lni lni-thumbs-down"></i></button>
+                                    </form>
+                                    
+                                    <form method="POST" action="{% url 'adminpanel-order' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="order_id" value="{{ order.id }}">
+                                        <input type="hidden" name="action" value="Delete">
+                                        <button type="submit" class="delete-button" onclick="return confirm('Are you sure you want to remove this order?')"><i class="lni lni-trash-can"></i></button>
+                                    </form>
+                
+                                    <form method="POST" action="{% url 'adminpanel-order' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="order_id" value="{{ order.id }}">
+                                        <input type="hidden" name="action" value="Complete">
+                                        <button type="submit" class="complete-button" onclick="return confirm('Are you sure you want to complete this order?')"><i class="lni lni-checkmark-circle"></i></button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                         {% endfor %}
