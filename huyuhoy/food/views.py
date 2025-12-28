@@ -150,16 +150,24 @@ def order(request):
             order.save()
             
             for article in orders:
-                rice_choice = article.get('rice', '')
-                rice = 'withRice' if rice_choice.lower() == 'with rice' else 'withOutRice'
+                # Get unlimited rice status (boolean)
+                unlirice = article.get('unlirice', False)
+                # Convert string 'true'/'false' to boolean if needed
+                if isinstance(unlirice, str):
+                    unlirice = unlirice.lower() == 'true'
+                
+                # Get drinks selection
+                drinks = article.get('drinks', 'None')
+                
                 item = CartItem(
                     order=order,
                     name=article['name'],
                     price=float(article['price']),
-                    rice=rice
+                    unlirice=unlirice,
+                    drinks=drinks
                 )
                 item.save()
-                print(rice)
+                print(f"Item: {article['name']}, Unlimited Rice: {unlirice}, Drinks: {drinks}")
 
             # Set the 'order' and 'bill' in the session
             request.session['order'] = random_order_number
