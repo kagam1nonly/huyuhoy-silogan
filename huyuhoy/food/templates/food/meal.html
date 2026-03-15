@@ -1,0 +1,65 @@
+{% extends 'food/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% include 'food/header.html' %} 
+{% block content %}
+    <title>Huyuhoy Silogan</title>
+    <link rel="icon" type="image/png" href="{% static 'imgs/huyuhoy-logo.jpg' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'food/css/meal.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        var csrfToken = "{{ csrf_token }}";
+    </script>
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrfToken }}">
+    <h2 id="menu">Menu</h2>
+    <div class="m-wrapper">
+        <div class="meal-container">
+                {% for meal in meals %}
+                <div class="product-card">
+                    <img class="product-image" src="{{ request.scheme }}://{{ request.get_host }}{{ meal.pImage.url }}" alt="{{ meal.name }}">
+                    <h4 class="product-title" id="meal{{ meal.meal_id }}">{{ meal.name }}</h4>
+
+                    <!-- Add hidden data element with meal data -->
+                    <span id="meal-data" data-meal-name="{{ meal.name }}" data-meal-image="{{ meal.pImage.url }}" style="display: none;"></span>
+
+                    <div class="product-radio">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="radio" name="mealOption{{ meal.meal_id }}" value="{{ meal.withRice }}" unchecked>
+                            ₱ {{ meal.withRice }} <span> With Rice </span>
+                        </label>
+                    </div>
+                    <div class="product-radio">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="radio" name="mealOption{{ meal.meal_id }}" value="{{ meal.withOutRice }}" unchecked>
+                            ₱ {{ meal.withOutRice }} <span> Without Rice </span>
+                        </label>
+                    </div>
+                    <div>
+                        <button class="btn" onclick="addMeal('{{ meal.meal_id }}', '{{ meal.name }}', '{{ meal.pImage.url }}', '{{ meal.withRice }}', '{{ meal.withOutRice }}');">Add to cart</button>
+
+                    </div>
+                </div>
+                {% endfor %}
+        </div>
+        <div class="order-total">
+            <div class="order-header">
+            <h3>Cart-items</h3>
+            <div class="checkout">
+                <a href="{% url 'order' %}">
+                    Proceed to checkout
+                </a>
+            </div>
+            </a>
+            </div>
+            <div class="cart-items">
+                <ol id="mcart"></ol>
+            </div>
+            <div class="horizontal-line"></div>
+            <span id="mtotal"></span>
+        </div>
+    </div>
+    
+    <script src="{% static 'food/js/main.js' %}"></script>
+    <script src="{% static 'food/js/order.js' %}"></script>
+{% endblock content %}
+{% include 'food/footer.html' %} <!-- Include the footer -->

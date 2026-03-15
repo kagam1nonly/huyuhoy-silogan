@@ -1,0 +1,27 @@
+{% extends 'food/base.html' %}
+
+{% block content %}
+{% load static %}
+    <title>Huyuhoy Silogan</title>
+    <link rel="icon" type="image/png" href="{% static 'imgs/huyuhoy-logo.jpg' %}">
+    <section id="hero">
+    </section>
+    <section id="meal">
+        <div class="menu-container">
+            <div class="sidebar">
+                 <div id="cat-btn"></div>
+            </div>
+            <div class="meal-content">
+                <div class="meal-content2">
+                    <div class="header">
+                        <p>Our Meal</p>
+                    </div>
+                    <div class="cline"></div>
+                    <div id="root"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="{% static 'food/js/main.js' %}"></script>
+    <script src="{% static 'food/js/filter.js' %}"></script> 
+{% endblock content %}

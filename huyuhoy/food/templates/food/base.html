@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    {% load static %} <!-- Move the load static tag here -->
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Huyuhoy Silogan</title>
+    <link rel="icon" type="image/png" href="{% static 'imgs/huyuhoy-logo.jpg' %}">
+
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'food/css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'food/css/order.css' %}">
+
+    <!-- Imports -->
+    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
+    </head>
+<body>
+    {% include 'food/header.html' %}
+    {% block content %}
+    {% endblock content %}
+    {% include 'food/footer.html' %}
+</body>
+</html>

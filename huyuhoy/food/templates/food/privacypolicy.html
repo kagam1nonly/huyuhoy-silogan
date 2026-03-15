@@ -1,0 +1,144 @@
+{% load static %}
+{% include 'food/header.html' %} <!-- Include the header -->
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'food/css/howtoorder.css' %}">
+<div class="s-wrapper">
+    <div class="a-wrapper">
+        <div class="o-container c-ordernow for-delivery-form">
+            <div class="c-standard-layout-content">
+               <div class="c-standard-layout-content_display [ u-df-mb u-df-mb-w ]">
+                    <div class="modal-body desktop">
+                        <div class="privacy-policy__content" id="policy-content">
+                            <div class="js-spy">
+                                <h3 style="color:#F5B335">Privacy Policy</h3>
+                                <hr>
+                                <p class="body-1">Welcome to Huyuhoy! At Huyuhoy, we are dedicated to safeguarding your privacy and ensuring the security of your personal information. 
+                                    This Privacy Policy outlines how we collect, use, disclose, and protect your personal information when you interact with our website, 
+                                    mobile application, or any other services provided by Huyuhoy (referred to collectively as the "Services").</p><br>
+                            </div>
+                            <div class="js-spy">
+                                <h3 style="color:#F5B335">Collection of Personal Data</h3>
+                                <hr>
+                                <p class="body-1">We may collect various types of personal information when you engage with our Services, including but not limited to:</p><br>
+                                <p class="body-1"><b>Personal Identifiers:</b>
+                                     Such as your name, email address, phone number, and mailing address when you create an account, place an order, or contact us.</p><br>
+                                <p class="body-1"><b>Payment Information:</b> When you make purchases through our Services, we may collect payment card information and billing details. 
+                                    Please note that we do not store payment card information; it is securely processed by our trusted payment service providers.</p><br>
+                                <p class="body-1"><b>Order History:</b> Information about your past orders, including the items you have ordered and transaction details.</p><br>
+                                <p class="body-1"><b>Usage Information:</b> We gather data related to how you interact with our website and mobile application, including your IP address, browser type, device information, and usage patterns.</p>
+                            </div>
+                            <br>
+                            <div class="js-spy">
+                                <h3 style="color:#F5B335">Use of Personal Data</h3>
+                                <hr>
+                                <p class="body-1">The Company uses your Personal Data for the following purposes, without limitation:</p><br>
+                                <p class="body-1">a) to deliver or improve our products and services.</p><br>
+                                <p class="body-1">b) to administer a content, promotion, survey or other Site feature.</p><br>
+                                <p class="body-1">c) to send periodic emails regarding your account or other products and services.</p><br>
+                                <p class="body-1">d) to effectively respond to your customer service requests and support needs.</p><br>
+                                <p class="body-1">The Company may share the Personal Data gathered from you within Max’s Group of Companies and will use it 
+                                    consistent with the purpose of this Privacy Policy. We may also use the information in the aggregate to understand how our 
+                                    users as a group, use the services and resources provided on our Site.</p>
+                            </div>
+                            <br>
+                            <div class="js-spy">
+                                <h3 style="color:#F5B335">Third-Party Payment Processor</h3>
+                                <hr>
+                                <p class="body-1">The Company takes the security and privacy of your billing information seriously. 
+                                All credit/debit card payments are processed over a secure connection using PesoPay’s PCI-compliant gateway. 
+                                We do not store credit/debit card details and instead relies on PesoPay for this. To save a new credit/debit card to your account, 
+                                go to the payment options, select “pay online via credit card”, check the box "Save credit card information", then click continue. 
+                                If you saved a credit/debit card to your account, you will not be able to update the existing card information, but you can delete 
+                                it from your account on the same page. You can save a new credit/debit card to your account the next time you order from our Site. 
+                                Your CVV/CVC is always required to be manually encoded for every transaction, for validation purposes.</p><br>
+                                <p class="body-1">Tip: If you don't want to save your credit/debit card information to your account, make sure to un-check the box next to "Save credit card information."</p>
+                            </div>
+                            <br>
+                            <div class="js-spy">
+                                <h3 style="color:#F5B335">Further Disclosure</h3>
+                                <hr>
+                                <p class="body-1">We take reasonable precautions to be sure that nonaffiliated third parties and affiliates, 
+                                to whom we disclose your Personal Data are aware of our Privacy Policy and will treat the information in a 
+                                similarly responsible manner. Our contracts and written agreements with nonaffiliated third parties that receive 
+                                information from us about you prohibit those parties from transferring the information other than to provide the service that you obtain from us.</p><br>
+                                <p class="body-1">Agents and contractors: Our contractors sometimes have access to your Personal Data in the course of assisting in
+                                    operating our business and providing products or services to you. These contractors may include vendors and suppliers that provide us with technology, 
+                                    services, and/or content for the operation and maintenance of our website. Access to your Personal Data by these contractors is limited to the information 
+                                    reasonably necessary for the contractor to perform its limited function. Contractors have an obligation under their contracts with us to keep your information 
+                                    confidential and to comply with our privacy and security policies.</p><br>
+                                <p class="body-1">Disclosure for legal reason:We may release Personal Data to third parties: (1) to comply with valid legal requirements 
+                                    such as a law, regulation, search warrant, subpoena or court order; or (2) in special cases, such as a threat to security, 
+                                    a threat to our system or network, or cases in which we believe it is reasonably necessary to investigate or prevent harm, 
+                                    fraud, abuse, or illegal conduct.</p><br>
+                                <p class="body-1">Changes in our corporate structure:If all or part of the Company is sold, merged or otherwise transferred to 
+                                    another entity, the Personal Data you have provided to us may be transferred as part of that transaction. We will take steps 
+                                    to ensure that, without your consent, any Personal Data that is transferred will not be used or shared in a manner inconsistent 
+                                    with this Privacy Policy.</p><br>
+                                <p class="body-1">Tip: If you don't want to save your credit/debit card information to your account, make sure to un-check the box next to "Save credit card information."</p>
+                            </div>
+                            <br>
+                            <div class="js-spy">
+                                <h3 style="color:#F5B335">Accuracy and Access</h3>
+                                <hr>
+                                <p class="body-1">The Company will keep your Personal Data as accurate, complete and up-to-date as is necessary for the 
+                                purpose for which it is processed. You will have adequate controls in your account profile to help ensure the accuracy 
+                                of your Personal Data. Should you wish to obtain a copy of Personal Data you provided to us, or if you become aware the 
+                                information is incorrect and you would like us to correct it, or if you wish to withdraw your Personal Data, please immediately 
+                                inform us. (see Contact Us section below)</p>
+                            </div>
+                            <br>
+                            <div class="js-spy">
+                                <h3 style="color:#F5B335">Security</h3>
+                                <hr>
+                                <p class="body-1">The Company employs adequate organizational, physical and technical security measures such as 
+                                password protection, encryption, firewalls and other controls, to ensure and preserve the confidentiality, 
+                                integrity and availability of your Personal Data. Only authorized persons from the Company will have access to 
+                                your Personal Data. Employees who misuse any information are subject to disciplinary action, including termination.</p>
+                            </div>
+                            <br>
+                            <div class="js-spy">
+                                <h3 style="color:#F5B335">Third Parties</h3>
+                                <hr>
+                                <p class="body-1">The Company may offer links to sites that is run by third parties. If you visit other sites, you should read the site’s privacy policy,
+                                terms and conditions, and their other policies. The Company is not responsible for the policies and practices of third parties. 
+                                Any information you give to those organizations is dealt with under their privacy statement, terms and conditions, and other policies.</p>
+                            </div>
+                            <br>
+                            <div class="js-spy">
+                                <h3 style="color:#F5B335">Retention and Disposal</h3>
+                                <hr>
+                                <p class="body-1">The Company will retain your Personal Data only as long as necessary for the fulfillment of the stated purposes. 
+                                In case that the system is no longer functional or decommissioned, all of your Personal Data in digital or hard copies will be 
+                                disposed or erased according to the Company’s guidelines, where it is irretrievable, unreadable, or unidentifiable. In case you 
+                                subscribed to marketing campaigns, you will still receive emails/SMS notifications. If you want to cancel your subscription, 
+                                you may click the unsubscribe link at the bottom of any email message from the Company, or follow the SMS cancellation instructions.</p>
+                            </div>
+                            <br>
+                            <div class="js-spy">
+                                <h3 style="color:#F5B335">Applicable Law and Rights</h3>
+                                <hr>
+                                <p class="body-1">The Company upholds compliance with Republic Act No. 10173 or the Data Privacy Act of 2012 (DPA), 
+                                its Implementing Rules and Regulations, and other relevant policies, including issuances of the National Privacy Commission. 
+                                The Company acknowledges your right to be informed, object processing, access and rectify, suspend or withdraw Personal Data, 
+                                and be indemnified in case of damages pursuant to the provisions of DPA.</p>
+                            </div>
+                            <br>
+                            <div class="js-spy">
+                                <h3 style="color:#F5B335">Changes to Privacy Policy</h3>
+                                <hr>
+                                <p class="body-1">The Company reserves the right to amend this Privacy Policy at any time, consistent with applicable law. 
+                                In such case, an updated version will be posted in our Site. If we are going to use your Personal Data in a manner different 
+                                from that stated at the time of collection, we will notify you, and you will have a choice as to whether or not we can use your 
+                                Personal Data in such a way.</p>
+                            </div>
+                            <br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+{% include 'food/footer.html' %}
