@@ -1,0 +1,72 @@
+.order-container {
+    background-color: #fff; /* White background for contrast */
+    border: 1px solid #000; /* Border color matching your theme */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    padding: 30px; 
+    text-align: center; 
+    width: 80%; 
+    max-width: 550px; 
+    min-height: 400px; /* Set a fixed height */
+    overflow: auto;
+    margin: 20px auto; 
+}
+
+.track-btn {
+    display: flex;
+    justify-content: center; /* Center the button content */
+    align-items: center;
+    text-decoration: none !important;
+    background-color: #ffc107; /* Yellow background */
+    color: #000; /* Black font color */
+    padding: 10px 15px; /* Padding for the button */
+    border-radius: 5px; /* Rounded corners */
+    margin: 15px 0; /* Margin above and below */
+    transition: background-color 0.3s; 
+    color: #252932;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-family: sans-serif;
+    font-size: small;
+}
+
+.track-btn:hover {
+    background-color: #f3b807; 
+    cursor: pointer;
+}
+
+.continue-btn { /* Styling for continue ordering button */
+    background-color: #28a745; /* Green background for the continue button */
+    color: #252932; /* White font color */
+    padding: 10px 20px; /* Padding for the button */
+    width: 200px; /* Fixed width for consistency */
+    border: none; /* Remove default border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 16px; /* Font size for button */
+    margin-top: 20px; /* Space above the button */
+    transition: background-color 0.3s; /* Smooth transition on hover */
+}
+
+.continue-btn:hover {
+    background-color: #218838;
+    color: #252932;
+}
+
+.ordered-items {
+    list-style: none; /* No bullet points */
+    padding: 0; /* Remove default padding */
+    text-align: center; /* Center text in the list */
+}
+
+.item-name {
+    text-transform: uppercase; /* Uppercase text */
+    text-align: center; /* Center text */
+    margin: 5px 0; /* Space between items */
+}
+
+.total {
+    font-size: 22px; /* Larger font for total */
+    margin-top: 10px; /* Space above total */
+    text-align: center; /* Center total text */
+}

@@ -1,0 +1,42 @@
+body {
+    background-color: whitesmoke;
+    
+}
+.s-wrapper {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    width: 100%; /* Equal width for left and right */
+    padding: 20px; /* Adjust the padding as needed */
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.line-indicator {
+    width: 2px; /* Adjust the width as needed */
+    background-color: dimgray; /* Adjust the color as needed */
+    height: 100%; /* Height will match the height of .footer-desc */
+    position: absolute;
+    left: 104%; /* Position it in the center of the .footer-desc */
+    top: 0;
+    transform: translateX(-50%); /* Center horizontally */
+}
+
+h3 {
+    font-family:Arial, Helvetica, sans-serif;
+    color: black;
+    font-size: 34px;
+}
+p {
+    font-family:Arial, Helvetica, sans-serif;
+    color: black;
+    font-size: 14px;
+}
+body-1 {
+    font-family:Arial, Helvetica, sans-serif;
+    color: black;
+}
+li {
+    font-family:Arial, Helvetica, sans-serif;
+    color: black;
+    font-size: 14px;
+}
