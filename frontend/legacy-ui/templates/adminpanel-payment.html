@@ -1,0 +1,98 @@
+﻿{% load static %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'food/css/adminpanel.css' %}">
+<link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet">
+<title>Huyuhoy Silogan</title>
+<link rel="icon" type="image/png" href="{% static 'imgs/huyuhoy-logo.jpg' %}">
+
+{% if user.is_superuser %}
+<div class="main-container">
+    <div class="sidebar">
+        <div class="header">
+            <a href="{% url 'index' %}" class="header-logo">
+                <img src="{% static 'food/imgs/huyuhoy-logo.jpg' %}" class="logo" alt="Huyuhoy logo">
+            </a>
+            <i class="lni lni-user"> </i> <h2>{{ user.username }}</h2>
+        </div>
+        <div class="line"></div>
+        <div class="side">
+            <a href="{% url 'adminpanel' %}"><div class="button"><i class="lni lni-home"></i> Dashboard</div></a>
+            <a href="{% url 'adminpanel-order' %}"><div class="button"><i class="lni lni-layers"></i> Orders</div></a>
+            <a href="{% url 'adminpanel-payment' %}"><div class="button"><i class="lni lni-coin"></i> Payment</div></a>
+            <a href="{% url 'logout' %}"><div class="button" onclick="return confirm('Are you sure you want to Log out?')"><i class="lni lni-cogs"></i> Log out</div></a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <main class="table">
+            <section class="table_header">
+                <h1>Payments</h1>
+                <h2>
+                    <i class="lni lni-wallet"></i>
+                    <i class="lni lni-wallet"></i>
+                    <i class="lni lni-wallet"></i>
+                </h2>
+            </section>
+            <section class="table_body2">
+                <table>
+                    <thead>
+                        <tr>
+                            <th> ID </th>
+                            <th> Customer </th>
+                            <th> Order Number </th>
+                            <th> Status </th>
+                            <th> Amount </th>
+                            <th> Referrence No. </th>
+                            <th> Payment Method </th>
+                            <th colspan="4"> Action </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for payment in payments %}
+                        <tr>
+                            <td> {{ payment.id }} </td>
+                            <td> {{ payment.order.customer.first_name }} {{ payment.order.customer.last_name }}</td>
+                            <td> {{ payment.order.number }} </td>
+                            <td> {{ payment.payment_status }} </td>
+                            <td> <strong>{{ payment.amount|default:'' }}</strong> </td>
+                            <td> {{ payment.ref_num|default:'' }} </td>
+                            <td> {{ payment.method }} </td>
+                            <td>
+                                <form method="POST" action="{% url 'adminpanel-payment' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="payment_id" value="{{ payment.id }}">
+                                    <input type="hidden" name="action" value="Confirm">
+                                    <button type="submit" class="complete-button" onclick="return confirm('Are you sure you want to Complete this Payment?')"><i class="lni lni-check-box"></i></button>
+                                </form>
+                                
+                                <form method="POST" action="{% url 'adminpanel-payment' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="payment_id" value="{{ payment.id }}">
+                                    <input type="hidden" name="action" value="Delete">
+                                    <button type="submit" class="delete-button" onclick="return confirm('Are you sure you want to Remove this Payment?')"><i class="lni lni-trash-can"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    {% else %}
+    <div class="main-container2">
+        <div class="warning-container">
+            <span><i class="lni lni-warning"></i></span>
+            <div class="h1">Admin section only!</div>
+        </div>
+        <div class="home-container">
+            <a class="home-btn" href="{% url 'index' %}">
+                <span><i class="lni lni-home"></i></span>
+                <div class="return">Return</div>
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- <script src="{% static 'food/js/adminpanel.js' %}"></script> -->
+{% endblock %}

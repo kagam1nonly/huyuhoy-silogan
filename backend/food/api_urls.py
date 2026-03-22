@@ -1,0 +1,38 @@
+from django.urls import path
+from .api_views import (
+    HealthCheckAPIView,
+    CsrfTokenAPIView,
+    SignupAPIView,
+    LoginAPIView,
+    LogoutAPIView,
+    MeAPIView,
+    MealListAPIView,
+    OrderListCreateAPIView,
+    OrderDetailAPIView,
+    CancelOrderAPIView,
+    GCashPaymentAPIView,
+    AdminOrdersAPIView,
+    AdminOrderActionAPIView,
+    AdminPaymentsAPIView,
+    AdminPaymentConfirmAPIView,
+    AdminPaymentDeleteAPIView,
+)
+
+urlpatterns = [
+    path('health/', HealthCheckAPIView.as_view(), name='api-health'),
+    path('auth/csrf/', CsrfTokenAPIView.as_view(), name='api-auth-csrf'),
+    path('auth/signup/', SignupAPIView.as_view(), name='api-auth-signup'),
+    path('auth/login/', LoginAPIView.as_view(), name='api-auth-login'),
+    path('auth/logout/', LogoutAPIView.as_view(), name='api-auth-logout'),
+    path('auth/me/', MeAPIView.as_view(), name='api-auth-me'),
+    path('meals/', MealListAPIView.as_view(), name='api-meals'),
+    path('orders/', OrderListCreateAPIView.as_view(), name='api-orders'),
+    path('orders/<str:number>/', OrderDetailAPIView.as_view(), name='api-order-detail'),
+    path('orders/<str:order_number>/cancel/', CancelOrderAPIView.as_view(), name='api-cancel-order'),
+    path('orders/<str:order_number>/payment/gcash/', GCashPaymentAPIView.as_view(), name='api-gcash-payment'),
+    path('admin/orders/', AdminOrdersAPIView.as_view(), name='api-admin-orders'),
+    path('admin/orders/<int:order_id>/action/', AdminOrderActionAPIView.as_view(), name='api-admin-order-action'),
+    path('admin/payments/', AdminPaymentsAPIView.as_view(), name='api-admin-payments'),
+    path('admin/payments/<int:payment_id>/confirm/', AdminPaymentConfirmAPIView.as_view(), name='api-admin-payment-confirm'),
+    path('admin/payments/<int:payment_id>/', AdminPaymentDeleteAPIView.as_view(), name='api-admin-payment-delete'),
+]
