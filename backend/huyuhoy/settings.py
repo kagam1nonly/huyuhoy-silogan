@@ -43,13 +43,22 @@ ROOT_URLCONF = 'huyuhoy.urls'
 
 # --- DATABASE CONFIGURATION ---
 # Uses SQLite for local dev, PostgreSQL for Render/Supabase
+database_url = os.getenv('DATABASE_URL')
+
 DATABASES = {
-    'default': dj_database_url.config(
-        default='sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3'),
-        conn_max_age=600,
-        ssl_require=not DEBUG
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
 }
+
+if database_url:
+    # We manually parse the parts so the URL parser doesn't get confused
+    config = dj_database_url.parse(database_url, conn_max_age=600, ssl_require=not DEBUG)
+    
+    # If parsing worked, update the DATABASES setting
+    if config:
+        DATABASES['default'] = config
 
 # --- STATIC & MEDIA ---
 STATIC_URL = '/static/'
