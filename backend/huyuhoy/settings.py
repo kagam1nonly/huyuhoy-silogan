@@ -1,7 +1,7 @@
 import os
 import dj_database_url
 from pathlib import Path, PurePath
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urlsplit, urlunsplit, quote, unquote
 import django_heroku
 import psycopg2
 
@@ -26,6 +26,27 @@ def normalize_host(value):
     if ':' in host and not host.startswith('['):
         host = host.split(':', 1)[0]
     return host
+
+
+def sanitize_database_url(value):
+    if not value or '://' not in value:
+        return value
+
+    split = urlsplit(value)
+    netloc = split.netloc
+    if '@' not in netloc:
+        return value
+
+    userinfo, hostinfo = netloc.rsplit('@', 1)
+    if ':' in userinfo:
+        username, password = userinfo.split(':', 1)
+        username = quote(unquote(username), safe='')
+        password = quote(unquote(password), safe='')
+        safe_userinfo = f'{username}:{password}'
+    else:
+        safe_userinfo = quote(unquote(userinfo), safe='')
+
+    return urlunsplit((split.scheme, f'{safe_userinfo}@{hostinfo}', split.path, split.query, split.fragment))
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -176,7 +197,11 @@ if use_sqlite:
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 elif database_url:
-    DATABASES['default'] = dj_database_url.parse(database_url, conn_max_age=600, ssl_require=not DEBUG)
+    DATABASES['default'] = dj_database_url.parse(
+        sanitize_database_url(database_url),
+        conn_max_age=600,
+        ssl_require=not DEBUG,
+    )
 
 APPEND_SLASH = False
 
