@@ -2,11 +2,11 @@ import os
 import dj_database_url
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Build paths inside the project
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'local-dev-only-secret-key-change-me')
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', '9!s-WXdO!xfjhcpvq%rF^hhy4IMn(yb918KMeE(SnrR(5t47L^rVGa5728@&HBFj')
 DEBUG = os.getenv('DJANGO_DEBUG', 'False').lower() == 'true'
 
 # Allowed Hosts
@@ -41,10 +41,27 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'huyuhoy.urls'
 
-# --- DATABASE CONFIGURATION ---
-# Uses SQLite for local dev, PostgreSQL for Render/Supabase
-database_url = os.getenv('DATABASE_URL')
+# --- TEMPLATES (FIXED: Required for Admin Panel) ---
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
 
+WSGI_APPLICATION = 'huyuhoy.wsgi.application'
+
+# --- DATABASE CONFIGURATION ---
+database_url = os.getenv('DATABASE_URL')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -53,10 +70,8 @@ DATABASES = {
 }
 
 if database_url:
-    # We manually parse the parts so the URL parser doesn't get confused
+    # Safely configure the database
     config = dj_database_url.parse(database_url, conn_max_age=600, ssl_require=not DEBUG)
-    
-    # If parsing worked, update the DATABASES setting
     if config:
         DATABASES['default'] = config
 
