@@ -119,7 +119,7 @@ TEMPLATES = [
     },
 ]
 
-# WSGI_APPLICATION = 'huyuhoy.wsgi.application'
+WSGI_APPLICATION = 'huyuhoy.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -139,8 +139,14 @@ DATABASES = {
 }
 
 database_url = os.getenv('DATABASE_URL', '').strip()
+use_sqlite = env_bool('DJANGO_USE_SQLITE', False)
 if database_url:
     DATABASES['default'] = dj_database_url.parse(database_url, conn_max_age=600, ssl_require=not DEBUG)
+elif use_sqlite:
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
 
 APPEND_SLASH = False
 

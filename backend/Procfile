@@ -1,1 +1,1 @@
-web: gunicorn huyuhoy.wsgi
+web: gunicorn huyuhoy.wsgi:application

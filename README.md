@@ -70,69 +70,84 @@ Frontend:
 
 ## Deployment Targets
 
-- Frontend: Vercel (`frontend/`)
-- Backend: Render (`backend/`)
+- Frontend: Render Static Site (`frontend/`)
+- Backend: Render Web Service (`backend/`)
+- Database: Render PostgreSQL
 
 Recommended rollout: deploy now as **beta/staging**, then continue UI polish.
 
-## Deployment Env Checklist
+## Deploy on Render from scratch (backend + frontend + DB)
 
-Frontend (Vercel):
+This repo includes a Render Blueprint at `render.yaml` for backend + database.
 
-- `VITE_API_BASE_URL=https://your-render-api-domain/api`
+### 1) Push your latest code to GitHub
 
-Backend (Render):
+Render will deploy from your connected GitHub repository.
 
-- `FRONTEND_URL=https://your-vercel-domain`
+### 2) Create services from Blueprint
 
-This keeps CORS + CSRF trusted origins aligned for cross-domain frontend/backend communication.
+1. Open Render dashboard.
+2. Click **New +** → **Blueprint**.
+3. Select this repository and branch.
+4. Confirm creation of:
+	- `huyuhoy-postgres` (PostgreSQL)
+	- `huyuhoy-backend` (Django web service)
 
-Database migration and final production DB setup can be handled after API + frontend integration is complete.
+### 3) Create frontend static site on Render
 
-## Deploy Now (Beta/Staging)
+1. Click **New +** → **Static Site**.
+2. Connect the same repository.
+3. Configure:
+	- Root Directory: `frontend`
+	- Build Command: `npm ci && npm run build`
+	- Publish Directory: `dist`
+4. Add environment variable:
+	- `VITE_API_BASE_URL=https://<your-backend-domain>.onrender.com/api`
+5. Add rewrite rule for SPA routing:
+	- Source: `/*`
+	- Destination: `/index.html`
+	- Action: `Rewrite`
 
-### 1) Deploy Backend to Render
+### Render-first (no DB yet) quick setup
 
-Create a new **Web Service** from the `backend/` directory and set:
+If Postgres is not ready yet, you can deploy backend on Render using temporary SQLite.
 
-- Build command: `pip install -r requirements.txt`
-- Start command: `gunicorn huyuhoy.wsgi`
+In Render backend service, use **Environment > Add from .env** and paste from:
 
-Set Render environment variables:
+- `backend/.env.render.no-db.example`
 
-- `DJANGO_SECRET_KEY=<long-random-secret>`
-- `DJANGO_DEBUG=False`
-- `DJANGO_ALLOWED_HOSTS=<your-render-service>.onrender.com`
-- `FRONTEND_URL=https://<your-vercel-app>.vercel.app`
-- `SESSION_COOKIE_SECURE=True`
-- `CSRF_COOKIE_SECURE=True`
-- `SESSION_COOKIE_SAMESITE=None`
-- `CSRF_COOKIE_SAMESITE=None`
-- `SECURE_SSL_REDIRECT=True`
-- `SECURE_HSTS_SECONDS=31536000`
-- `SECURE_HSTS_INCLUDE_SUBDOMAINS=True`
-- `SECURE_HSTS_PRELOAD=True`
-- `DATABASE_URL=<render-postgres-internal-or-external-url>`
+Important:
 
-Then run migrations in Render Shell:
+- Replace `DJANGO_ALLOWED_HOSTS` with your backend Render domain
+- Replace `FRONTEND_URL` with your Vercel URL
+- Keep `DJANGO_USE_SQLITE=True` for now
 
-- `python manage.py migrate`
+### 4) Wait for first deploy to finish
+
+The backend build already runs:
+
+- `pip install -r requirements.txt`
 - `python manage.py collectstatic --noinput`
+- `python manage.py migrate`
+
+### 5) Update real service URLs (important)
+
+After first deploy, Render gives final `.onrender.com` domains. Update env vars in Render:
+
+Backend (`huyuhoy-backend`):
+
+- `DJANGO_ALLOWED_HOSTS=<your-backend-domain>.onrender.com`
+- `FRONTEND_URL=https://<your-frontend-domain>.onrender.com`
+
+Then manually trigger redeploy for both services.
+
+### 6) Create admin account once
+
+Open backend service shell and run:
+
 - `python manage.py createsuperuser`
 
-### 2) Deploy Frontend to Vercel
-
-Create a new Vercel project from the `frontend/` directory and set:
-
-- Framework preset: `Vite`
-- Build command: `npm run build`
-- Output directory: `dist`
-
-Set Vercel environment variables:
-
-- `VITE_API_BASE_URL=https://<your-render-service>.onrender.com/api`
-
-### 3) Smoke Test on Live URLs
+### 7) Smoke Test on live URLs
 
 - Signup/login as customer
 - Place order
