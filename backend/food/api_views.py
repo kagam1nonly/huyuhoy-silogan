@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import authenticate, login, logout
+from django.http import JsonResponse
 from django.middleware.csrf import get_token
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.utils.decorators import method_decorator
@@ -20,12 +21,8 @@ from .serializers import (
 )
 
 
-class HealthCheckAPIView(APIView):
-    permission_classes = [permissions.AllowAny]
-    authentication_classes = []
-
-    def get(self, request):
-        return Response({'status': 'ok'})
+def health_check_view(request):
+    return JsonResponse({'status': 'ok'})
 
 
 @method_decorator(ensure_csrf_cookie, name='dispatch')
