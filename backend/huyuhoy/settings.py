@@ -170,13 +170,13 @@ DATABASES = {
 
 database_url = os.getenv('DATABASE_URL', '').strip()
 use_sqlite = env_bool('DJANGO_USE_SQLITE', False)
-if database_url:
-    DATABASES['default'] = dj_database_url.parse(database_url, conn_max_age=600, ssl_require=not DEBUG)
-elif use_sqlite:
+if use_sqlite:
     DATABASES['default'] = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
+elif database_url:
+    DATABASES['default'] = dj_database_url.parse(database_url, conn_max_age=600, ssl_require=not DEBUG)
 
 APPEND_SLASH = False
 
