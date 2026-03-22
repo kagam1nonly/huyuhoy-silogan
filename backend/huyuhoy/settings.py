@@ -13,6 +13,9 @@ DEBUG = os.getenv('DJANGO_DEBUG', 'False').lower() == 'true'
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 if not DEBUG:
     ALLOWED_HOSTS.append('.onrender.com')
+    
+if os.getenv('DATABASE_URL'):
+    print(f"DEBUG: Using DATABASE_URL: {os.getenv('DATABASE_URL')}")
 
 # Application definition
 INSTALLED_APPS = [
