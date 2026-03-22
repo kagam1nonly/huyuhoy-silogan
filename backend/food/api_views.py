@@ -22,6 +22,7 @@ from .serializers import (
 
 class HealthCheckAPIView(APIView):
     permission_classes = [permissions.AllowAny]
+    authentication_classes = []
 
     def get(self, request):
         return Response({'status': 'ok'})

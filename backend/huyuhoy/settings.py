@@ -1,6 +1,7 @@
 import os
 import dj_database_url
 from pathlib import Path, PurePath
+from urllib.parse import urlparse
 import django_heroku
 import psycopg2
 
@@ -10,6 +11,21 @@ def env_bool(name, default=False):
     if value is None:
         return default
     return value.strip().lower() in ('1', 'true', 'yes', 'on')
+
+
+def normalize_host(value):
+    if not value:
+        return ''
+    host = value.strip()
+    if not host:
+        return ''
+    if '://' in host:
+        parsed = urlparse(host)
+        host = parsed.netloc or host
+    host = host.split('/')[0].strip()
+    if ':' in host and not host.startswith('['):
+        host = host.split(':', 1)[0]
+    return host
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -35,11 +51,25 @@ SECRET_KEY = os.getenv(
 DEBUG = env_bool('DJANGO_DEBUG', False)
 
 allowed_hosts_env = os.getenv('DJANGO_ALLOWED_HOSTS', '')
-ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_env.split(',') if host.strip()]
+ALLOWED_HOSTS = [normalize_host(host) for host in allowed_hosts_env.split(',') if normalize_host(host)]
+
+render_hostname = normalize_host(os.getenv('RENDER_EXTERNAL_HOSTNAME', ''))
+if render_hostname:
+    ALLOWED_HOSTS.append(render_hostname)
+
+render_external_url = normalize_host(os.getenv('RENDER_EXTERNAL_URL', ''))
+if render_external_url:
+    ALLOWED_HOSTS.append(render_external_url)
+
+if not DEBUG:
+    ALLOWED_HOSTS.append('.onrender.com')
+
 if DEBUG:
     ALLOWED_HOSTS.extend(['127.0.0.1', 'localhost'])
 if not ALLOWED_HOSTS:
     ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+else:
+    ALLOWED_HOSTS = list(dict.fromkeys(ALLOWED_HOSTS))
 
 AUTH_USER_MODEL = 'food.CustomUser'
 # Application definition
@@ -227,4 +257,13 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ]
 }
+
+if DEBUG:
+    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ]
