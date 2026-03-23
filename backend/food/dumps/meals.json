@@ -1,0 +1,92 @@
+[
+  {
+    "model": "food.meal",
+    "pk": 1,
+    "fields": {
+      "name": "Sisilog",
+      "withRice": "99.00",
+      "withOutRice": "89.00",
+      "pImage": "meal_images/sisilog.png"
+    }
+  },
+  {
+    "model": "food.meal",
+    "pk": 2,
+    "fields": {
+      "name": "Pork Silog",
+      "withRice": "105.00",
+      "withOutRice": "95.00",
+      "pImage": "meal_images/porksilog.png"
+    }
+  },
+  {
+    "model": "food.meal",
+    "pk": 3,
+    "fields": {
+      "name": "Bang Silog",
+      "withRice": "85.00",
+      "withOutRice": "75.00",
+      "pImage": "meal_images/bangsilog.png"
+    }
+  },
+  {
+    "model": "food.meal",
+    "pk": 4,
+    "fields": {
+      "name": "Corn Silog",
+      "withRice": "79.00",
+      "withOutRice": "69.00",
+      "pImage": "meal_images/cornsilog.png"
+    }
+  },
+  {
+    "model": "food.meal",
+    "pk": 5,
+    "fields": {
+      "name": "Tuna Silog",
+      "withRice": "99.00",
+      "withOutRice": "89.00",
+      "pImage": "meal_images/tunasilog.png"
+    }
+  },
+  {
+    "model": "food.meal",
+    "pk": 6,
+    "fields": {
+      "name": "Hot Silog",
+      "withRice": "70.00",
+      "withOutRice": "60.00",
+      "pImage": "meal_images/hotsilog.png"
+    }
+  },
+  {
+    "model": "food.meal",
+    "pk": 7,
+    "fields": {
+      "name": "Spam Silog",
+      "withRice": "110.00",
+      "withOutRice": "100.00",
+      "pImage": "meal_images/spamsilog.png"
+    }
+  },
+  {
+    "model": "food.meal",
+    "pk": 8,
+    "fields": {
+      "name": "Quarterpound Beef Patty",
+      "withRice": "120.00",
+      "withOutRice": "110.00",
+      "pImage": "meal_images/quarterpound.png"
+    }
+  },
+  {
+    "model": "food.meal",
+    "pk": 9,
+    "fields": {
+      "name": "Pork Steak",
+      "withRice": "105.00",
+      "withOutRice": "95.00",
+      "pImage": "meal_images/porksteak.png"
+    }
+  }
+]
