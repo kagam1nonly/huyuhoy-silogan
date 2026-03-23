@@ -13,6 +13,7 @@ def create_superuser(apps, schema_editor):
 class Migration(migrations.Migration):
     dependencies = [
         ('food', '0001_initial'), # Make sure this matches your previous migration file
+        ('food', '0002_alter_order_payment'), # Make sure this matches your previous migration file
     ]
     operations = [
         migrations.RunPython(create_superuser),
