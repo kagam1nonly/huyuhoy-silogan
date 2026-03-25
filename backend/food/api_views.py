@@ -71,10 +71,12 @@ class LogoutAPIView(APIView):
 
 
 class MeAPIView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def get(self, request):
-        return Response(UserSerializer(request.user).data)
+        if request.user.is_authenticated:
+            return Response(UserSerializer(request.user).data)
+        return Response(None, status=status.HTTP_200_OK)
 
 
 class AdminOrdersAPIView(APIView):
