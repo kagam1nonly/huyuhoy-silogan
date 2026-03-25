@@ -10,6 +10,7 @@ async function request(path, options = {}) {
 
   const response = await fetch(`${API_BASE_URL}${path}`, {
     credentials: 'include',
+    cache: import.meta.env.DEV ? 'no-store' : 'default',
     ...options,
     headers: {
       'Content-Type': 'application/json',
