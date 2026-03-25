@@ -7,11 +7,12 @@ import LoadingState from './components/LoadingState'
 import Navbar from './components/Navbar'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
-import MealPage from './pages/MealPage'
 import MyOrdersPage from './pages/MyOrdersPage'
 import NotFoundPage from './pages/NotFoundPage'
 import OrderPage from './pages/OrderPage'
+import OrderSuccessPage from './pages/OrderSuccessPage'
 import SignupPage from './pages/SignupPage'
+import { Toaster } from './components/ui/toaster'
 
 function App() {
   const [user, setUser] = useState(null)
@@ -72,14 +73,22 @@ function App() {
 
   return (
     <div className={layoutClass}>
-      <Navbar user={user} onLoggedOut={() => setUser(null)} cartCount={cartItems.length} />
+      <Navbar
+        user={user}
+        onLoggedOut={() => setUser(null)}
+        cartCount={cartItems.length}
+        cartItems={cartItems}
+        setCartItems={setCartItems}
+      />
+      <Toaster />
       <Routes>
-        <Route path="/" element={<HomePage user={user} />} />
-        <Route path="/meal" element={<MealPage onAddToCart={addToCart} />} />
-        <Route path="/order" element={user ? <OrderPage cartItems={cartItems} setCartItems={setCartItems} user={user} /> : <Navigate to="/login" replace />} />
+        <Route path="/" element={<HomePage onAddToCart={addToCart} />} />
+        <Route path="/meal" element={<Navigate to="/" replace />} />
+        <Route path="/order" element={<OrderPage cartItems={cartItems} setCartItems={setCartItems} user={user} />} />
+        <Route path="/order-success" element={<OrderSuccessPage user={user} />} />
         <Route path="/my-orders" element={user ? <MyOrdersPage user={user} /> : <Navigate to="/login" replace />} />
-        <Route path="/login" element={!user ? <LoginPage onLoggedIn={setUser} /> : <Navigate to="/meal" replace />} />
-        <Route path="/signup" element={!user ? <SignupPage onSignedUp={setUser} /> : <Navigate to="/meal" replace />} />
+        <Route path="/login" element={!user ? <LoginPage onLoggedIn={setUser} /> : <Navigate to="/" replace />} />
+        <Route path="/signup" element={!user ? <SignupPage onSignedUp={setUser} /> : <Navigate to="/" replace />} />
         <Route path="/admin/orders" element={user?.is_staff ? <AdminOrdersPage user={user} /> : <Navigate to="/" replace />} />
         <Route path="/admin/payments" element={user?.is_staff ? <AdminPaymentsPage user={user} /> : <Navigate to="/" replace />} />
         <Route path="*" element={<NotFoundPage />} />

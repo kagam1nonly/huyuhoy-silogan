@@ -1,13 +1,17 @@
 import { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 import { createOrder } from '../api/client'
+import LoadingState from '../components/LoadingState'
 
 export default function OrderPage({ cartItems, setCartItems, user }) {
+  const navigate = useNavigate()
   const [note, setNote] = useState('')
   const [transaction, setTransaction] = useState('Pickup')
   const [address, setAddress] = useState('')
   const [paymentMethod, setPaymentMethod] = useState('CASH')
   const [submitting, setSubmitting] = useState(false)
-  const [message, setMessage] = useState('')
+  const [finalizing, setFinalizing] = useState(false)
   const [error, setError] = useState('')
 
   const total = useMemo(
@@ -19,10 +23,13 @@ export default function OrderPage({ cartItems, setCartItems, user }) {
     setCartItems(cartItems.filter((item) => item.id !== itemId))
   }
 
+  function clearCart() {
+    setCartItems([])
+  }
+
   async function submitOrder(event) {
     event.preventDefault()
     setError('')
-    setMessage('')
 
     if (!user) {
       setError('Please login first to place an order.')
@@ -50,10 +57,21 @@ export default function OrderPage({ cartItems, setCartItems, user }) {
       }
 
       const order = await createOrder(payload)
-      setMessage(`Order placed successfully: #${order.number}`)
+      toast.success(`Order placed successfully`, {
+        description: `Order #${order.number} is now being prepared.`,
+      })
+      const summary = {
+        orderNumber: order.number,
+        total: total.toFixed(2),
+        itemCount: cartItems.length,
+      }
       setCartItems([])
       setNote('')
       setAddress('')
+      setFinalizing(true)
+      window.setTimeout(() => {
+        navigate('/order-success', { state: summary })
+      }, 700)
     } catch (submitError) {
       setError(submitError.message)
     } finally {
@@ -61,28 +79,47 @@ export default function OrderPage({ cartItems, setCartItems, user }) {
     }
   }
 
-  return (
-    <main className="mx-auto w-full max-w-6xl px-4 py-10">
-      <h1 className="mb-6 text-2xl font-bold text-slate-900">Order</h1>
+  if (finalizing) {
+    return <LoadingState text="Finalizing your order..." />
+  }
 
-      <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-        <h2 className="text-lg font-semibold text-slate-900">Cart Items</h2>
+  return (
+    <main className="mx-auto w-full max-w-6xl px-4 py-6">
+      <h1 className="mb-4 text-2xl font-bold text-slate-900">Order</h1>
+
+      <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="text-lg font-semibold text-slate-900">Cart Items</h2>
+          <button
+            type="button"
+            onClick={clearCart}
+            className="cursor-pointer rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
+          >
+            Clear Cart
+          </button>
+        </div>
         {!cartItems.length && <p className="mt-2 text-sm text-slate-600">Your cart is empty.</p>}
-        <ul className="mt-3 space-y-2">
+        <ul className="mt-2 space-y-2">
           {cartItems.map((item, index) => (
-            <li key={item.id || `${item.name}-${index}`} className="flex items-center justify-between rounded-md bg-slate-50 px-3 py-2">
+            <li key={item.id || `${item.name}-${index}`} className="flex items-center justify-between rounded-md bg-slate-50 px-3 py-1.5">
               <div>
                 <p className="text-sm font-medium text-slate-900">{item.name}</p>
                 <p className="text-xs text-slate-600">{item.rice} · ₱{item.price}</p>
               </div>
-              <button onClick={() => removeItem(item.id)} className="text-sm text-rose-600 hover:text-rose-700">Remove</button>
+              <button onClick={() => removeItem(item.id)} className="cursor-pointer text-sm text-rose-600 hover:text-rose-700">Remove</button>
             </li>
           ))}
         </ul>
         <p className="mt-3 text-sm font-semibold text-slate-900">Total: ₱{total.toFixed(2)}</p>
       </section>
 
-      <form onSubmit={submitOrder} className="mt-5 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      {!user ? (
+        <section className="mt-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+          <h2 className="text-lg font-semibold text-slate-900">Checkout</h2>
+          <p className="mt-2 text-sm text-slate-600">Login to place your order and track it in your account.</p>
+        </section>
+      ) : (
+      <form onSubmit={submitOrder} className="mt-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
         <h2 className="text-lg font-semibold text-slate-900">Checkout</h2>
 
         <label className="mt-4 block text-sm font-medium text-slate-700">Transaction</label>
@@ -109,12 +146,12 @@ export default function OrderPage({ cartItems, setCartItems, user }) {
         <textarea value={note} onChange={(event) => setNote(event.target.value)} className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm" rows={3} />
 
         {error && <p className="mt-3 text-sm text-rose-600">{error}</p>}
-        {message && <p className="mt-3 text-sm text-emerald-700">{message}</p>}
 
-        <button disabled={submitting} className="mt-4 rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60">
+        <button disabled={submitting} className="mt-4 cursor-pointer rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60">
           {submitting ? 'Placing Order...' : 'Place Order'}
         </button>
       </form>
+      )}
     </main>
   )
 }

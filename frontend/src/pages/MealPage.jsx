@@ -53,33 +53,45 @@ export default function MealPage({ onAddToCart }) {
           {addedMessage}
         </div>
       )}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {meals.map((meal) => (
-          <article key={meal.meal_id} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-            <img
-              src={meal.pImage}
-              alt={meal.name}
-              className="h-44 w-full rounded-md object-cover"
-              onError={(event) => {
-                event.currentTarget.src = '/assets/huyuhoy-logo.jpg'
-              }}
-            />
-            <h2 className="mt-3 text-lg font-semibold text-slate-900">{meal.name}</h2>
-            <p className="mt-1 text-sm text-slate-600">With rice: ₱{meal.withRice}</p>
-            <p className="text-sm text-slate-600">Without rice: ₱{meal.withOutRice}</p>
-            <div className="mt-4 flex gap-2">
-              <button
-                className="rounded-md bg-slate-900 px-3 py-2 text-sm text-white hover:bg-slate-800"
-                onClick={() => handleAdd(meal, 'with rice')}
-              >
-                Add (With Rice)
-              </button>
-              <button
-                className="rounded-md bg-slate-200 px-3 py-2 text-sm text-slate-800 hover:bg-slate-300"
-                onClick={() => handleAdd(meal, 'without rice')}
-              >
-                Add (No Rice)
-              </button>
+          <article key={meal.meal_id} className="flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-transform duration-200 ease-in-out hover:scale-105">
+            <div className="flex-shrink-0">
+              <img
+                src={meal.pImage}
+                alt={meal.name}
+                className="h-40 w-full object-contain p-4"
+                onError={(event) => {
+                  event.currentTarget.src = '/assets/huyuhoy-logo.jpg'
+                }}
+              />
+            </div>
+            <div className="flex flex-1 flex-col justify-between p-4">
+              <div>
+                <h2 className="text-center text-lg font-semibold text-slate-900">{meal.name}</h2>
+                <div className="mt-4 space-y-2">
+                  <p className="text-sm text-slate-600">
+                    <span className="font-medium">With Rice:</span> ₱{meal.withRice}
+                  </p>
+                  <p className="text-sm text-slate-600">
+                    <span className="font-medium">Without Rice:</span> ₱{meal.withOutRice}
+                  </p>
+                </div>
+              </div>
+              <div className="mt-4 flex flex-col gap-2">
+                <button
+                  className="rounded-md bg-slate-900 px-3 py-2 text-sm text-white hover:bg-slate-800"
+                  onClick={() => handleAdd(meal, 'with rice')}
+                >
+                  Add (With Rice)
+                </button>
+                <button
+                  className="rounded-md bg-slate-200 px-3 py-2 text-sm text-slate-800 hover:bg-slate-300"
+                  onClick={() => handleAdd(meal, 'without rice')}
+                >
+                  Add (No Rice)
+                </button>
+              </div>
             </div>
           </article>
         ))}
