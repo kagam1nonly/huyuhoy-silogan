@@ -39,11 +39,7 @@ Admin endpoints (staff only):
 
 The frontend is initialized with React + Vite + Tailwind v4.
 
-Legacy server-rendered UI files are preserved for reference in:
-
-- `frontend/legacy-ui/templates/` (old Django HTML templates)
-- `frontend/legacy-ui/css/` (old CSS)
-- `frontend/legacy-ui/js/` (old vanilla JS)
+Legacy server-rendered UI files were removed after migration to keep the repository clean and maintainable.
 
 Set API URL in:
 
