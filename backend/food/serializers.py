@@ -76,9 +76,8 @@ class OrderCreateSerializer(serializers.Serializer):
         payment_method = validated_data.pop('payment_method', 'CASH')
 
         status = 'Pending'
-        if transaction_mode == 'Pickup':
+        if payment_method == 'CASH':
             status = 'Processing'
-            payment_method = 'CASH'
         if transaction_mode == 'Delivery' and payment_method == 'COD':
             status = 'Processing'
 

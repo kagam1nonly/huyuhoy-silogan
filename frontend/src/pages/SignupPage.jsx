@@ -1,6 +1,8 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { signup } from '../api/client'
+import { Button } from '../components/ui/button'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card'
 
 const INITIAL_STATE = {
   username: '',
@@ -30,7 +32,7 @@ export default function SignupPage({ onSignedUp }) {
       setSubmitting(true)
       const user = await signup(form)
       onSignedUp(user)
-      navigate('/meal')
+      navigate('/')
     } catch (signupError) {
       setError(signupError.message)
     } finally {
@@ -39,44 +41,55 @@ export default function SignupPage({ onSignedUp }) {
   }
 
   return (
-    <main className="mx-auto w-full max-w-xl px-4 py-10">
-      <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h1 className="text-2xl font-bold text-slate-900">Signup</h1>
-        <form onSubmit={handleSubmit} className="mt-4 grid gap-4 md:grid-cols-2">
-          <div>
-            <label className="block text-sm font-medium text-slate-700">Username</label>
-            <input value={form.username} onChange={(event) => updateField('username', event.target.value)} className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm" required />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700">Email</label>
-            <input type="email" value={form.email} onChange={(event) => updateField('email', event.target.value)} className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm" required />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700">First Name</label>
-            <input value={form.first_name} onChange={(event) => updateField('first_name', event.target.value)} className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700">Last Name</label>
-            <input value={form.last_name} onChange={(event) => updateField('last_name', event.target.value)} className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700">Phone</label>
-            <input value={form.phone} onChange={(event) => updateField('phone', event.target.value)} className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700">Address</label>
-            <input value={form.address} onChange={(event) => updateField('address', event.target.value)} className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm" />
-          </div>
-          <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-slate-700">Password</label>
-            <input type="password" value={form.password} onChange={(event) => updateField('password', event.target.value)} className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm" required minLength={8} />
-          </div>
-          {error && <p className="md:col-span-2 text-sm text-rose-600">{error}</p>}
-          <button disabled={submitting} className="md:col-span-2 w-full rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60">
-            {submitting ? 'Creating account...' : 'Create Account'}
-          </button>
-        </form>
-      </section>
+    <main className="mx-auto flex min-h-[calc(100vh-64px)] w-full max-w-6xl items-center justify-center px-4 py-10">
+      <Card className="w-full max-w-2xl">
+        <CardHeader>
+          <CardTitle className="text-2xl">Create account</CardTitle>
+          <CardDescription>Set up your account to speed up checkout and track orders.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-2">
+            <div>
+              <label className="text-sm font-medium text-slate-700">Username</label>
+              <input value={form.username} onChange={(e) => updateField('username', e.target.value)} className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm" required />
+            </div>
+            <div>
+              <label className="text-sm font-medium text-slate-700">Email</label>
+              <input type="email" value={form.email} onChange={(e) => updateField('email', e.target.value)} className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm" required />
+            </div>
+            <div>
+              <label className="text-sm font-medium text-slate-700">First name</label>
+              <input value={form.first_name} onChange={(e) => updateField('first_name', e.target.value)} className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label className="text-sm font-medium text-slate-700">Last name</label>
+              <input value={form.last_name} onChange={(e) => updateField('last_name', e.target.value)} className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label className="text-sm font-medium text-slate-700">Phone</label>
+              <input value={form.phone} onChange={(e) => updateField('phone', e.target.value)} className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label className="text-sm font-medium text-slate-700">Address</label>
+              <input value={form.address} onChange={(e) => updateField('address', e.target.value)} className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm" />
+            </div>
+            <div className="md:col-span-2">
+              <label className="text-sm font-medium text-slate-700">Password</label>
+              <input type="password" value={form.password} onChange={(e) => updateField('password', e.target.value)} className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm" required minLength={8} />
+            </div>
+            {error && <p className="text-sm text-rose-600 md:col-span-2">{error}</p>}
+            <Button type="submit" className="md:col-span-2" disabled={submitting}>
+              {submitting ? 'Creating account...' : 'Create account'}
+            </Button>
+          </form>
+        </CardContent>
+        <CardFooter className="justify-between">
+          <p className="text-sm text-slate-600">Already have an account?</p>
+          <Button asChild variant="secondary">
+            <Link to="/login">Login</Link>
+          </Button>
+        </CardFooter>
+      </Card>
     </main>
   )
 }

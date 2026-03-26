@@ -10,6 +10,7 @@ async function request(path, options = {}) {
 
   const response = await fetch(`${API_BASE_URL}${path}`, {
     credentials: 'include',
+    cache: import.meta.env.DEV ? 'no-store' : 'default',
     ...options,
     headers: {
       'Content-Type': 'application/json',
@@ -59,6 +60,15 @@ export async function logout() {
 
 export async function me() {
   return request('/auth/me/', { method: 'GET' })
+}
+
+export async function updateMe(data) {
+  const csrf = getCsrfFromCookie()
+  return request('/auth/me/', {
+    method: 'PATCH',
+    headers: { 'X-CSRFToken': csrf },
+    body: JSON.stringify(data),
+  })
 }
 
 export async function fetchMeals() {

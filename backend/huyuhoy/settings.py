@@ -46,11 +46,17 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'local-dev-only-change-this-secret-key')
-DEBUG = env_bool('DJANGO_DEBUG', False)
+debug_env = os.getenv('DJANGO_DEBUG')
+if debug_env is None:
+    DEBUG = os.getenv('RENDER') is None
+else:
+    DEBUG = env_bool('DJANGO_DEBUG', False)
 
 # Allowed Hosts
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
-if not DEBUG:
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '[::1]']
+if DEBUG:
+    ALLOWED_HOSTS.append('*')
+else:
     ALLOWED_HOSTS.append('.onrender.com')
 
 # Application definition
@@ -78,6 +84,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+if DEBUG:
+    MIDDLEWARE.insert(0, 'huyuhoy.middleware.DevNoCacheMiddleware')
+
 ROOT_URLCONF = 'huyuhoy.urls'
 
 # --- TEMPLATES (FIXED: Required for Admin Panel) ---
@@ -101,7 +110,7 @@ WSGI_APPLICATION = 'huyuhoy.wsgi.application'
 
 # --- DATABASE CONFIGURATION ---
 database_url = sanitize_database_url(os.getenv('DATABASE_URL', '').strip())
-use_sqlite = env_bool('DJANGO_USE_SQLITE', False)
+use_sqlite = env_bool('DJANGO_USE_SQLITE', DEBUG)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -146,11 +155,11 @@ if frontend_url_single:
     frontend_urls.append(frontend_url_single)
 
 if DEBUG and not frontend_urls:
+    local_ports = [5173, 5174, 5175, 5176, 5177, 5178]
     frontend_urls = [
-        'http://localhost:5173',
-        'http://127.0.0.1:5173',
-        'http://localhost:5174',
-        'http://127.0.0.1:5174',
+        origin
+        for port in local_ports
+        for origin in (f'http://localhost:{port}', f'http://127.0.0.1:{port}')
     ]
 
 frontend_urls = list(dict.fromkeys(frontend_urls))

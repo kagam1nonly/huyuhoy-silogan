@@ -71,10 +71,24 @@ class LogoutAPIView(APIView):
 
 
 class MeAPIView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def get(self, request):
-        return Response(UserSerializer(request.user).data)
+        if request.user.is_authenticated:
+            return Response(UserSerializer(request.user).data)
+        return Response(None, status=status.HTTP_200_OK)
+
+    def patch(self, request):
+        if not request.user.is_authenticated:
+            return Response({'detail': 'Authentication credentials were not provided.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        allowed_fields = {'first_name', 'last_name', 'email', 'phone', 'address'}
+        payload = {key: value for key, value in request.data.items() if key in allowed_fields}
+
+        serializer = UserSerializer(request.user, data=payload, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 
 
 class AdminOrdersAPIView(APIView):
