@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { fetchMeals } from '../api/client'
+import ImageWithFallback from '../components/ImageWithFallback'
 import ErrorState from '../components/ErrorState'
 import LoadingState from '../components/LoadingState'
 
@@ -56,14 +57,13 @@ export default function MealPage({ onAddToCart }) {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {meals.map((meal) => (
           <article key={meal.meal_id} className="flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-transform duration-200 ease-in-out hover:scale-105">
-            <div className="flex-shrink-0">
-              <img
+            <div className="shrink-0">
+              <ImageWithFallback
                 src={meal.pImage}
                 alt={meal.name}
+                wrapperClassName="h-40 w-full p-4"
                 className="h-40 w-full object-contain p-4"
-                onError={(event) => {
-                  event.currentTarget.src = '/assets/huyuhoy-logo.jpg'
-                }}
+                fallbackSrc="/assets/huyuhoy-logo.jpg"
               />
             </div>
             <div className="flex flex-1 flex-col justify-between p-4">

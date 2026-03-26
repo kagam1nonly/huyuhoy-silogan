@@ -1,6 +1,7 @@
 import { CircleHelp } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { fetchMeals } from '../api/client'
+import ImageWithFallback from '../components/ImageWithFallback'
 import MenuGrid from '../components/menu/MenuGrid'
 import ErrorState from '../components/ErrorState'
 import LoadingState from '../components/LoadingState'
@@ -74,19 +75,18 @@ export default function HomePage({ onAddToCart }) {
                 {featuredMeals.map((meal) => (
                   <CarouselItem key={meal.meal_id}>
                     <div className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
-                      <div className="flex h-[58vh] min-h-[360px] w-full items-center justify-center bg-white p-4">
-                        <img
+                      <div className="flex h-[58vh] min-h-90 w-full items-center justify-center bg-white p-4">
+                        <ImageWithFallback
                           src={meal.pImage}
                           alt={meal.name}
+                          wrapperClassName="h-full w-full"
                           className="h-full w-full object-contain"
-                          onError={(event) => {
-                            event.currentTarget.src = '/assets/huyuhoy-logo.jpg'
-                          }}
+                          fallbackSrc="/assets/huyuhoy-logo.jpg"
                         />
                       </div>
-                      <div className="border-t border-slate-200 bg-white px-5 py-4">
-                        <p className="text-xl font-bold tracking-tight text-slate-900">{meal.name}</p>
-                        <p className="mt-1 text-sm text-slate-600">With rice ₱{meal.withRice} · Without rice ₱{meal.withOutRice}</p>
+                      <div className="border-t bg-[#1b2132]/95 backdrop-blur supports-backdrop-filter:bg-[#1b2132]/90 px-4 py-3 text-white">
+                        <p className="text-xl font-bold tracking-tight">{meal.name}</p>
+                        <p className="mt-1 text-sm text-balance">With rice ₱{meal.withRice} · Without rice ₱{meal.withOutRice}</p>
                       </div>
                     </div>
                   </CarouselItem>
@@ -116,7 +116,7 @@ export default function HomePage({ onAddToCart }) {
                 </ul>
               </div>
 
-              <div className="mt-6 rounded-xl bg-slate-900 px-4 py-3 text-white">
+              <div className="mt-6 rounded-xl bg-[#1b2132]/95 backdrop-blur supports-backdrop-filter:bg-[#1b2132]/90 px-4 py-3 text-white">
                 <p className="text-sm font-medium">{meals.length} menu items available</p>
               </div>
             </div>
@@ -134,7 +134,7 @@ export default function HomePage({ onAddToCart }) {
               Pick your favorite silog meals, customize rice options, and check out quickly.
             </p>
           </div>
-          <div className="rounded-xl bg-slate-900 px-4 py-3 text-white">
+          <div className="rounded-xl bg-[#1b2132]/95 backdrop-blur supports-backdrop-filter:bg-[#1b2132]/90 px-4 py-3 text-white">
             <p className="text-sm font-medium">{meals.length} menu items available</p>
           </div>
         </div>

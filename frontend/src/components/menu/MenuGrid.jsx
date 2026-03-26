@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
+import ImageWithFallback from '../ImageWithFallback'
 import { Button } from '../ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../ui/card'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
@@ -19,13 +20,12 @@ export default function MenuGrid({ meals, onAddToCart }) {
       {meals.map((meal) => (
         <Card key={meal.meal_id} className="overflow-hidden">
           <CardHeader className="p-0">
-            <img
+            <ImageWithFallback
               src={meal.pImage}
               alt={meal.name}
+              wrapperClassName="h-44 w-full bg-white p-4"
               className="h-44 w-full bg-white object-contain p-4"
-              onError={(event) => {
-                event.currentTarget.src = '/assets/huyuhoy-logo.jpg'
-              }}
+              fallbackSrc="/assets/huyuhoy-logo.jpg"
             />
           </CardHeader>
           <CardContent className="space-y-3 p-4">
