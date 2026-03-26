@@ -62,6 +62,15 @@ export async function me() {
   return request('/auth/me/', { method: 'GET' })
 }
 
+export async function updateMe(data) {
+  const csrf = getCsrfFromCookie()
+  return request('/auth/me/', {
+    method: 'PATCH',
+    headers: { 'X-CSRFToken': csrf },
+    body: JSON.stringify(data),
+  })
+}
+
 export async function fetchMeals() {
   return request('/meals/', { method: 'GET' })
 }
