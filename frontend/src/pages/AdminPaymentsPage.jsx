@@ -214,7 +214,7 @@ export default function AdminPaymentsPage({ user }) {
                   <div className="grid grid-cols-2 gap-1.5">
                     <Button
                       size="sm"
-                      className="h-8 w-full bg-emerald-600 px-2 text-[11px] uppercase tracking-[0.06em] text-white hover:bg-emerald-700"
+                      className="h-8 w-full bg-[#1b2132]/95 px-2 text-[11px] uppercase tracking-[0.06em] text-white hover:bg-[#1b2132]/80"
                       disabled={payment.payment_status === 'Paid'}
                       onClick={() => handleConfirm(payment.id)}
                     >
@@ -222,7 +222,7 @@ export default function AdminPaymentsPage({ user }) {
                     </Button>
                     <Button
                       size="sm"
-                      className="h-8 w-full bg-red-600 px-2 text-[11px] uppercase tracking-[0.06em] text-white hover:bg-red-700"
+                      className="h-8 w-full bg-[#1b2132]/95 px-2 text-[11px] uppercase tracking-[0.06em] text-white hover:bg-[#1b2132]/80"
                       onClick={() => handleDelete(payment.id)}
                     >
                       Delete

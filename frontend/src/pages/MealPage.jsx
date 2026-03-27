@@ -63,7 +63,6 @@ export default function MealPage({ onAddToCart }) {
                 alt={meal.name}
                 wrapperClassName="h-40 w-full p-4"
                 className="h-40 w-full object-contain p-4"
-                fallbackSrc="/assets/huyuhoy-logo.jpg"
               />
             </div>
             <div className="flex flex-1 flex-col justify-between p-4">
@@ -71,25 +70,25 @@ export default function MealPage({ onAddToCart }) {
                 <h2 className="text-center text-lg font-semibold text-slate-900">{meal.name}</h2>
                 <div className="mt-4 space-y-2">
                   <p className="text-sm text-slate-600">
-                    <span className="font-medium">With Rice:</span> ₱{meal.withRice}
+                    <span className="font-medium">With Unli-rice:</span> ₱{meal.withUnliRice}
                   </p>
                   <p className="text-sm text-slate-600">
-                    <span className="font-medium">Without Rice:</span> ₱{meal.withOutRice}
+                    <span className="font-medium">Without Unli:</span> ₱{meal.withoutUnli}
                   </p>
                 </div>
               </div>
               <div className="mt-4 flex flex-col gap-2">
                 <button
                   className="rounded-md bg-slate-900 px-3 py-2 text-sm text-white hover:bg-slate-800"
-                  onClick={() => handleAdd(meal, 'with rice')}
+                  onClick={() => handleAdd(meal, 'with unli-rice')}
                 >
-                  Add (With Rice)
+                  Add (With Unli-rice)
                 </button>
                 <button
                   className="rounded-md bg-slate-200 px-3 py-2 text-sm text-slate-800 hover:bg-slate-300"
-                  onClick={() => handleAdd(meal, 'without rice')}
+                  onClick={() => handleAdd(meal, 'without unli')}
                 >
-                  Add (No Rice)
+                  Add (Without Unli)
                 </button>
               </div>
             </div>

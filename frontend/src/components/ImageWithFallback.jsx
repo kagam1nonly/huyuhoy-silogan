@@ -28,14 +28,10 @@ export default function ImageWithFallback({
 
   return (
     <div className={`relative ${wrapperClassName}`}>
-      {status !== 'loaded' ? (
+      {status === 'loading' ? (
         <div
-          className={`absolute inset-0 flex items-center justify-center rounded-md bg-slate-200 text-xs font-medium text-slate-500 ${
-            status === 'loading' ? 'animate-pulse' : ''
-          } ${skeletonClassName}`}
-        >
-          {status === 'loading' ? 'Loading image...' : 'Image unavailable'}
-        </div>
+          className={`absolute inset-0 rounded-md bg-slate-100/80 animate-pulse ${skeletonClassName}`}
+        />
       ) : null}
 
       {activeSrc ? (

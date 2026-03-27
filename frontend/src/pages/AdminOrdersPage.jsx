@@ -60,6 +60,20 @@ function paymentStatusClass(status) {
   return map[status] || 'bg-slate-100 text-slate-700 border-slate-200'
 }
 
+function formatRiceOptionLabel(value) {
+  const normalized = String(value || '').trim().toLowerCase()
+
+  if (['withunli-rice', 'withunlirice', 'withrice', 'with unli-rice', 'with rice'].includes(normalized)) {
+    return 'With unli-rice'
+  }
+
+  if (['withoutunli', 'without unli', 'withoutrice', 'without rice'].includes(normalized)) {
+    return 'Without unli'
+  }
+
+  return value || 'Without unli'
+}
+
 function actionDisabledReason(order, action) {
   if (action === 'Accept' && order.status !== 'Pending') {
     return 'Only pending orders can be accepted.'
@@ -112,15 +126,19 @@ export default function AdminOrdersPage({ user }) {
   const [selectedOrder, setSelectedOrder] = useState(null)
   const [actionOrder, setActionOrder] = useState(null)
 
-  async function loadOrders() {
+  async function loadOrders({ showLoader = true } = {}) {
     try {
-      setLoading(true)
+      if (showLoader) {
+        setLoading(true)
+      }
       const data = await adminFetchOrders()
       setOrders(data)
     } catch (loadError) {
       setError(loadError.message)
     } finally {
-      setLoading(false)
+      if (showLoader) {
+        setLoading(false)
+      }
     }
   }
 
@@ -350,7 +368,7 @@ export default function AdminOrdersPage({ user }) {
                     <div key={`${item.cartitem_id || item.name}-${index}`} className="flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2">
                       <div>
                         <p className="text-sm font-semibold text-slate-900">{item.name}</p>
-                        <p className="text-xs text-slate-500">{item.rice}</p>
+                        <p className="text-xs text-slate-500">{formatRiceOptionLabel(item.rice)}</p>
                       </div>
                       <p className="text-sm font-bold text-slate-800">{formatCurrency(item.price)}</p>
                     </div>
@@ -373,13 +391,13 @@ export default function AdminOrdersPage({ user }) {
               <div className="grid gap-2 pt-1 sm:grid-cols-3">
                 <ActionButton
                   label="Accept Order"
-                  className="h-10 w-full bg-slate-900 px-4 text-sm font-semibold text-white hover:bg-slate-800"
+                  className="h-10 w-full bg-[#1b2132]/95 px-4 text-sm font-semibold text-white hover:bg-[#1b2132]/80"
                   disabledReason={actionDisabledReason(selectedOrder, 'Accept')}
                   onClick={() => handleAction(selectedOrder.id, 'Accept')}
                 />
                 <ActionButton
                   label="Refuse Order"
-                  className="h-10 w-full bg-[#f4c23d] px-4 text-sm font-semibold text-white hover:bg-[#e7b52a]"
+                  className="h-10 w-full bg-[#1b2132]/95 px-4 text-sm font-semibold text-white hover:bg-[#1b2132]/80"
                   disabledReason={actionDisabledReason(selectedOrder, 'Refuse')}
                   onClick={() => handleAction(selectedOrder.id, 'Refuse')}
                 />
@@ -409,13 +427,13 @@ export default function AdminOrdersPage({ user }) {
               <div className="grid gap-2 sm:grid-cols-2">
                 <ActionButton
                   label="Accept"
-                  className="h-10 w-full bg-slate-900 px-3 text-sm font-semibold text-white hover:bg-slate-800"
+                  className="h-10 w-full bg-[#1b2132]/95 px-3 text-sm font-semibold text-white hover:bg-[#1b2132]/80"
                   disabledReason={actionDisabledReason(actionOrder, 'Accept')}
                   onClick={() => handleAction(actionOrder.id, 'Accept')}
                 />
                 <ActionButton
                   label="Refuse"
-                  className="h-10 w-full bg-[#f4c23d] px-3 text-sm font-semibold text-white hover:bg-[#e7b52a]"
+                  className="h-10 w-full bg-[#1b2132]/95 px-3 text-sm font-semibold text-white hover:bg-[#1b2132]/80"
                   disabledReason={actionDisabledReason(actionOrder, 'Refuse')}
                   onClick={() => handleAction(actionOrder.id, 'Refuse')}
                 />

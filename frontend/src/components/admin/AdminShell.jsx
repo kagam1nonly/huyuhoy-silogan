@@ -1,4 +1,4 @@
-import { CreditCard, LayoutDashboard, ListOrdered } from 'lucide-react'
+import { CreditCard, LayoutDashboard, ListOrdered, Settings, UserRound, UtensilsCrossed } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 
 function linkClass({ isActive }) {
@@ -15,7 +15,7 @@ export default function AdminShell({ user, title, subtitle, children }) {
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-6">
       <div className="grid gap-4 md:grid-cols-[240px_1fr]">
-        <aside className="rounded-2xl border border-[#f4c23d]/25 bg-[#1b2132] p-4 shadow-lg">
+        <aside className="rounded-2xl border border-[#f4c23d]/25 bg-[#1b2132]/95 p-4 shadow-lg">
           <p className="px-2 pb-3 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Admin Panel</p>
           <nav className="space-y-1">
             <NavLink to="/admin" end className={linkClass}>
@@ -29,6 +29,18 @@ export default function AdminShell({ user, title, subtitle, children }) {
             <NavLink to="/admin/payments" className={linkClass}>
               <CreditCard className="h-4 w-4" />
               Payments
+            </NavLink>
+            <NavLink to="/admin/meals" className={linkClass}>
+              <UtensilsCrossed className="h-4 w-4" />
+              Meals
+            </NavLink>
+            <NavLink to="/admin/users" className={linkClass}>
+              <UserRound className="h-4 w-4" />
+              Users
+            </NavLink>
+            <NavLink to="/admin/settings" className={linkClass}>
+              <Settings className="h-4 w-4" />
+              Settings
             </NavLink>
           </nav>
 

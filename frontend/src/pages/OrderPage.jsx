@@ -7,6 +7,20 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 const FINALIZING_DELAY_MS = 4000
 const PROGRESS_TICK_MS = 100
 
+function formatRiceOptionLabel(value) {
+  const normalized = String(value || '').trim().toLowerCase()
+
+  if (['withunli-rice', 'withunlirice', 'withrice', 'with unli-rice', 'with rice'].includes(normalized)) {
+    return 'With unli-rice'
+  }
+
+  if (['withoutunli', 'without unli', 'withoutrice', 'without rice'].includes(normalized)) {
+    return 'Without unli'
+  }
+
+  return value || 'Without unli'
+}
+
 export default function OrderPage({ cartItems, setCartItems, user }) {
   const navigate = useNavigate()
   const [note, setNote] = useState('')
@@ -147,7 +161,7 @@ export default function OrderPage({ cartItems, setCartItems, user }) {
             <li key={item.id || `${item.name}-${index}`} className="flex items-center justify-between rounded-md bg-slate-50 px-3 py-1.5">
               <div>
                 <p className="text-sm font-medium text-slate-900">{item.name}</p>
-                <p className="text-xs text-slate-600">{item.rice} · ₱{item.price}</p>
+                <p className="text-xs text-slate-600">{formatRiceOptionLabel(item.rice)} · ₱{item.price}</p>
               </div>
               <Button
                 type="button"

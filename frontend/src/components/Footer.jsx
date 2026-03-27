@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="mt-10 border-t border-[#f4c23d]/20 bg-[#1b2132] text-slate-200">
+    <footer className="mt-10 border-t border-[#f4c23d]/20 bg-[#1b2132]/95 text-slate-200">
       <div className="mx-auto w-full max-w-6xl px-4 py-8">
         <div className="grid gap-6 text-left md:grid-cols-3 md:items-start">
           <div className="space-y-2">
@@ -11,7 +11,7 @@ export default function Footer() {
               rel="noreferrer"
               className="inline-flex items-center gap-2 text-sm text-slate-100 transition-colors hover:text-white"
             >
-              <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-[#1877F2]">
+              <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-[#f4c23d]">
                 <path d="M13.5 21v-7h2.4l.4-3h-2.8V9.1c0-.9.3-1.5 1.6-1.5H16V5c-.2 0-1-.1-1.9-.1-1.9 0-3.2 1.2-3.2 3.4V11H8.7v3h2.2v7h2.6Z" />
               </svg>
               Facebook

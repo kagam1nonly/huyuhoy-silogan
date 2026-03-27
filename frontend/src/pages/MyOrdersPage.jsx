@@ -52,6 +52,20 @@ function paymentClass(status) {
   return map[status] || 'bg-slate-100 text-slate-700 border-slate-200'
 }
 
+function formatRiceOptionLabel(value) {
+  const normalized = String(value || '').trim().toLowerCase()
+
+  if (['withunli-rice', 'withunlirice', 'withrice', 'with unli-rice', 'with rice'].includes(normalized)) {
+    return 'With unli-rice'
+  }
+
+  if (['withoutunli', 'without unli', 'withoutrice', 'without rice'].includes(normalized)) {
+    return 'Without unli'
+  }
+
+  return value || 'Without unli'
+}
+
 const GROUPS = [
   { value: 'all', label: 'All' },
   { value: 'active', label: 'Active' },
@@ -384,7 +398,7 @@ export default function MyOrdersPage({ user }) {
                 <ul className="mt-2 space-y-2 text-sm text-slate-700">
                   {order.cart_items.map((item) => (
                     <li key={item.cartitem_id} className="flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2">
-                      <span>{item.name} · {item.rice}</span>
+                      <span>{item.name} · {formatRiceOptionLabel(item.rice)}</span>
                       <span className="font-semibold text-slate-900">{formatCurrency(item.price)}</span>
                     </li>
                   ))}

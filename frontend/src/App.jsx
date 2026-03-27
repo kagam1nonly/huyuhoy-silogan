@@ -1,9 +1,13 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
-import { fetchCsrf, me } from './api/client'
+import { toast } from 'sonner'
+import { adminFetchOrders, fetchCsrf, me } from './api/client'
 import AdminOrdersPage from './pages/AdminOrdersPage'
 import AdminPaymentsPage from './pages/AdminPaymentsPage'
 import AdminDashboardPage from './pages/AdminDashboardPage'
+import AdminMealsPage from './pages/AdminMealsPage'
+import AdminConfigPage from './pages/AdminConfigPage'
+import AdminUsersPage from './pages/AdminUsersPage'
 import LoadingState from './components/LoadingState'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
@@ -22,7 +26,7 @@ function ScrollToTop() {
   const { pathname } = useLocation()
 
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
   }, [pathname])
 
   return null
@@ -31,6 +35,15 @@ function ScrollToTop() {
 function App() {
   const [user, setUser] = useState(null)
   const [authLoading, setAuthLoading] = useState(true)
+  const [adminNotifications, setAdminNotifications] = useState(() => {
+    try {
+      const persisted = localStorage.getItem('huyuhoy-admin-notifications')
+      return persisted ? JSON.parse(persisted) : []
+    } catch {
+      return []
+    }
+  })
+  const previousAdminOrderCountRef = useRef(null)
   const [cartItems, setCartItems] = useState(() => {
     try {
       const persisted = localStorage.getItem('huyuhoy-cart')
@@ -60,8 +73,83 @@ function App() {
     localStorage.setItem('huyuhoy-cart', JSON.stringify(cartItems))
   }, [cartItems])
 
+  useEffect(() => {
+    localStorage.setItem('huyuhoy-admin-notifications', JSON.stringify(adminNotifications))
+  }, [adminNotifications])
+
+  useEffect(() => {
+    if (!user?.is_staff) {
+      previousAdminOrderCountRef.current = null
+      return undefined
+    }
+
+    let canceled = false
+
+    async function pollAdminOrders() {
+      try {
+        const data = await adminFetchOrders()
+        if (canceled) {
+          return
+        }
+
+        const previousCount = previousAdminOrderCountRef.current
+        if (typeof previousCount === 'number' && data.length > previousCount) {
+          const newCount = data.length - previousCount
+          const latestAmount = Number(data[0]?.bill || 0)
+          const plural = newCount > 1 ? 's' : ''
+
+          const incoming = data.slice(0, newCount).map((order) => ({
+            id: `order-${order.id}-${order.number}-${order.date}`,
+            orderId: order.id,
+            orderNumber: order.number,
+            amount: Number(order.bill || 0),
+            date: order.date,
+            customerName: order.customer_name,
+            read: false,
+          }))
+
+          setAdminNotifications((previous) => {
+            const existingIds = new Set(previous.map((item) => item.id))
+            const dedupedIncoming = incoming.filter((item) => !existingIds.has(item.id))
+            return [...dedupedIncoming, ...previous].slice(0, 80)
+          })
+
+          toast.success('New Order Received!', {
+            description: `${newCount} new order${plural}. Total amount: ₱${latestAmount.toFixed(2)}`,
+          })
+        }
+
+        previousAdminOrderCountRef.current = data.length
+      } catch {
+        // Silent fail on background polling to avoid noisy admin UX.
+      }
+    }
+
+    pollAdminOrders()
+    const intervalId = window.setInterval(pollAdminOrders, 5000)
+
+    return () => {
+      canceled = true
+      window.clearInterval(intervalId)
+    }
+  }, [user])
+
+  function handleMarkAdminNotificationRead(notificationId) {
+    setAdminNotifications((previous) =>
+      previous.map((item) => (item.id === notificationId ? { ...item, read: true } : item)),
+    )
+  }
+
+  function handleMarkAllAdminNotificationsRead() {
+    setAdminNotifications((previous) => previous.map((item) => ({ ...item, read: true })))
+  }
+
+  function handleClearAdminNotifications() {
+    setAdminNotifications([])
+  }
+
   function addToCart(meal, riceLabel) {
-    const rawPrice = riceLabel === 'with rice' ? meal.withRice : meal.withOutRice
+    const rawPrice = riceLabel === 'with unli-rice' ? meal.withUnliRice : meal.withoutUnli
     const price = Number(rawPrice)
 
     if (Number.isNaN(price)) {
@@ -94,6 +182,10 @@ function App() {
         cartCount={cartItems.length}
         cartItems={cartItems}
         setCartItems={setCartItems}
+        adminNotifications={adminNotifications}
+        onMarkAdminNotificationRead={handleMarkAdminNotificationRead}
+        onMarkAllAdminNotificationsRead={handleMarkAllAdminNotificationsRead}
+        onClearAdminNotifications={handleClearAdminNotifications}
       />
       <Toaster />
       <main className="flex-1">
@@ -110,6 +202,10 @@ function App() {
           <Route path="/admin" element={user?.is_staff ? <AdminDashboardPage user={user} /> : <Navigate to="/" replace />} />
           <Route path="/admin/orders" element={user?.is_staff ? <AdminOrdersPage user={user} /> : <Navigate to="/" replace />} />
           <Route path="/admin/payments" element={user?.is_staff ? <AdminPaymentsPage user={user} /> : <Navigate to="/" replace />} />
+          <Route path="/admin/meals" element={user?.is_staff ? <AdminMealsPage user={user} /> : <Navigate to="/" replace />} />
+          <Route path="/admin/users" element={user?.is_staff ? <AdminUsersPage user={user} onUserUpdated={setUser} /> : <Navigate to="/" replace />} />
+          <Route path="/admin/settings" element={user?.is_staff ? <AdminConfigPage user={user} onUserUpdated={setUser} /> : <Navigate to="/" replace />} />
+          <Route path="/admin/config" element={<Navigate to="/admin/settings" replace />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
