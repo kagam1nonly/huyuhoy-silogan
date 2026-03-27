@@ -1,232 +1,118 @@
-## Huyuhoy Silogan (Decoupled Architecture)
+# Huyuhoy Silogan
 
-This repository is now split into a modern, decoupled setup:
+Decoupled full-stack food ordering platform.
 
-- `backend/` → Django + Django REST Framework API
-- `frontend/` → React + Tailwind CSS (Vite)
+- Frontend: React + Vite + Tailwind
+- Backend: Django + Django REST Framework
+- Target production DB: PostgreSQL (Render Postgres or Supabase)
 
-## Repository Structure
+## Project Structure
 
-- `backend/manage.py` Django entry point
-- `backend/food/` Django app (models + serializers + API views)
-- `backend/food/api_urls.py` API routes
-- `frontend/src/` React application source
-- `frontend/public/assets/` migrated static image assets
-
-## Backend (Django + DRF)
-
-API base path: `/api/`
-
-Current endpoints:
-
-- `GET /api/health/`
-- `GET /api/meals/`
-- `GET /api/orders/` (auth)
-- `POST /api/orders/` (auth)
-- `GET /api/orders/{number}/` (auth)
-- `POST /api/orders/{order_number}/cancel/` (auth)
-- `POST /api/orders/{order_number}/payment/gcash/` (auth)
-
-Admin endpoints (staff only):
-
-- `GET /api/admin/orders/`
-- `POST /api/admin/orders/{id}/action/`
-- `GET /api/admin/payments/`
-- `POST /api/admin/payments/{id}/confirm/`
-- `DELETE /api/admin/payments/{id}/`
-
-## Frontend (React + Tailwind)
-
-The frontend is initialized with React + Vite + Tailwind v4.
-
-Legacy server-rendered UI files were removed after migration to keep the repository clean and maintainable.
-
-Set API URL in:
-
-- `frontend/.env` with `VITE_API_BASE_URL=http://127.0.0.1:8000/api`
-
-Set backend frontend-origin in:
-
-- `backend/.env` with `FRONTEND_URL=http://localhost:5173` (local)
-- Production example: `FRONTEND_URL=https://your-frontend.vercel.app`
+- frontend: Vite app (customer and admin UI)
+- backend: Django API and models
+- docs/notes: project notes and SQL references
+- render.yaml: Render blueprint (backend + postgres)
 
 ## Local Development
 
-Backend:
+### 1) Backend
 
-1. `cd backend`
-2. `pip install -r requirements.txt`
-3. `python manage.py runserver`
+```powershell
+Set-Location backend
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+copy .env.example .env
+python manage.py migrate
+python manage.py runserver
+```
 
-Frontend:
+Backend API runs on http://127.0.0.1:8000/api.
 
-1. `cd frontend`
-2. `npm install`
-3. `npm run dev`
+### 2) Frontend
 
-## Deployment Targets
+```powershell
+Set-Location frontend
+npm install
+"VITE_API_BASE_URL=http://127.0.0.1:8000/api" | Set-Content .env
+npm run dev
+```
 
-- Frontend: Render Static Site (`frontend/`)
-- Backend: Render Web Service (`backend/`)
-- Database: Render PostgreSQL
+Frontend runs on http://localhost:5173.
 
-Recommended rollout: deploy now as **beta/staging**, then continue UI polish.
+## Environment Variables (Backend)
 
-## Deploy on Render from scratch (backend + frontend + DB)
+Use backend/.env.example as baseline.
 
-This repo includes a Render Blueprint at `render.yaml` for backend + database.
+Required for production:
 
-### Render Free Postgres limits (important)
+- DJANGO_SECRET_KEY
+- DJANGO_DEBUG=False
+- DJANGO_ALLOWED_HOSTS (comma-separated hosts)
+- FRONTEND_URL and/or FRONTEND_URLS
+- DATABASE_URL (Postgres URI)
 
-Render Free Postgres is great for demos, but it has strict limits:
+Optional security overrides (already supported in settings.py):
 
-- Expires **30 days** after creation
-- **1 GB** storage cap
-- **No backups** on free tier
-- Only one free Postgres per workspace
+- SESSION_COOKIE_SECURE
+- CSRF_COOKIE_SECURE
+- SESSION_COOKIE_SAMESITE
+- CSRF_COOKIE_SAMESITE
+- SECURE_SSL_REDIRECT
+- SECURE_HSTS_SECONDS
+- SECURE_HSTS_INCLUDE_SUBDOMAINS
+- SECURE_HSTS_PRELOAD
 
-After expiration, there is a short grace period to upgrade, then data is deleted.
+## Deployment
 
-### 1) Push your latest code to GitHub
+### Render
 
-Render will deploy from your connected GitHub repository.
+The repository includes render.yaml for backend + postgres.
 
-### 2) Create services from Blueprint
+Backend build command:
 
-1. Open Render dashboard.
-2. Click **New +** → **Blueprint**.
-3. Select this repository and branch.
-4. Confirm creation of:
-	- `huyuhoy-postgres` (PostgreSQL)
-	- `huyuhoy-backend` (Django web service)
+- pip install -r requirements.txt
+- python manage.py migrate
+- python manage.py collectstatic --noinput
 
-### 3) Create frontend static site on Render
+After first deploy, verify env vars and create a superuser:
 
-1. Click **New +** → **Static Site**.
-2. Connect the same repository.
-3. Configure:
-	- Root Directory: `frontend`
-	- Build Command: `npm ci && npm run build`
-	- Publish Directory: `dist`
-4. Add environment variable:
-	- `VITE_API_BASE_URL=https://<your-backend-domain>.onrender.com/api`
-5. Add rewrite rule for SPA routing:
-	- Source: `/*`
-	- Destination: `/index.html`
-	- Action: `Rewrite`
+```powershell
+python manage.py createsuperuser
+```
 
-### Render-first (no DB yet) quick setup
+### Frontend Hosting
 
-If Postgres is not ready yet, you can deploy backend on Render using temporary SQLite.
+Deploy frontend as a static site (Render Static Site or Vercel).
+Set:
 
-In Render backend service, use **Environment > Add from .env** and paste from:
+- VITE_API_BASE_URL=https://your-backend-domain/api
 
-- `backend/.env.render.no-db.example`
+For SPA routing, configure rewrite:
 
-Important:
+- /* -> /index.html
 
-- Replace `DJANGO_ALLOWED_HOSTS` with your backend Render domain
-- Replace `FRONTEND_URL` with your Vercel URL
-- Keep `DJANGO_USE_SQLITE=True` for now
-- Ensure `DATABASE_URL` is unset/blank while using SQLite mode
+## Supabase PostgreSQL (Alternative)
 
-When your database is ready (Render Postgres or Supabase), set `DATABASE_URL`, set `DJANGO_USE_SQLITE=False`, then run:
+1. Create Supabase project.
+2. Copy pooled postgres URI.
+3. Set backend DATABASE_URL to Supabase URI.
+4. Ensure DJANGO_DEBUG=False and correct host/origin settings.
+5. Run migrations:
 
-- `python manage.py migrate`
+```powershell
+python manage.py migrate
+```
 
-Use this template when switching to managed Postgres:
+## Safety Review Archive
 
-- `backend/.env.render.postgres.example`
+Unexpected files were copied (not deleted) to:
 
-### 4) Wait for first deploy to finish
+- docs/review-pending/2026-03-28-unexpected-files
 
-The backend build already runs:
+You can review and remove this folder later once confirmed.
 
-- `pip install -r requirements.txt`
-- `python manage.py collectstatic --noinput`
+## Notes
 
-Then run migration once in Render Shell:
-
-- `python manage.py migrate`
-
-### 5) Update real service URLs (important)
-
-After first deploy, Render gives final `.onrender.com` domains. Update env vars in Render:
-
-Backend (`huyuhoy-backend`):
-
-- `DJANGO_ALLOWED_HOSTS=<your-backend-domain>.onrender.com`
-- `FRONTEND_URL=https://<your-frontend-domain>.onrender.com`
-
-Then manually trigger redeploy for both services.
-
-### 6) Create admin account once
-
-Open backend service shell and run:
-
-- `python manage.py createsuperuser`
-
-### 7) Smoke Test on live URLs
-
-- Signup/login as customer
-- Place order
-- Submit payment
-- Login as staff
-- Approve order/payment in `/admin/orders` and `/admin/payments`
-
-## Recommended long-term showcase setup
-
-If you want auto-sleep/auto-wake but no 30-day expiry, keep Render web service and use an external free Postgres provider (for example Supabase or Neon).
-
-1. Create the Postgres project in provider dashboard.
-2. Copy the PostgreSQL connection string.
-3. In Render backend env:
-	- set `DJANGO_USE_SQLITE=False`
-	- set `DATABASE_URL=<provider-postgres-url>`
-4. Redeploy backend.
-5. Run `python manage.py migrate` in Render Shell.
-
-## Supabase setup from scratch (recommended for portfolio)
-
-### 1) Create Supabase project
-
-1. Go to Supabase dashboard and create a new project.
-2. Wait until database status is ready.
-3. Save the database password you created.
-
-### 2) Copy Supabase Postgres connection string
-
-1. Open **Project Settings** → **Database**.
-2. Find **Connection string** and select **Transaction pooler** (recommended for hosted apps).
-3. Copy URI format similar to:
-	- `postgresql://postgres.<project-ref>:<PASSWORD>@aws-0-<region>.pooler.supabase.com:6543/postgres`
-
-### 3) Configure Render backend env
-
-Use **Environment → Add from .env** and paste from:
-
-- `backend/.env.render.supabase.example`
-
-Then replace values:
-
-- `DATABASE_URL` with your Supabase URI
-- `FRONTEND_URL` with your Vercel URL
-- `DJANGO_SECRET_KEY` with your generated secret
-
-Important:
-
-- Keep `DJANGO_USE_SQLITE=False`
-- Ensure old `DATABASE_URL` values are removed/replaced
-
-### 4) Deploy and migrate
-
-1. Redeploy backend service on Render.
-2. Open Render Shell and run:
-	- `python manage.py migrate`
-3. (Optional) Create admin user:
-	- `python manage.py createsuperuser`
-
-### 5) Verify
-
-- `GET /api/health/` returns `{"status":"ok"}`
-- From frontend, test signup/login and order flow
+- SQL reference files were reorganized to docs/notes/sql.
+- Local sqlite database file should not be committed.

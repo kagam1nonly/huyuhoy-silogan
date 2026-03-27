@@ -1,0 +1,26 @@
+# Root-level secrets and local environments
+.env
+.env.*
+!.env.example
+venv/
+.venv/
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.sqlite3
+
+# Local DB and generated media
+backend/db.sqlite3
+backend/media/
+backend/staticfiles/
+
+# Frontend build artifacts
+frontend/dist/
+frontend/node_modules/
+
+# Editor/OS noise
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
