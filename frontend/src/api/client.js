@@ -8,13 +8,15 @@ function getCsrfFromCookie() {
 
 async function request(path, options = {}) {
   const customHeaders = options.headers || {}
+  const isFormData = options.body instanceof FormData
+  const baseHeaders = isFormData ? {} : { 'Content-Type': 'application/json' }
 
   const response = await fetch(`${API_BASE_URL}${path}`, {
     credentials: 'include',
     cache: import.meta.env.DEV ? 'no-store' : 'default',
     ...options,
     headers: {
-      'Content-Type': 'application/json',
+      ...baseHeaders,
       ...customHeaders,
     },
   })
@@ -153,6 +155,57 @@ export async function adminConfirmPayment(paymentId) {
 export async function adminDeletePayment(paymentId) {
   const csrf = await resolveCsrfToken()
   return request(`/admin/payments/${paymentId}/`, {
+    method: 'DELETE',
+    headers: { 'X-CSRFToken': csrf },
+  })
+}
+
+export async function adminFetchMeals() {
+  return request('/admin/meals/', { method: 'GET' })
+}
+
+export async function adminCreateMeal(formData) {
+  const csrf = await resolveCsrfToken()
+  return request('/admin/meals/', {
+    method: 'POST',
+    headers: { 'X-CSRFToken': csrf },
+    body: formData,
+  })
+}
+
+export async function adminUpdateMeal(mealId, formData) {
+  const csrf = await resolveCsrfToken()
+  return request(`/admin/meals/${mealId}/`, {
+    method: 'PATCH',
+    headers: { 'X-CSRFToken': csrf },
+    body: formData,
+  })
+}
+
+export async function adminDeleteMeal(mealId) {
+  const csrf = await resolveCsrfToken()
+  return request(`/admin/meals/${mealId}/`, {
+    method: 'DELETE',
+    headers: { 'X-CSRFToken': csrf },
+  })
+}
+
+export async function adminFetchUsers() {
+  return request('/admin/users/', { method: 'GET' })
+}
+
+export async function adminUpdateUser(userId, data) {
+  const csrf = await resolveCsrfToken()
+  return request(`/admin/users/${userId}/`, {
+    method: 'PATCH',
+    headers: { 'X-CSRFToken': csrf },
+    body: JSON.stringify(data),
+  })
+}
+
+export async function adminDeleteUser(userId) {
+  const csrf = await resolveCsrfToken()
+  return request(`/admin/users/${userId}/`, {
     method: 'DELETE',
     headers: { 'X-CSRFToken': csrf },
   })

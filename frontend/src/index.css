@@ -1,16 +1,39 @@
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   min-width: 320px;
+  background:
+    radial-gradient(circle at 12% 20%, rgba(244, 194, 61, 0.12), transparent 45%),
+    radial-gradient(circle at 85% 8%, rgba(27, 33, 50, 0.12), transparent 42%),
+    #f8fafc;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M6 4l20 12-9 2.5L13 28 9 18.5 6 4z' fill='%230b0b0b'/%3E%3Cpath d='M6 4l20 12-9 2.5L13 28 9 18.5 6 4z' fill='none' stroke='%23e7ecf6' stroke-width='1.35' stroke-linejoin='round'/%3E%3C/svg%3E") 6 3, auto;
 }
 
 button,
 [role='button'],
 input[type='button'],
 input[type='submit'],
-input[type='reset'] {
-  cursor: pointer;
+input[type='reset'],
+a,
+label[for],
+summary {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M10 3c1.1 0 2 .9 2 2v6h2V4c0-1.1.9-2 2-2s2 .9 2 2v7h2V6c0-1.1.9-2 2-2s2 .9 2 2v10.5c0 4-3.3 7.5-7.5 7.5H16c-2.6 0-4.9-1.2-6.4-3.3L6.8 17c-.7-1-.4-2.4.6-3.1 1-.7 2.4-.4 3.1.6l1.5 2.2V5c0-1.1.9-2 2-2z' fill='%23ffffff' stroke='%230b0b0b' stroke-width='1.35' stroke-linejoin='round'/%3E%3C/svg%3E") 9 4, pointer;
+}
+
+button:active,
+[role='button']:active,
+input[type='button']:active,
+input[type='submit']:active,
+input[type='reset']:active,
+a:active,
+label[for]:active,
+summary:active {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M10 5c1.1 0 2 .9 2 2v5h2V6c0-1.1.9-2 2-2s2 .9 2 2v6h2V8c0-1.1.9-2 2-2s2 .9 2 2v9c0 4.4-3.6 8-8 8h-1c-2.9 0-5.5-1.6-6.9-4.1l-2-3.5c-.6-1-.2-2.3.8-2.9 1-.6 2.3-.2 2.9.8l1.2 2V7c0-1.1.9-2 2-2z' fill='%23ffffff' stroke='%230b0b0b' stroke-width='1.35' stroke-linejoin='round'/%3E%3Cpath d='M16 1v3M9.5 3.2l1.8 2.3M22.5 3.2l-1.8 2.3M25.5 9h-3M6.5 9h3' stroke='%23009cf6' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E") 9 4, pointer;
 }
 
 button:disabled,
@@ -18,4 +41,92 @@ input:disabled,
 select:disabled,
 textarea:disabled {
   cursor: not-allowed;
+}
+
+.brand-wordmark {
+  position: relative;
+  display: inline-block;
+  background-image: linear-gradient(110deg, #f4c23d 0%, #ffe08a 22%, #fff4cf 35%, #f4c23d 54%, #c9971d 82%, #f4c23d 100%);
+  background-size: 220% 100%;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: drop-shadow(0 0 8px rgba(244, 194, 61, 0.32));
+  animation: wordmark-shine 5.5s linear infinite;
+}
+
+.hero-orb {
+  position: absolute;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 35% 35%, rgba(244, 194, 61, 0.35), rgba(244, 194, 61, 0.08) 55%, transparent 78%);
+  filter: blur(8px);
+}
+
+.menu-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(27, 33, 50, 0.18);
+  background: rgba(27, 33, 50, 0.04);
+  padding: 0.35rem 0.7rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #1b2132;
+}
+
+.food-order-surface {
+  position: relative;
+}
+
+.corner-hot-badge {
+  display: inline-grid;
+  place-items: center;
+  width: 68px;
+  height: 68px;
+  clip-path: polygon(50% 0%, 61% 12%, 76% 8%, 79% 23%, 92% 30%, 86% 44%, 96% 56%, 84% 64%, 87% 80%, 72% 82%, 66% 96%, 50% 89%, 34% 96%, 28% 82%, 13% 80%, 16% 64%, 4% 56%, 14% 44%, 8% 30%, 21% 23%, 24% 8%, 39% 12%);
+  background: linear-gradient(90deg, #ff6b1a 0 50%, #f23f00 50% 100%);
+  box-shadow: 0 8px 14px rgba(0, 0, 0, 0.26);
+}
+
+.corner-hot-badge > span {
+  color: #f7e7b5;
+  font-size: 17px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.corner-hot-badge--small {
+  width: 54px;
+  height: 54px;
+}
+
+.corner-hot-badge--small > span {
+  font-size: 13px;
+}
+
+.corner-hot-badge--angled {
+  transform: rotate(11deg);
+}
+
+@keyframes wordmark-shine {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 220% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .brand-wordmark {
+    animation: none;
+  }
 }
