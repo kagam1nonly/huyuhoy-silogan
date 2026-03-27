@@ -7,8 +7,9 @@ from django.contrib.auth.models import AbstractUser, Group, Permission
 class Meal(models.Model):
     meal_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=120)
-    withRice = models.DecimalField(max_digits=10, decimal_places=2)
-    withOutRice = models.DecimalField(max_digits=10, decimal_places=2)
+    withUnliRice = models.DecimalField(max_digits=10, decimal_places=2)
+    withoutUnli = models.DecimalField(max_digits=10, decimal_places=2)
+    isHot = models.BooleanField(default=False)
     pImage = models.ImageField(upload_to='meal_images/')
 
     def __str__(self):  

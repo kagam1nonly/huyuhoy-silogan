@@ -16,6 +16,10 @@ from .api_views import (
     AdminPaymentsAPIView,
     AdminPaymentConfirmAPIView,
     AdminPaymentDeleteAPIView,
+    AdminMealListCreateAPIView,
+    AdminMealDetailAPIView,
+    AdminUsersAPIView,
+    AdminUserDetailAPIView,
 )
 
 urlpatterns = [
@@ -35,4 +39,8 @@ urlpatterns = [
     path('admin/payments/', AdminPaymentsAPIView.as_view(), name='api-admin-payments'),
     path('admin/payments/<int:payment_id>/confirm/', AdminPaymentConfirmAPIView.as_view(), name='api-admin-payment-confirm'),
     path('admin/payments/<int:payment_id>/', AdminPaymentDeleteAPIView.as_view(), name='api-admin-payment-delete'),
+    path('admin/meals/', AdminMealListCreateAPIView.as_view(), name='api-admin-meals'),
+    path('admin/meals/<int:meal_id>/', AdminMealDetailAPIView.as_view(), name='api-admin-meal-detail'),
+    path('admin/users/', AdminUsersAPIView.as_view(), name='api-admin-users'),
+    path('admin/users/<int:user_id>/', AdminUserDetailAPIView.as_view(), name='api-admin-user-detail'),
 ]

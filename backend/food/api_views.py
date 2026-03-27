@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -10,6 +11,8 @@ from rest_framework.views import APIView
 from .models import Meal, Order, Payment
 from .serializers import (
     MealSerializer,
+    AdminMealCreateSerializer,
+    AdminMealUpdateSerializer,
     OrderSerializer,
     OrderCreateSerializer,
     UserSerializer,
@@ -19,6 +22,8 @@ from .serializers import (
     AdminOrderSerializer,
     AdminPaymentSerializer,
 )
+
+User = get_user_model()
 
 
 def health_check_view(request):
@@ -163,6 +168,75 @@ class AdminPaymentDeleteAPIView(APIView):
         payment = get_object_or_404(Payment, id=payment_id)
         payment.delete()
         return Response({'detail': 'Payment deleted successfully.'})
+
+
+class AdminMealListCreateAPIView(APIView):
+    permission_classes = [permissions.IsAdminUser]
+
+    def get(self, request):
+        meals = Meal.objects.all().order_by('meal_id')
+        return Response(MealSerializer(meals, many=True).data)
+
+    def post(self, request):
+        serializer = AdminMealCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        meal = serializer.save()
+        return Response(MealSerializer(meal).data, status=status.HTTP_201_CREATED)
+
+
+class AdminMealDetailAPIView(APIView):
+    permission_classes = [permissions.IsAdminUser]
+
+    def patch(self, request, meal_id):
+        meal = get_object_or_404(Meal, meal_id=meal_id)
+        serializer = AdminMealUpdateSerializer(meal, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        meal = serializer.save()
+        return Response(MealSerializer(meal).data)
+
+    def delete(self, request, meal_id):
+        meal = get_object_or_404(Meal, meal_id=meal_id)
+        meal.delete()
+        return Response({'detail': 'Meal deleted successfully.'})
+
+
+class AdminUsersAPIView(APIView):
+    permission_classes = [permissions.IsAdminUser]
+
+    def get(self, request):
+        users = User.objects.all().order_by('-date_joined')
+        return Response(UserSerializer(users, many=True).data)
+
+
+class AdminUserDetailAPIView(APIView):
+    permission_classes = [permissions.IsAdminUser]
+
+    def patch(self, request, user_id):
+        user = get_object_or_404(User, id=user_id)
+        allowed_fields = {
+            'first_name',
+            'last_name',
+            'email',
+            'phone',
+            'address',
+            'is_staff',
+            'is_active',
+        }
+        payload = {key: value for key, value in request.data.items() if key in allowed_fields}
+
+        serializer = UserSerializer(user, data=payload, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def delete(self, request, user_id):
+        user = get_object_or_404(User, id=user_id)
+
+        if user.id == request.user.id:
+            return Response({'detail': 'You cannot delete your own account.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.delete()
+        return Response({'detail': 'User deleted successfully.'})
 
 
 class MealListAPIView(generics.ListAPIView):

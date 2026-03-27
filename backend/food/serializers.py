@@ -15,7 +15,26 @@ def generate_random_order_number(length=6):
 class MealSerializer(serializers.ModelSerializer):
     class Meta:
         model = Meal
-        fields = ['meal_id', 'name', 'withRice', 'withOutRice', 'pImage']
+        fields = ['meal_id', 'name', 'withUnliRice', 'withoutUnli', 'isHot', 'pImage']
+
+
+class AdminMealCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Meal
+        fields = ['name', 'withUnliRice', 'withoutUnli', 'isHot', 'pImage']
+
+
+class AdminMealUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Meal
+        fields = ['name', 'withUnliRice', 'withoutUnli', 'isHot', 'pImage']
+        extra_kwargs = {
+            'name': {'required': False},
+            'withUnliRice': {'required': False},
+            'withoutUnli': {'required': False},
+            'isHot': {'required': False},
+            'pImage': {'required': False},
+        }
 
 
 class CartItemSerializer(serializers.ModelSerializer):
@@ -105,8 +124,8 @@ class OrderCreateSerializer(serializers.Serializer):
 
             cart_items = []
             for item in items:
-                rice_choice = item.get('rice', '')
-                rice = 'withRice' if rice_choice.lower() == 'with rice' else 'withOutRice'
+                rice_choice = str(item.get('rice', '')).strip().lower().replace('-', '').replace(' ', '')
+                rice = 'with unli-rice' if rice_choice in {'withunlirice', 'withrice'} else 'without unli'
                 cart_items.append(
                     CartItem(
                         order=order,
@@ -124,7 +143,18 @@ class OrderCreateSerializer(serializers.Serializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'phone', 'address', 'is_staff']
+        fields = [
+            'id',
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            'phone',
+            'address',
+            'is_staff',
+            'is_active',
+            'date_joined',
+        ]
 
 
 class SignupSerializer(serializers.ModelSerializer):

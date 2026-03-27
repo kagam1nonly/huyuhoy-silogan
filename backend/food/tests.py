@@ -11,5 +11,5 @@ class homePageTest(TestCase):
 class MealTestCase(TestCase):
     def test_newMeal_added(self):
         numMeal = Meal.objects.count()
-        Meal.objects.create(name='Sisilog', withRice='80', withOutRice='70', pImage='')
+        Meal.objects.create(name='Sisilog', withUnliRice='80', withoutUnli='70', pImage='')
         self.assertEqual(Meal.objects.count(), numMeal+1)

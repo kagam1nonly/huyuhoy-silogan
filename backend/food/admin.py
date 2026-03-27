@@ -4,7 +4,7 @@ from .models import CustomUser
 from django.contrib.auth.admin import UserAdmin
 
 class MealAdmin(admin.ModelAdmin):
-    list_display = ('name', 'withRice', 'withOutRice')
+    list_display = ('name', 'withUnliRice', 'withoutUnli', 'isHot')
 
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
