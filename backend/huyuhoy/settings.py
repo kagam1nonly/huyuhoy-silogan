@@ -11,6 +11,29 @@ def env_bool(name, default=False):
     return value.strip().lower() in ('1', 'true', 'yes', 'on')
 
 
+def env_int(name, default=0):
+    value = os.getenv(name)
+    if value is None:
+        return default
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def normalize_samesite(value, default):
+    if not value:
+        return default
+    normalized = value.strip().lower()
+    if normalized == 'none':
+        return 'None'
+    if normalized == 'lax':
+        return 'Lax'
+    if normalized == 'strict':
+        return 'Strict'
+    return default
+
+
 def normalize_origin(value):
     if not value:
         return ''
@@ -53,11 +76,15 @@ else:
     DEBUG = env_bool('DJANGO_DEBUG', False)
 
 # Allowed Hosts
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '[::1]']
-if DEBUG:
-    ALLOWED_HOSTS.append('*')
+allowed_hosts_env = os.getenv('DJANGO_ALLOWED_HOSTS', '').strip()
+if allowed_hosts_env:
+    ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_env.split(',') if host.strip()]
 else:
-    ALLOWED_HOSTS.append('.onrender.com')
+    ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '[::1]']
+    if DEBUG:
+        ALLOWED_HOSTS.append('*')
+    else:
+        ALLOWED_HOSTS.append('.onrender.com')
 
 # Application definition
 INSTALLED_APPS = [
@@ -133,12 +160,17 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # --- SECURITY & CORS ---
-SESSION_COOKIE_SECURE = not DEBUG
-CSRF_COOKIE_SECURE = not DEBUG
-SESSION_COOKIE_SAMESITE = 'None' if not DEBUG else 'Lax'
-CSRF_COOKIE_SAMESITE = 'None' if not DEBUG else 'Lax'
-SECURE_SSL_REDIRECT = not DEBUG
+default_samesite = 'None' if not DEBUG else 'Lax'
+
+SESSION_COOKIE_SECURE = env_bool('SESSION_COOKIE_SECURE', not DEBUG)
+CSRF_COOKIE_SECURE = env_bool('CSRF_COOKIE_SECURE', not DEBUG)
+SESSION_COOKIE_SAMESITE = normalize_samesite(os.getenv('SESSION_COOKIE_SAMESITE'), default_samesite)
+CSRF_COOKIE_SAMESITE = normalize_samesite(os.getenv('CSRF_COOKIE_SAMESITE'), default_samesite)
+SECURE_SSL_REDIRECT = env_bool('SECURE_SSL_REDIRECT', not DEBUG)
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_HSTS_SECONDS = env_int('SECURE_HSTS_SECONDS', 0 if DEBUG else 31536000)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = env_bool('SECURE_HSTS_INCLUDE_SUBDOMAINS', not DEBUG)
+SECURE_HSTS_PRELOAD = env_bool('SECURE_HSTS_PRELOAD', not DEBUG)
 
 # CORS
 frontend_urls = []
