@@ -71,7 +71,7 @@ export default function GcashPaymentPage({ user }) {
 
         <div className="mt-4 overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
           <ImageWithFallback
-            src="/assets/gcash.jpg"
+            src="/gcash.jpg"
             alt="GCash QR or payment instructions"
             wrapperClassName="max-h-[42vh] w-full bg-white"
             className="max-h-[42vh] w-full object-contain bg-white"

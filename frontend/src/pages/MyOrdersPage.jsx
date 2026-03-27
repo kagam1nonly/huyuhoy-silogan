@@ -441,7 +441,7 @@ export default function MyOrdersPage({ user }) {
 
               <div className="overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
                 <ImageWithFallback
-                  src="/assets/gcash.jpg"
+                  src="/gcash.jpg"
                   alt="GCash QR or payment instructions"
                   wrapperClassName="max-h-[64vh] w-full"
                   className="max-h-[64vh] w-full object-contain"
