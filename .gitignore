@@ -12,7 +12,9 @@ __pycache__/
 
 # Local DB and generated media
 backend/db.sqlite3
-backend/media/
+backend/media/*
+!backend/media/meal_images/
+!backend/media/meal_images/**
 backend/staticfiles/
 
 # Frontend build artifacts

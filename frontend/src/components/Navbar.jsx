@@ -38,6 +38,10 @@ export default function Navbar({
   onMarkAdminNotificationRead,
   onMarkAllAdminNotificationsRead,
   onClearAdminNotifications,
+  userNotifications = [],
+  onMarkUserNotificationRead,
+  onMarkAllUserNotificationsRead,
+  onClearUserNotifications,
 }) {
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
@@ -60,20 +64,23 @@ export default function Navbar({
     [cartItems],
   )
 
+  const isAdmin = Boolean(user?.is_staff)
+  const activeNotifications = isAdmin ? adminNotifications : userNotifications
+
   const unreadNotificationCount = useMemo(
-    () => adminNotifications.filter((item) => !item.read).length,
-    [adminNotifications],
+    () => activeNotifications.filter((item) => !item.read).length,
+    [activeNotifications],
   )
 
   const visibleNotifications = useMemo(() => {
     if (notificationFilter === 'all') {
-      return adminNotifications
+      return activeNotifications
     }
     if (notificationFilter === 'read') {
-      return adminNotifications.filter((item) => item.read)
+      return activeNotifications.filter((item) => item.read)
     }
-    return adminNotifications.filter((item) => !item.read)
-  }, [adminNotifications, notificationFilter])
+    return activeNotifications.filter((item) => !item.read)
+  }, [activeNotifications, notificationFilter])
 
   const philippinesDate = useMemo(
     () => new Intl.DateTimeFormat('en-PH', {
@@ -308,9 +315,33 @@ export default function Navbar({
     })
   }
 
-  function goToAdminOrders() {
+  function goToNotificationTarget() {
     setNotificationOpen(false)
-    navigate('/admin/orders')
+    navigate(isAdmin ? '/admin/orders' : '/my-orders')
+  }
+
+  function handleMarkNotificationRead(notificationId) {
+    if (isAdmin) {
+      onMarkAdminNotificationRead?.(notificationId)
+      return
+    }
+    onMarkUserNotificationRead?.(notificationId)
+  }
+
+  function handleMarkAllNotificationsRead() {
+    if (isAdmin) {
+      onMarkAllAdminNotificationsRead?.()
+      return
+    }
+    onMarkAllUserNotificationsRead?.()
+  }
+
+  function handleClearNotifications() {
+    if (isAdmin) {
+      onClearAdminNotifications?.()
+      return
+    }
+    onClearUserNotifications?.()
   }
 
   return (
@@ -444,13 +475,13 @@ export default function Navbar({
               </Dialog>
             </div>
 
-            {user?.is_staff ? (
+            {user ? (
               <div className="relative" ref={notificationRef}>
                 <Button
                   type="button"
                   variant="ghost"
                   size="icon"
-                  aria-label="Admin notifications"
+                  aria-label={isAdmin ? 'Admin notifications' : 'Order notifications'}
                   onClick={() => setNotificationOpen((previous) => !previous)}
                   className="relative cursor-pointer text-[#f4c23d] transition-transform duration-200 hover:scale-105 hover:bg-white/10 hover:text-[#ffd560]"
                 >
@@ -468,7 +499,7 @@ export default function Navbar({
                   }`}
                 >
                   <div className="mb-3 flex items-center justify-between gap-2">
-                    <p className="text-sm font-black uppercase tracking-[0.08em] text-white">Admin Notifications</p>
+                    <p className="text-sm font-black uppercase tracking-[0.08em] text-white">{isAdmin ? 'Admin Notifications' : 'Order Notifications'}</p>
                     <button
                       type="button"
                       onClick={() => setNotificationOpen(false)}
@@ -482,10 +513,10 @@ export default function Navbar({
                   <Button
                     type="button"
                     size="sm"
-                    onClick={goToAdminOrders}
+                    onClick={goToNotificationTarget}
                     className="mb-3 h-9 w-full justify-between border border-[#f4c23d]/40 bg-[#f4c23d]/12 text-xs font-bold uppercase tracking-[0.08em] text-[#f4c23d] hover:bg-[#f4c23d]/20"
                   >
-                    Open Orders Admin
+                    {isAdmin ? 'Open Orders Admin' : 'Open My Orders'}
                     <ArrowRight className="h-4 w-4" />
                   </Button>
 
@@ -537,8 +568,8 @@ export default function Navbar({
                       size="sm"
                       variant="outline"
                       className="h-8 border-white/20 bg-white/5 text-slate-200 hover:bg-white/10 hover:text-white"
-                      onClick={() => onMarkAllAdminNotificationsRead?.()}
-                      disabled={!adminNotifications.length}
+                      onClick={handleMarkAllNotificationsRead}
+                      disabled={!activeNotifications.length}
                     >
                       Mark all read
                     </Button>
@@ -547,8 +578,8 @@ export default function Navbar({
                       size="sm"
                       variant="outline"
                       className="h-8 border-rose-300/35 bg-rose-500/10 text-rose-200 hover:bg-rose-500/20 hover:text-rose-100"
-                      onClick={() => onClearAdminNotifications?.()}
-                      disabled={!adminNotifications.length}
+                      onClick={handleClearNotifications}
+                      disabled={!activeNotifications.length}
                     >
                       Clear all
                     </Button>
@@ -560,8 +591,8 @@ export default function Navbar({
                         key={notification.id}
                         type="button"
                         onClick={() => {
-                          onMarkAdminNotificationRead?.(notification.id)
-                          goToAdminOrders()
+                          handleMarkNotificationRead(notification.id)
+                          goToNotificationTarget()
                         }}
                         className={`w-full rounded-lg border px-3 py-2 text-left transition-colors ${
                           notification.read
@@ -570,10 +601,16 @@ export default function Navbar({
                         }`}
                       >
                         <div className="flex items-center justify-between gap-2">
-                          <p className="text-sm font-semibold text-white">New Order Received! #{notification.orderNumber}</p>
+                          <p className="text-sm font-semibold text-white">
+                            {isAdmin ? `New Order Received! #${notification.orderNumber}` : `Order Accepted! #${notification.orderNumber}`}
+                          </p>
                           <ArrowRight className="h-3.5 w-3.5 text-[#f4c23d]" />
                         </div>
-                        <p className="text-xs text-slate-200">Total amount: ₱{Number(notification.amount || 0).toFixed(2)}</p>
+                        <p className="text-xs text-slate-200">
+                          {isAdmin
+                            ? `Total amount: ₱${Number(notification.amount || 0).toFixed(2)}`
+                            : 'Your order is now being processed.'}
+                        </p>
                         <p className="mt-1 text-[11px] uppercase tracking-[0.08em] text-slate-300">{formatAdminNotificationDate(notification.date)}</p>
                       </button>
                     ))}

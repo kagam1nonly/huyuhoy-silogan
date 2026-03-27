@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { toast } from 'sonner'
-import { adminFetchOrders, fetchCsrf, me } from './api/client'
+import { adminFetchOrders, fetchCsrf, fetchOrders, me } from './api/client'
 import AdminOrdersPage from './pages/AdminOrdersPage'
 import AdminPaymentsPage from './pages/AdminPaymentsPage'
 import AdminDashboardPage from './pages/AdminDashboardPage'
@@ -43,7 +43,16 @@ function App() {
       return []
     }
   })
+  const [userNotifications, setUserNotifications] = useState(() => {
+    try {
+      const persisted = localStorage.getItem('huyuhoy-user-notifications')
+      return persisted ? JSON.parse(persisted) : []
+    } catch {
+      return []
+    }
+  })
   const previousAdminOrderCountRef = useRef(null)
+  const previousUserOrderStatusMapRef = useRef({})
   const [cartItems, setCartItems] = useState(() => {
     try {
       const persisted = localStorage.getItem('huyuhoy-cart')
@@ -76,6 +85,10 @@ function App() {
   useEffect(() => {
     localStorage.setItem('huyuhoy-admin-notifications', JSON.stringify(adminNotifications))
   }, [adminNotifications])
+
+  useEffect(() => {
+    localStorage.setItem('huyuhoy-user-notifications', JSON.stringify(userNotifications))
+  }, [userNotifications])
 
   useEffect(() => {
     if (!user?.is_staff) {
@@ -134,6 +147,74 @@ function App() {
     }
   }, [user])
 
+  useEffect(() => {
+    if (!user || user.is_staff) {
+      previousUserOrderStatusMapRef.current = {}
+      return undefined
+    }
+
+    let canceled = false
+
+    async function pollUserOrders() {
+      try {
+        const data = await fetchOrders()
+        if (canceled) {
+          return
+        }
+
+        const previousStatusMap = previousUserOrderStatusMapRef.current
+        const nextStatusMap = {}
+        const acceptedOrders = []
+
+        data.forEach((order) => {
+          const key = order.number
+          const currentStatus = order.status
+          const previousStatus = previousStatusMap[key]
+
+          nextStatusMap[key] = currentStatus
+
+          if (previousStatus === 'Pending' && currentStatus === 'Processing') {
+            acceptedOrders.push(order)
+          }
+        })
+
+        if (acceptedOrders.length) {
+          const incoming = acceptedOrders.map((order) => ({
+            id: `accepted-${order.number}-${order.date}`,
+            orderNumber: order.number,
+            amount: Number(order.bill || 0),
+            date: order.date,
+            read: false,
+          }))
+
+          setUserNotifications((previous) => {
+            const existingIds = new Set(previous.map((item) => item.id))
+            const dedupedIncoming = incoming.filter((item) => !existingIds.has(item.id))
+            return [...dedupedIncoming, ...previous].slice(0, 80)
+          })
+
+          acceptedOrders.forEach((order) => {
+            toast.success('Order Accepted!', {
+              description: `Order #${order.number} is now being processed.`,
+            })
+          })
+        }
+
+        previousUserOrderStatusMapRef.current = nextStatusMap
+      } catch {
+        // Silent fail on background polling to avoid noisy customer UX.
+      }
+    }
+
+    pollUserOrders()
+    const intervalId = window.setInterval(pollUserOrders, 5000)
+
+    return () => {
+      canceled = true
+      window.clearInterval(intervalId)
+    }
+  }, [user])
+
   function handleMarkAdminNotificationRead(notificationId) {
     setAdminNotifications((previous) =>
       previous.map((item) => (item.id === notificationId ? { ...item, read: true } : item)),
@@ -146,6 +227,20 @@ function App() {
 
   function handleClearAdminNotifications() {
     setAdminNotifications([])
+  }
+
+  function handleMarkUserNotificationRead(notificationId) {
+    setUserNotifications((previous) =>
+      previous.map((item) => (item.id === notificationId ? { ...item, read: true } : item)),
+    )
+  }
+
+  function handleMarkAllUserNotificationsRead() {
+    setUserNotifications((previous) => previous.map((item) => ({ ...item, read: true })))
+  }
+
+  function handleClearUserNotifications() {
+    setUserNotifications([])
   }
 
   function addToCart(meal, riceLabel) {
@@ -186,6 +281,10 @@ function App() {
         onMarkAdminNotificationRead={handleMarkAdminNotificationRead}
         onMarkAllAdminNotificationsRead={handleMarkAllAdminNotificationsRead}
         onClearAdminNotifications={handleClearAdminNotifications}
+        userNotifications={userNotifications}
+        onMarkUserNotificationRead={handleMarkUserNotificationRead}
+        onMarkAllUserNotificationsRead={handleMarkAllUserNotificationsRead}
+        onClearUserNotifications={handleClearUserNotifications}
       />
       <Toaster />
       <main className="flex-1">
