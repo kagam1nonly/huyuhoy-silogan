@@ -1,6 +1,35 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
 let cachedCsrfToken = ''
 
+function getApiOrigin() {
+  if (/^https?:\/\//i.test(API_BASE_URL)) {
+    return new URL(API_BASE_URL).origin
+  }
+  return window.location.origin
+}
+
+function normalizeMediaUrl(value) {
+  const raw = String(value || '').trim()
+  if (!raw) {
+    return ''
+  }
+  if (/^https?:\/\//i.test(raw)) {
+    return raw
+  }
+  const normalizedPath = raw.startsWith('/') ? raw : `/${raw}`
+  return `${getApiOrigin()}${normalizedPath}`
+}
+
+function normalizeMeal(meal) {
+  if (!meal || typeof meal !== 'object') {
+    return meal
+  }
+  return {
+    ...meal,
+    pImage: normalizeMediaUrl(meal.pImage),
+  }
+}
+
 function getCsrfFromCookie() {
   const matches = document.cookie.match(/(?:^|; )csrftoken=([^;]+)/)
   return matches ? decodeURIComponent(matches[1]) : ''
@@ -94,7 +123,8 @@ export async function updateMe(data) {
 }
 
 export async function fetchMeals() {
-  return request('/meals/', { method: 'GET' })
+  const payload = await request('/meals/', { method: 'GET' })
+  return Array.isArray(payload) ? payload.map(normalizeMeal) : payload
 }
 
 export async function fetchOrders() {
@@ -161,25 +191,28 @@ export async function adminDeletePayment(paymentId) {
 }
 
 export async function adminFetchMeals() {
-  return request('/admin/meals/', { method: 'GET' })
+  const payload = await request('/admin/meals/', { method: 'GET' })
+  return Array.isArray(payload) ? payload.map(normalizeMeal) : payload
 }
 
 export async function adminCreateMeal(formData) {
   const csrf = await resolveCsrfToken()
-  return request('/admin/meals/', {
+  const payload = await request('/admin/meals/', {
     method: 'POST',
     headers: { 'X-CSRFToken': csrf },
     body: formData,
   })
+  return normalizeMeal(payload)
 }
 
 export async function adminUpdateMeal(mealId, formData) {
   const csrf = await resolveCsrfToken()
-  return request(`/admin/meals/${mealId}/`, {
+  const payload = await request(`/admin/meals/${mealId}/`, {
     method: 'PATCH',
     headers: { 'X-CSRFToken': csrf },
     body: formData,
   })
+  return normalizeMeal(payload)
 }
 
 export async function adminDeleteMeal(mealId) {

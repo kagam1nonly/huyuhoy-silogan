@@ -34,6 +34,12 @@ export default function ImageWithFallback({
         />
       ) : null}
 
+      {status === 'error' ? (
+        <div className="absolute inset-0 flex items-center justify-center rounded-md bg-slate-100 text-xs font-medium text-slate-500">
+          Image unavailable
+        </div>
+      ) : null}
+
       {activeSrc ? (
         <img
           src={activeSrc}
