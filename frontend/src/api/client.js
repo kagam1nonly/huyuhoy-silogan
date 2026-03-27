@@ -1,4 +1,5 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
+let cachedCsrfToken = ''
 
 function getCsrfFromCookie() {
   const matches = document.cookie.match(/(?:^|; )csrftoken=([^;]+)/)
@@ -29,11 +30,30 @@ async function request(path, options = {}) {
 }
 
 export async function fetchCsrf() {
-  return request('/auth/csrf/', { method: 'GET' })
+  const payload = await request('/auth/csrf/', { method: 'GET' })
+  if (payload?.csrfToken) {
+    cachedCsrfToken = payload.csrfToken
+  }
+  return payload
+}
+
+async function resolveCsrfToken() {
+  const cookieToken = getCsrfFromCookie()
+  if (cookieToken) {
+    cachedCsrfToken = cookieToken
+    return cookieToken
+  }
+
+  if (cachedCsrfToken) {
+    return cachedCsrfToken
+  }
+
+  const payload = await fetchCsrf()
+  return payload?.csrfToken || ''
 }
 
 export async function signup(data) {
-  const csrf = getCsrfFromCookie()
+  const csrf = await resolveCsrfToken()
   return request('/auth/signup/', {
     method: 'POST',
     headers: { 'X-CSRFToken': csrf },
@@ -42,7 +62,7 @@ export async function signup(data) {
 }
 
 export async function login(data) {
-  const csrf = getCsrfFromCookie()
+  const csrf = await resolveCsrfToken()
   return request('/auth/login/', {
     method: 'POST',
     headers: { 'X-CSRFToken': csrf },
@@ -51,7 +71,7 @@ export async function login(data) {
 }
 
 export async function logout() {
-  const csrf = getCsrfFromCookie()
+  const csrf = await resolveCsrfToken()
   return request('/auth/logout/', {
     method: 'POST',
     headers: { 'X-CSRFToken': csrf },
@@ -63,7 +83,7 @@ export async function me() {
 }
 
 export async function updateMe(data) {
-  const csrf = getCsrfFromCookie()
+  const csrf = await resolveCsrfToken()
   return request('/auth/me/', {
     method: 'PATCH',
     headers: { 'X-CSRFToken': csrf },
@@ -80,7 +100,7 @@ export async function fetchOrders() {
 }
 
 export async function createOrder(orderData) {
-  const csrf = getCsrfFromCookie()
+  const csrf = await resolveCsrfToken()
   return request('/orders/', {
     method: 'POST',
     headers: { 'X-CSRFToken': csrf },
@@ -89,7 +109,7 @@ export async function createOrder(orderData) {
 }
 
 export async function cancelOrder(orderNumber) {
-  const csrf = getCsrfFromCookie()
+  const csrf = await resolveCsrfToken()
   return request(`/orders/${orderNumber}/cancel/`, {
     method: 'POST',
     headers: { 'X-CSRFToken': csrf },
@@ -97,7 +117,7 @@ export async function cancelOrder(orderNumber) {
 }
 
 export async function processGcashPayment(orderNumber, paymentData) {
-  const csrf = getCsrfFromCookie()
+  const csrf = await resolveCsrfToken()
   return request(`/orders/${orderNumber}/payment/gcash/`, {
     method: 'POST',
     headers: { 'X-CSRFToken': csrf },
@@ -110,7 +130,7 @@ export async function adminFetchOrders() {
 }
 
 export async function adminOrderAction(orderId, action) {
-  const csrf = getCsrfFromCookie()
+  const csrf = await resolveCsrfToken()
   return request(`/admin/orders/${orderId}/action/`, {
     method: 'POST',
     headers: { 'X-CSRFToken': csrf },
@@ -123,7 +143,7 @@ export async function adminFetchPayments() {
 }
 
 export async function adminConfirmPayment(paymentId) {
-  const csrf = getCsrfFromCookie()
+  const csrf = await resolveCsrfToken()
   return request(`/admin/payments/${paymentId}/confirm/`, {
     method: 'POST',
     headers: { 'X-CSRFToken': csrf },
@@ -131,7 +151,7 @@ export async function adminConfirmPayment(paymentId) {
 }
 
 export async function adminDeletePayment(paymentId) {
-  const csrf = getCsrfFromCookie()
+  const csrf = await resolveCsrfToken()
   return request(`/admin/payments/${paymentId}/`, {
     method: 'DELETE',
     headers: { 'X-CSRFToken': csrf },
