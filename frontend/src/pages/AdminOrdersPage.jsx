@@ -274,60 +274,62 @@ export default function AdminOrdersPage({ user }) {
           Showing {filteredOrders.length} of {orders.length} orders
         </p>
 
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Order #</TableHead>
-              <TableHead>Customer</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Payment</TableHead>
-              <TableHead>Bill</TableHead>
-              <TableHead>Items</TableHead>
-              <TableHead className="w-44">Date</TableHead>
-              <TableHead className="w-24">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredOrders.map((order) => (
-              <TableRow key={order.id}>
-                <TableCell className="font-semibold text-slate-900">#{order.number}</TableCell>
-                <TableCell className="font-semibold text-slate-800">{order.customer_name}</TableCell>
-                <TableCell>{order.transaction}</TableCell>
-                <TableCell>
-                  <span className={`inline-flex rounded-full border px-2 py-1 text-xs font-semibold ${statusClass(order.status)}`}>
-                    {order.status}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  <span className={`inline-flex rounded-full border px-2 py-1 text-xs font-semibold ${paymentStatusClass(order.payment_status)}`}>
-                    {order.payment_status || 'N/A'}
-                  </span>
-                  <p className="mt-1 text-xs text-slate-500">{order.payment_method || 'N/A'}</p>
-                </TableCell>
-                <TableCell className="font-semibold text-slate-800">{formatCurrency(order.bill)}</TableCell>
-                <TableCell>
-                  <Button size="sm" variant="outline" className="h-8 border-slate-300" onClick={() => setSelectedOrder(order)}>
-                    View ({(order.cart_items || []).length})
-                  </Button>
-                </TableCell>
-                <TableCell className="whitespace-nowrap text-sm">{formatDate(order.date)}</TableCell>
-                <TableCell className="align-top">
-                  <Button
-                    type="button"
-                    size="sm"
-                    variant="outline"
-                    className="h-9 w-12 border-slate-300 px-0"
-                    onClick={() => setActionOrder(order)}
-                    aria-label={`Open actions for order ${order.number}`}
-                  >
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
-                </TableCell>
+        <div className="overflow-x-auto rounded-xl border border-slate-100">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Order #</TableHead>
+                <TableHead>Customer</TableHead>
+                <TableHead>Type</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Payment</TableHead>
+                <TableHead>Bill</TableHead>
+                <TableHead>Items</TableHead>
+                <TableHead className="w-44">Date</TableHead>
+                <TableHead className="min-w-22.5">Actions</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {filteredOrders.map((order) => (
+                <TableRow key={order.id}>
+                  <TableCell className="font-semibold text-slate-900">#{order.number}</TableCell>
+                  <TableCell className="font-semibold text-slate-800">{order.customer_name}</TableCell>
+                  <TableCell>{order.transaction}</TableCell>
+                  <TableCell>
+                    <span className={`inline-flex rounded-full border px-2 py-1 text-xs font-semibold ${statusClass(order.status)}`}>
+                      {order.status}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <span className={`inline-flex rounded-full border px-2 py-1 text-xs font-semibold ${paymentStatusClass(order.payment_status)}`}>
+                      {order.payment_status || 'N/A'}
+                    </span>
+                    <p className="mt-1 text-xs text-slate-500">{order.payment_method || 'N/A'}</p>
+                  </TableCell>
+                  <TableCell className="font-semibold text-slate-800">{formatCurrency(order.bill)}</TableCell>
+                  <TableCell>
+                    <Button size="sm" variant="outline" className="h-8 border-slate-300" onClick={() => setSelectedOrder(order)}>
+                      View ({(order.cart_items || []).length})
+                    </Button>
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap text-sm">{formatDate(order.date)}</TableCell>
+                  <TableCell className="align-top">
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      className="h-9 w-12 border-slate-300 px-0"
+                      onClick={() => setActionOrder(order)}
+                      aria-label={`Open actions for order ${order.number}`}
+                    >
+                      <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
 
         {!filteredOrders.length ? (
           <p className="py-6 text-center text-sm text-slate-500">No orders matched your current filters.</p>

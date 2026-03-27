@@ -19,7 +19,7 @@ function formatCurrency(value) {
 function statusClass(status) {
   const map = {
     Unpaid: 'bg-red-100 text-red-700 border-red-200',
-    Pending: 'bg-[#f4c23d]/20 text-[#926500] border-[#f4c23d]/45',
+    Pending: 'bg-red-100 text-red-700 border-red-200',
     Paid: 'bg-emerald-100 text-emerald-700 border-emerald-200',
     Failed: 'bg-slate-200 text-slate-700 border-slate-300',
   }
@@ -183,56 +183,58 @@ export default function AdminPaymentsPage({ user }) {
           Showing {filteredPayments.length} of {payments.length} payment records
         </p>
 
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Payment ID</TableHead>
-              <TableHead>Order #</TableHead>
-              <TableHead>Customer</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Amount</TableHead>
-              <TableHead>Reference</TableHead>
-              <TableHead>Method</TableHead>
-              <TableHead className="w-40">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredPayments.map((payment) => (
-              <TableRow key={payment.id}>
-                <TableCell className="font-semibold text-slate-900">#{payment.id}</TableCell>
-                <TableCell className="font-semibold text-slate-700">#{payment.order_number || 'N/A'}</TableCell>
-                <TableCell>{payment.customer_name || 'N/A'}</TableCell>
-                <TableCell>
-                  <span className={`inline-flex rounded-full border px-2 py-1 text-xs font-semibold ${statusClass(payment.payment_status)}`}>
-                    {payment.payment_status}
-                  </span>
-                </TableCell>
-                <TableCell className="font-semibold text-slate-800">{formatCurrency(payment.amount)}</TableCell>
-                <TableCell>{payment.ref_num || 'N/A'}</TableCell>
-                <TableCell>{payment.method || 'N/A'}</TableCell>
-                <TableCell>
-                  <div className="grid grid-cols-2 gap-1.5">
-                    <Button
-                      size="sm"
-                      className="h-8 w-full bg-[#1b2132]/95 px-2 text-[11px] uppercase tracking-[0.06em] text-white hover:bg-[#1b2132]/80"
-                      disabled={payment.payment_status === 'Paid'}
-                      onClick={() => handleConfirm(payment.id)}
-                    >
-                      Confirm
-                    </Button>
-                    <Button
-                      size="sm"
-                      className="h-8 w-full bg-[#1b2132]/95 px-2 text-[11px] uppercase tracking-[0.06em] text-white hover:bg-[#1b2132]/80"
-                      onClick={() => handleDelete(payment.id)}
-                    >
-                      Delete
-                    </Button>
-                  </div>
-                </TableCell>
+        <div className="overflow-x-auto rounded-xl border border-slate-100">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Payment ID</TableHead>
+                <TableHead>Order #</TableHead>
+                <TableHead>Customer</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Amount</TableHead>
+                <TableHead>Reference</TableHead>
+                <TableHead>Method</TableHead>
+                <TableHead className="min-w-45">Actions</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {filteredPayments.map((payment) => (
+                <TableRow key={payment.id}>
+                  <TableCell className="font-semibold text-slate-900">#{payment.id}</TableCell>
+                  <TableCell className="font-semibold text-slate-700">#{payment.order_number || 'N/A'}</TableCell>
+                  <TableCell>{payment.customer_name || 'N/A'}</TableCell>
+                  <TableCell>
+                    <span className={`inline-flex rounded-full border px-2 py-1 text-xs font-semibold ${statusClass(payment.payment_status)}`}>
+                      {payment.payment_status}
+                    </span>
+                  </TableCell>
+                  <TableCell className="font-semibold text-slate-800">{formatCurrency(payment.amount)}</TableCell>
+                  <TableCell>{payment.ref_num || 'N/A'}</TableCell>
+                  <TableCell>{payment.method || 'N/A'}</TableCell>
+                  <TableCell>
+                    <div className="grid grid-cols-2 gap-1.5">
+                      <Button
+                        size="sm"
+                        className="h-8 w-full bg-emerald-600 px-2 text-[11px] font-semibold text-white hover:bg-emerald-700"
+                        disabled={payment.payment_status === 'Paid'}
+                        onClick={() => handleConfirm(payment.id)}
+                      >
+                        Confirm
+                      </Button>
+                      <Button
+                        size="sm"
+                        className="h-8 w-full bg-red-600 px-2 text-[11px] font-semibold text-white hover:bg-red-700"
+                        onClick={() => handleDelete(payment.id)}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
 
         {!filteredPayments.length ? (
           <p className="py-6 text-center text-sm text-slate-500">No payment records matched your current filters.</p>
