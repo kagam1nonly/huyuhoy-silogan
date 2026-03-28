@@ -11,7 +11,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '../components/ui/dialog'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../components/ui/tooltip'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table'
 
 const STATUS_OPTIONS = ['All', 'Pending', 'Processing', 'Completed', 'Canceled']
@@ -21,6 +20,13 @@ const SORT_OPTIONS = [
   { value: 'bill-high', label: 'Highest Bill' },
   { value: 'bill-low', label: 'Lowest Bill' },
 ]
+
+const ACTION_BUTTON_BASE =
+  'h-10 w-full rounded-md px-3 text-sm font-semibold text-white transition-all duration-200 hover:shadow-md focus-visible:ring-2 focus-visible:ring-offset-1'
+const ACTION_PRIMARY_CLASS = `${ACTION_BUTTON_BASE} bg-[#1b2132]/95 hover:bg-[#1b2132]/80 focus-visible:ring-[#f4c23d]`
+const ACTION_WHITE_CLASS =
+  'h-10 w-full rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-[#1b2132] transition-all duration-200 hover:bg-slate-50 hover:shadow-md focus-visible:ring-2 focus-visible:ring-slate-300 focus-visible:ring-offset-1'
+const ACTION_DANGER_CLASS = `${ACTION_BUTTON_BASE} bg-rose-700 hover:bg-rose-600 focus-visible:ring-rose-400`
 
 function formatCurrency(value) {
   return `₱${Number(value || 0).toFixed(2)}`
@@ -93,25 +99,14 @@ function actionDisabledReason(order, action) {
 function ActionButton({ label, onClick, className, disabledReason }) {
   const disabled = Boolean(disabledReason)
 
-  if (!disabled) {
-    return (
-      <Button size="sm" className={className} onClick={onClick}>
-        {label}
-      </Button>
-    )
+  if (disabled) {
+    return null
   }
 
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <span className="inline-flex w-full">
-          <Button size="sm" className={className} disabled>
-            {label}
-          </Button>
-        </span>
-      </TooltipTrigger>
-      <TooltipContent>{disabledReason}</TooltipContent>
-    </Tooltip>
+    <Button size="sm" className={className} onClick={onClick}>
+      {label}
+    </Button>
   )
 }
 
@@ -225,7 +220,6 @@ export default function AdminOrdersPage({ user }) {
       {error && <p className="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">{error}</p>}
       {message && <p className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">{message}</p>}
 
-      <TooltipProvider delayDuration={150}>
       <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
         <div className="mb-4 grid gap-3 md:grid-cols-[1fr_180px_180px]">
           <label className="space-y-1 text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
@@ -274,10 +268,10 @@ export default function AdminOrdersPage({ user }) {
           Showing {filteredOrders.length} of {orders.length} orders
         </p>
 
-        <div className="overflow-x-auto rounded-xl border border-slate-100">
-          <Table>
+        <div className="max-w-full overflow-hidden rounded-xl border border-slate-100">
+          <Table className="min-w-280">
             <TableHeader>
-              <TableRow>
+              <TableRow className="bg-slate-50/80">
                 <TableHead>Order #</TableHead>
                 <TableHead>Customer</TableHead>
                 <TableHead>Type</TableHead>
@@ -286,7 +280,7 @@ export default function AdminOrdersPage({ user }) {
                 <TableHead>Bill</TableHead>
                 <TableHead>Items</TableHead>
                 <TableHead className="w-44">Date</TableHead>
-                <TableHead className="min-w-22.5">Actions</TableHead>
+                <TableHead className="sticky right-0 z-20 min-w-28 border-l border-slate-200 bg-white shadow-[-4px_0_8px_rgba(15,23,42,0.04)]">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -313,7 +307,7 @@ export default function AdminOrdersPage({ user }) {
                     </Button>
                   </TableCell>
                   <TableCell className="whitespace-nowrap text-sm">{formatDate(order.date)}</TableCell>
-                  <TableCell className="align-top">
+                  <TableCell className="sticky right-0 z-10 border-l border-slate-200 bg-white shadow-[-4px_0_8px_rgba(15,23,42,0.04)] align-top">
                     <Button
                       type="button"
                       size="sm"
@@ -337,7 +331,7 @@ export default function AdminOrdersPage({ user }) {
       </div>
 
       <Dialog open={Boolean(selectedOrder)} onOpenChange={(open) => !open && setSelectedOrder(null)}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-h-[88vh] w-[min(96vw,48rem)] overflow-y-auto">
           {selectedOrder ? (
             <>
               <DialogHeader>
@@ -390,22 +384,22 @@ export default function AdminOrdersPage({ user }) {
                 </div>
               </div>
 
-              <div className="grid gap-2 pt-1 sm:grid-cols-3">
+              <div className="grid gap-2 pt-2 sm:grid-cols-2">
                 <ActionButton
                   label="Accept Order"
-                  className="h-10 w-full bg-[#1b2132]/95 px-4 text-sm font-semibold text-white hover:bg-[#1b2132]/80"
+                  className={ACTION_PRIMARY_CLASS}
                   disabledReason={actionDisabledReason(selectedOrder, 'Accept')}
                   onClick={() => handleAction(selectedOrder.id, 'Accept')}
                 />
                 <ActionButton
                   label="Refuse Order"
-                  className="h-10 w-full bg-[#1b2132]/95 px-4 text-sm font-semibold text-white hover:bg-[#1b2132]/80"
+                  className={ACTION_WHITE_CLASS}
                   disabledReason={actionDisabledReason(selectedOrder, 'Refuse')}
                   onClick={() => handleAction(selectedOrder.id, 'Refuse')}
                 />
                 <ActionButton
                   label="Complete Order"
-                  className="h-10 w-full bg-emerald-600 px-4 text-sm font-semibold text-white hover:bg-emerald-700"
+                  className={ACTION_PRIMARY_CLASS}
                   disabledReason={actionDisabledReason(selectedOrder, 'Complete')}
                   onClick={() => handleAction(selectedOrder.id, 'Complete')}
                 />
@@ -416,7 +410,7 @@ export default function AdminOrdersPage({ user }) {
       </Dialog>
 
       <Dialog open={Boolean(actionOrder)} onOpenChange={(open) => !open && setActionOrder(null)}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-h-[88vh] w-[min(96vw,28rem)] overflow-y-auto">
           {actionOrder ? (
             <>
               <DialogHeader>
@@ -429,25 +423,25 @@ export default function AdminOrdersPage({ user }) {
               <div className="grid gap-2 sm:grid-cols-2">
                 <ActionButton
                   label="Accept"
-                  className="h-10 w-full bg-[#1b2132]/95 px-3 text-sm font-semibold text-white hover:bg-[#1b2132]/80"
+                  className={ACTION_PRIMARY_CLASS}
                   disabledReason={actionDisabledReason(actionOrder, 'Accept')}
                   onClick={() => handleAction(actionOrder.id, 'Accept')}
                 />
                 <ActionButton
                   label="Refuse"
-                  className="h-10 w-full bg-[#1b2132]/95 px-3 text-sm font-semibold text-white hover:bg-[#1b2132]/80"
+                  className={ACTION_WHITE_CLASS}
                   disabledReason={actionDisabledReason(actionOrder, 'Refuse')}
                   onClick={() => handleAction(actionOrder.id, 'Refuse')}
                 />
                 <ActionButton
                   label="Complete"
-                  className="h-10 w-full bg-emerald-600 px-3 text-sm font-semibold text-white hover:bg-emerald-700"
+                  className={ACTION_PRIMARY_CLASS}
                   disabledReason={actionDisabledReason(actionOrder, 'Complete')}
                   onClick={() => handleAction(actionOrder.id, 'Complete')}
                 />
                 <ActionButton
                   label="Delete"
-                  className="h-10 w-full bg-red-600 px-3 text-sm font-semibold text-white hover:bg-red-700"
+                  className={ACTION_DANGER_CLASS}
                   disabledReason={actionDisabledReason(actionOrder, 'Delete')}
                   onClick={() => handleAction(actionOrder.id, 'Delete')}
                 />
@@ -456,7 +450,6 @@ export default function AdminOrdersPage({ user }) {
           ) : null}
         </DialogContent>
       </Dialog>
-      </TooltipProvider>
     </AdminShell>
   )
 }

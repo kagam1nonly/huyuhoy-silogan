@@ -262,7 +262,7 @@ function App() {
     ])
   }
 
-  const layoutClass = useMemo(() => 'flex min-h-screen flex-col bg-slate-50 text-slate-900', [])
+  const layoutClass = useMemo(() => 'flex min-h-screen w-full flex-col bg-slate-50 text-slate-900', [])
 
   if (authLoading) {
     return <LoadingState text="Loading app..." />

@@ -246,7 +246,8 @@ export default function AdminUsersPage({ user, onUserUpdated }) {
                   <TableCell className="py-3">
                     <Button
                       size="sm"
-                      className="h-9 w-full bg-[#1b2132]/95 px-3 text-xs font-semibold uppercase tracking-[0.06em] text-white hover:bg-[#1b2132]/80"
+                      variant="outline"
+                      className="h-9 w-full rounded-md border-slate-300 bg-white px-3 text-xs font-semibold uppercase tracking-[0.06em] text-[#1b2132] transition-all duration-200 hover:bg-slate-50 hover:shadow-md"
                       onClick={() => startEdit(entry)}
                     >
                       Edit
@@ -359,7 +360,7 @@ export default function AdminUsersPage({ user, onUserUpdated }) {
                   </Button>
                   <Button
                     type="button"
-                    className="h-10 w-full bg-[#1b2132]/95 font-semibold text-white hover:bg-[#1b2132]/80"
+                    className="h-10 w-full rounded-md bg-rose-700 font-semibold text-white transition-all duration-200 hover:bg-rose-600 hover:shadow-md"
                     onClick={handleDeleteSelectedUser}
                   >
                     <Trash2 className="h-4 w-4" />

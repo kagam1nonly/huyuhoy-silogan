@@ -12,6 +12,11 @@ const SORT_OPTIONS = [
   { value: 'amount-low', label: 'Lowest Amount' },
 ]
 
+const PAYMENT_ACTION_BUTTON_BASE =
+  'h-8 w-full rounded-md whitespace-nowrap px-2 text-[11px] font-semibold text-white transition-all duration-200 hover:shadow-md focus-visible:ring-2 focus-visible:ring-offset-1'
+const PAYMENT_CONFIRM_CLASS = `${PAYMENT_ACTION_BUTTON_BASE} bg-[#1b2132]/95 hover:bg-[#1b2132]/80 focus-visible:ring-[#f4c23d]`
+const PAYMENT_DELETE_CLASS = `${PAYMENT_ACTION_BUTTON_BASE} bg-rose-700 hover:bg-rose-600 focus-visible:ring-rose-400`
+
 function formatCurrency(value) {
   return `₱${Number(value || 0).toFixed(2)}`
 }
@@ -183,10 +188,10 @@ export default function AdminPaymentsPage({ user }) {
           Showing {filteredPayments.length} of {payments.length} payment records
         </p>
 
-        <div className="overflow-x-auto rounded-xl border border-slate-100">
-          <Table>
+        <div className="max-w-full overflow-hidden rounded-xl border border-slate-100">
+          <Table className="min-w-245">
             <TableHeader>
-              <TableRow>
+              <TableRow className="bg-slate-50/80">
                 <TableHead>Payment ID</TableHead>
                 <TableHead>Order #</TableHead>
                 <TableHead>Customer</TableHead>
@@ -194,7 +199,7 @@ export default function AdminPaymentsPage({ user }) {
                 <TableHead>Amount</TableHead>
                 <TableHead>Reference</TableHead>
                 <TableHead>Method</TableHead>
-                <TableHead className="min-w-45">Actions</TableHead>
+                <TableHead className="sticky right-0 z-20 min-w-56 whitespace-nowrap border-l border-slate-200 bg-white shadow-[-4px_0_8px_rgba(15,23,42,0.04)]">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -211,11 +216,11 @@ export default function AdminPaymentsPage({ user }) {
                   <TableCell className="font-semibold text-slate-800">{formatCurrency(payment.amount)}</TableCell>
                   <TableCell>{payment.ref_num || 'N/A'}</TableCell>
                   <TableCell>{payment.method || 'N/A'}</TableCell>
-                  <TableCell>
+                  <TableCell className="sticky right-0 z-10 min-w-56 border-l border-slate-200 bg-white shadow-[-4px_0_8px_rgba(15,23,42,0.04)]">
                     <div className="grid grid-cols-2 gap-1.5">
                       <Button
                         size="sm"
-                        className="h-8 w-full bg-emerald-600 px-2 text-[11px] font-semibold text-white hover:bg-emerald-700"
+                        className={PAYMENT_CONFIRM_CLASS}
                         disabled={payment.payment_status === 'Paid'}
                         onClick={() => handleConfirm(payment.id)}
                       >
@@ -223,7 +228,7 @@ export default function AdminPaymentsPage({ user }) {
                       </Button>
                       <Button
                         size="sm"
-                        className="h-8 w-full bg-red-600 px-2 text-[11px] font-semibold text-white hover:bg-red-700"
+                        className={PAYMENT_DELETE_CLASS}
                         onClick={() => handleDelete(payment.id)}
                       >
                         Delete

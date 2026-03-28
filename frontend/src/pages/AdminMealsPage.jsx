@@ -278,7 +278,7 @@ export default function AdminMealsPage({ user }) {
                 type="button"
                 size="icon"
                 variant="outline"
-                className="h-10 w-10 border-rose-200 text-rose-600 hover:bg-rose-50 hover:text-rose-700"
+                className="h-10 w-10 rounded-md border-rose-400 bg-rose-600 text-white transition-all duration-200 hover:bg-rose-500 hover:shadow-md"
                 onClick={handleDeleteSelectedMeal}
                 aria-label="Delete meal"
                 title="Delete meal"
@@ -363,13 +363,13 @@ export default function AdminMealsPage({ user }) {
             </label>
 
             <div className="grid grid-cols-2 gap-2 pt-2">
-              <Button type="submit" className="h-10 w-full bg-[#1b2132]/95 font-semibold text-white hover:bg-[#1b2132]/80">
+              <Button type="submit" className="h-10 w-full rounded-md bg-[#1b2132]/95 font-semibold text-white transition-all duration-200 hover:bg-[#1b2132]/80 hover:shadow-md">
                 {selectedMeal ? 'Save Changes' : 'Add Meal'}
               </Button>
               <Button
                 type="button"
                 variant="outline"
-                className="h-10 w-full border-slate-300 font-semibold"
+                className="h-10 w-full rounded-md border-slate-300 font-semibold transition-all duration-200 hover:shadow-md"
                 onClick={resetForm}
               >
                 Discard

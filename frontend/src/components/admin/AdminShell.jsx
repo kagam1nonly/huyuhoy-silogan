@@ -50,7 +50,7 @@ export default function AdminShell({ user, title, subtitle, children }) {
           </div>
         </aside>
 
-        <section className="space-y-4">
+        <section className="min-w-0 space-y-4">
           <header className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
             <h1 className="text-xl font-black uppercase tracking-tight text-slate-900 sm:text-2xl">{title}</h1>
             {subtitle ? <p className="mt-1 text-sm font-medium text-slate-600">{subtitle}</p> : null}

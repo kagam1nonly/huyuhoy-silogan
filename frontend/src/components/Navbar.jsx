@@ -374,7 +374,7 @@ export default function Navbar({
               >
                 <ShoppingCart className="h-5 w-5" />
                 {cartCount > 0 ? (
-                  <span className="absolute right-0 top-0 inline-flex h-5 min-w-5 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-[#f4c23d] px-1 text-[10px] font-bold text-slate-900">
+                  <span className="absolute right-0 top-0 inline-flex h-5 min-w-5 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-bold text-white">
                     {cartCount}
                   </span>
                 ) : null}
