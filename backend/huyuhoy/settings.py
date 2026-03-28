@@ -1,7 +1,7 @@
 import os
 import dj_database_url
-from pathlib import Path
 from urllib.parse import urlparse, urlsplit, urlunsplit, quote, unquote
+from django.core.exceptions import ImproperlyConfigured
 
 
 def env_bool(name, default=False):
@@ -68,23 +68,20 @@ def sanitize_database_url(value):
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'local-dev-only-change-this-secret-key')
-debug_env = os.getenv('DJANGO_DEBUG')
-if debug_env is None:
-    DEBUG = os.getenv('RENDER') is None
-else:
-    DEBUG = env_bool('DJANGO_DEBUG', False)
+DEBUG = env_bool('DJANGO_DEBUG', False)
+
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', '').strip()
+if not SECRET_KEY:
+    raise ImproperlyConfigured('DJANGO_SECRET_KEY is required.')
 
 # Allowed Hosts
 allowed_hosts_env = os.getenv('DJANGO_ALLOWED_HOSTS', '').strip()
 if allowed_hosts_env:
     ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_env.split(',') if host.strip()]
+elif DEBUG:
+    ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '[::1]', '*']
 else:
-    ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '[::1]']
-    if DEBUG:
-        ALLOWED_HOSTS.append('*')
-    else:
-        ALLOWED_HOSTS.append('.onrender.com')
+    raise ImproperlyConfigured('DJANGO_ALLOWED_HOSTS is required when DJANGO_DEBUG is False.')
 
 # Application definition
 INSTALLED_APPS = [
@@ -111,9 +108,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-if DEBUG:
-    MIDDLEWARE.insert(0, 'huyuhoy.middleware.DevNoCacheMiddleware')
-
 ROOT_URLCONF = 'huyuhoy.urls'
 
 # --- TEMPLATES (FIXED: Required for Admin Panel) ---
@@ -138,18 +132,24 @@ WSGI_APPLICATION = 'huyuhoy.wsgi.application'
 # --- DATABASE CONFIGURATION ---
 database_url = sanitize_database_url(os.getenv('DATABASE_URL', '').strip())
 use_sqlite = env_bool('DJANGO_USE_SQLITE', DEBUG)
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
 
-if not use_sqlite and database_url:
-    # Safely configure the database
+if not DEBUG and use_sqlite:
+    raise ImproperlyConfigured('DJANGO_USE_SQLITE must be False when DJANGO_DEBUG is False.')
+
+if use_sqlite:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
+else:
+    if not database_url:
+        raise ImproperlyConfigured('DATABASE_URL is required when DJANGO_USE_SQLITE is False.')
     config = dj_database_url.parse(database_url, conn_max_age=600, ssl_require=not DEBUG)
-    if config:
-        DATABASES['default'] = config
+    if not config:
+        raise ImproperlyConfigured('DATABASE_URL could not be parsed into a valid database configuration.')
+    DATABASES = {'default': config}
 
 # --- STATIC & MEDIA ---
 STATIC_URL = '/static/'
@@ -186,15 +186,10 @@ frontend_url_single = normalize_origin(os.getenv('FRONTEND_URL', ''))
 if frontend_url_single:
     frontend_urls.append(frontend_url_single)
 
-if DEBUG and not frontend_urls:
-    local_ports = [5173, 5174, 5175, 5176, 5177, 5178]
-    frontend_urls = [
-        origin
-        for port in local_ports
-        for origin in (f'http://localhost:{port}', f'http://127.0.0.1:{port}')
-    ]
-
 frontend_urls = list(dict.fromkeys(frontend_urls))
+
+if not DEBUG and not frontend_urls:
+    raise ImproperlyConfigured('FRONTEND_URL or FRONTEND_URLS is required when DJANGO_DEBUG is False.')
 
 CORS_ALLOWED_ORIGINS = frontend_urls
 CSRF_TRUSTED_ORIGINS = frontend_urls
