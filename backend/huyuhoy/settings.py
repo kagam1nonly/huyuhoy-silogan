@@ -165,7 +165,6 @@ else:
 # --- STATIC & MEDIA ---
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 render_disk_root = os.getenv('RENDER_DISK_ROOT', '/var/data').strip() or '/var/data'
@@ -197,9 +196,29 @@ for root in dict.fromkeys(candidate_media_roots):
         break
 
 if USE_CLOUDINARY_MEDIA:
-    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    STORAGES = {
+        'default': {
+            'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage',
+        },
+        'staticfiles': {
+            'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+        },
+    }
     CLOUDINARY_STORAGE = {
         'FOLDER': os.getenv('CLOUDINARY_MEDIA_FOLDER', 'huyuhoy/meal_images').strip() or 'huyuhoy/meal_images',
+    }
+else:
+    STORAGES = {
+        'default': {
+            'BACKEND': 'django.core.files.storage.FileSystemStorage',
+            'OPTIONS': {
+                'location': MEDIA_ROOT,
+                'base_url': MEDIA_URL,
+            },
+        },
+        'staticfiles': {
+            'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+        },
     }
 
 # --- SECURITY & CORS ---
