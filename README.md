@@ -53,6 +53,11 @@ Required for production:
 - DATABASE_URL (Postgres URI)
 - DJANGO_MEDIA_ROOT=/var/data/media (for persistent uploaded meal images on Render)
 
+Recommended if you do not use Render Persistent Disk:
+
+- CLOUDINARY_URL=cloudinary://<api_key>:<api_secret>@<cloud_name>
+- CLOUDINARY_MEDIA_FOLDER=huyuhoy/meal_images
+
 Optional security overrides (already supported in settings.py):
 
 - SESSION_COOKIE_SECURE
@@ -89,6 +94,11 @@ Important for meal image persistence:
 - Set `DJANGO_MEDIA_ROOT=/var/data/media`.
 
 Without a persistent disk, uploaded meal images can disappear after restart/redeploy.
+
+Alternative (free tier friendly):
+
+- Use Cloudinary storage for media uploads by setting `CLOUDINARY_URL`.
+- When configured, Django uploads meal images to Cloudinary instead of local Render filesystem.
 
 ### Frontend Hosting
 
