@@ -68,14 +68,18 @@ def sanitize_database_url(value):
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings
-DEBUG = env_bool('DJANGO_DEBUG', False)
+debug_env_value = os.getenv('DJANGO_DEBUG')
+if debug_env_value is None:
+    DEBUG = env_bool('DEBUG', False)
+else:
+    DEBUG = env_bool('DJANGO_DEBUG', False)
 
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', '').strip()
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', '').strip() or os.getenv('SECRET_KEY', '').strip()
 if not SECRET_KEY:
     raise ImproperlyConfigured('DJANGO_SECRET_KEY is required.')
 
 # Allowed Hosts
-allowed_hosts_env = os.getenv('DJANGO_ALLOWED_HOSTS', '').strip()
+allowed_hosts_env = os.getenv('DJANGO_ALLOWED_HOSTS', '').strip() or os.getenv('ALLOWED_HOSTS', '').strip()
 if allowed_hosts_env:
     ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_env.split(',') if host.strip()]
 elif DEBUG:
@@ -157,7 +161,17 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+render_disk_root = os.getenv('RENDER_DISK_ROOT', '/var/data').strip() or '/var/data'
+default_media_root = os.path.join(render_disk_root, 'media') if os.getenv('RENDER') else os.path.join(BASE_DIR, 'media')
+
+media_root_env = os.getenv('DJANGO_MEDIA_ROOT', '').strip()
+if media_root_env:
+    if os.getenv('RENDER') and not os.path.isabs(media_root_env):
+        MEDIA_ROOT = f"/{media_root_env.lstrip('/')}"
+    else:
+        MEDIA_ROOT = media_root_env
+else:
+    MEDIA_ROOT = default_media_root
 
 # --- SECURITY & CORS ---
 default_samesite = 'None' if not DEBUG else 'Lax'

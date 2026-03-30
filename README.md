@@ -51,6 +51,7 @@ Required for production:
 - DJANGO_ALLOWED_HOSTS (comma-separated hosts)
 - FRONTEND_URL and/or FRONTEND_URLS
 - DATABASE_URL (Postgres URI)
+- DJANGO_MEDIA_ROOT=/var/data/media (for persistent uploaded meal images on Render)
 
 Optional security overrides (already supported in settings.py):
 
@@ -80,6 +81,14 @@ After first deploy, verify env vars and create a superuser:
 ```powershell
 python manage.py createsuperuser
 ```
+
+Important for meal image persistence:
+
+- Add a Render Persistent Disk to the backend service.
+- Use mount path `/var/data`.
+- Set `DJANGO_MEDIA_ROOT=/var/data/media`.
+
+Without a persistent disk, uploaded meal images can disappear after restart/redeploy.
 
 ### Frontend Hosting
 

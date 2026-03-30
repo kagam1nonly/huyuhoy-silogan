@@ -1,4 +1,5 @@
 import random
+import os
 from django.db import transaction
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
@@ -13,9 +14,30 @@ def generate_random_order_number(length=6):
 
 
 class MealSerializer(serializers.ModelSerializer):
+    pImage = serializers.SerializerMethodField()
+
     class Meta:
         model = Meal
         fields = ['meal_id', 'name', 'withUnliRice', 'withoutUnli', 'isHot', 'pImage']
+
+    def get_pImage(self, obj):
+        if not obj.pImage:
+            return ''
+
+        try:
+            relative_url = obj.pImage.url
+        except Exception:
+            return ''
+
+        request = self.context.get('request')
+        if request is not None:
+            return request.build_absolute_uri(relative_url)
+
+        backend_origin = os.getenv('BACKEND_ORIGIN', '').strip()
+        if backend_origin:
+            return f"{backend_origin.rstrip('/')}{relative_url}"
+
+        return relative_url
 
 
 class AdminMealCreateSerializer(serializers.ModelSerializer):

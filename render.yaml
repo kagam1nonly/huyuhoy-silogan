@@ -25,6 +25,8 @@ services:
         fromDatabase:
           name: huyuhoy-postgres
           property: connectionString
+      - key: DJANGO_MEDIA_ROOT
+        value: /var/data/media
       - key: FRONTEND_URL
         value: https://huyuhoy-frontend.onrender.com
       - key: SESSION_COOKIE_SECURE

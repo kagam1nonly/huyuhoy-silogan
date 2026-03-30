@@ -175,13 +175,13 @@ class AdminMealListCreateAPIView(APIView):
 
     def get(self, request):
         meals = Meal.objects.all().order_by('meal_id')
-        return Response(MealSerializer(meals, many=True).data)
+        return Response(MealSerializer(meals, many=True, context={'request': request}).data)
 
     def post(self, request):
         serializer = AdminMealCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         meal = serializer.save()
-        return Response(MealSerializer(meal).data, status=status.HTTP_201_CREATED)
+        return Response(MealSerializer(meal, context={'request': request}).data, status=status.HTTP_201_CREATED)
 
 
 class AdminMealDetailAPIView(APIView):
@@ -192,7 +192,7 @@ class AdminMealDetailAPIView(APIView):
         serializer = AdminMealUpdateSerializer(meal, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         meal = serializer.save()
-        return Response(MealSerializer(meal).data)
+        return Response(MealSerializer(meal, context={'request': request}).data)
 
     def delete(self, request, meal_id):
         meal = get_object_or_404(Meal, meal_id=meal_id)
