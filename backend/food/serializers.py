@@ -2,6 +2,7 @@ import random
 import os
 from django.db import transaction
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import serializers
 from .models import Meal, CartItem, Order, Payment
 
@@ -234,13 +235,21 @@ class AdminOrderSerializer(serializers.ModelSerializer):
         return full_name or obj.customer.username
 
     def get_payment_status(self, obj):
-        if obj.payment:
-            return obj.payment.payment_status
+        try:
+            payment = obj.payment
+        except ObjectDoesNotExist:
+            return None
+        if payment:
+            return payment.payment_status
         return None
 
     def get_payment_method(self, obj):
-        if obj.payment:
-            return obj.payment.method
+        try:
+            payment = obj.payment
+        except ObjectDoesNotExist:
+            return None
+        if payment:
+            return payment.method
         return None
 
 
@@ -261,12 +270,20 @@ class AdminPaymentSerializer(serializers.ModelSerializer):
         ]
 
     def get_order_number(self, obj):
-        if obj.order:
-            return obj.order.number
+        try:
+            order = obj.order
+        except ObjectDoesNotExist:
+            return None
+        if order:
+            return order.number
         return None
 
     def get_customer_name(self, obj):
-        if obj.order and obj.order.customer:
-            full_name = f"{obj.order.customer.first_name} {obj.order.customer.last_name}".strip()
-            return full_name or obj.order.customer.username
+        try:
+            order = obj.order
+        except ObjectDoesNotExist:
+            return None
+        if order and order.customer:
+            full_name = f"{order.customer.first_name} {order.customer.last_name}".strip()
+            return full_name or order.customer.username
         return None

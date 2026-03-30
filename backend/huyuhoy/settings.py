@@ -100,6 +100,13 @@ INSTALLED_APPS = [
     'food',
 ]
 
+USE_CLOUDINARY_MEDIA = bool(os.getenv('CLOUDINARY_URL', '').strip() or os.getenv('CLOUDINARY_CLOUD_NAME', '').strip())
+if USE_CLOUDINARY_MEDIA:
+    INSTALLED_APPS += [
+        'cloudinary',
+        'cloudinary_storage',
+    ]
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -162,16 +169,38 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 render_disk_root = os.getenv('RENDER_DISK_ROOT', '/var/data').strip() or '/var/data'
-default_media_root = os.path.join(render_disk_root, 'media') if os.getenv('RENDER') else os.path.join(BASE_DIR, 'media')
-
 media_root_env = os.getenv('DJANGO_MEDIA_ROOT', '').strip()
+
+candidate_media_roots = []
 if media_root_env:
-    if os.getenv('RENDER') and not os.path.isabs(media_root_env):
-        MEDIA_ROOT = f"/{media_root_env.lstrip('/')}"
-    else:
-        MEDIA_ROOT = media_root_env
-else:
-    MEDIA_ROOT = default_media_root
+    normalized_media_root = media_root_env
+    if os.getenv('RENDER') and not os.path.isabs(normalized_media_root):
+        normalized_media_root = f"/{normalized_media_root.lstrip('/')}"
+    candidate_media_roots.append(normalized_media_root)
+
+if os.getenv('RENDER'):
+    candidate_media_roots.append(os.path.join(render_disk_root, 'media'))
+
+candidate_media_roots.append(os.path.join(BASE_DIR, 'media'))
+
+def _is_writable_media_root(path):
+    try:
+        os.makedirs(path, exist_ok=True)
+    except OSError:
+        return False
+    return os.access(path, os.W_OK)
+
+MEDIA_ROOT = candidate_media_roots[-1]
+for root in dict.fromkeys(candidate_media_roots):
+    if _is_writable_media_root(root):
+        MEDIA_ROOT = root
+        break
+
+if USE_CLOUDINARY_MEDIA:
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    CLOUDINARY_STORAGE = {
+        'FOLDER': os.getenv('CLOUDINARY_MEDIA_FOLDER', 'huyuhoy/meal_images').strip() or 'huyuhoy/meal_images',
+    }
 
 # --- SECURITY & CORS ---
 default_samesite = 'None' if not DEBUG else 'Lax'
