@@ -31,7 +31,10 @@ class MealSerializer(serializers.ModelSerializer):
 
         request = self.context.get('request')
         if request is not None:
-            return request.build_absolute_uri(relative_url)
+            try:
+                return request.build_absolute_uri(relative_url)
+            except Exception:
+                return relative_url
 
         backend_origin = os.getenv('BACKEND_ORIGIN', '').strip()
         if backend_origin:
