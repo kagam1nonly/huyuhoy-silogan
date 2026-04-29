@@ -2,8 +2,9 @@ name: Keep Services Awake
 
 on:
   schedule:
+    # Runs every 10 minutes
     - cron: '*/10 * * * *'
-  workflow_dispatch:
+  workflow_dispatch: # Allows you to run it manually for testing
 
 jobs:
   keepalive:
@@ -15,14 +16,19 @@ jobs:
           KEEPALIVE_TOKEN: ${{ secrets.KEEPALIVE_TOKEN }}
         run: |
           if [ -z "$RENDER_KEEPALIVE_URL" ]; then
-            echo "RENDER_KEEPALIVE_URL is not set. Skipping Render ping."
+            echo "❌ RENDER_KEEPALIVE_URL is not set. Skipping."
             exit 0
           fi
 
+          echo "🚀 Pinging Render at $RENDER_KEEPALIVE_URL..."
+          # Increased max-time to 120s and connect-timeout to 60s to handle cold starts
           if [ -n "$KEEPALIVE_TOKEN" ]; then
-            curl -fsS -m 20 -H "X-Keepalive-Token: $KEEPALIVE_TOKEN" "$RENDER_KEEPALIVE_URL"
+            curl -fL --connect-timeout 60 --max-time 120 \
+              -H "X-Keepalive-Token: $KEEPALIVE_TOKEN" \
+              "$RENDER_KEEPALIVE_URL" || echo "⚠️ Render is taking a while to wake up..."
           else
-            curl -fsS -m 20 "$RENDER_KEEPALIVE_URL"
+            curl -fL --connect-timeout 60 --max-time 120 \
+              "$RENDER_KEEPALIVE_URL" || echo "⚠️ Render is taking a while to wake up..."
           fi
 
       - name: Ping Supabase health endpoint
@@ -31,15 +37,19 @@ jobs:
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
           if [ -z "$SUPABASE_PROJECT_URL" ]; then
-            echo "SUPABASE_PROJECT_URL is not set. Skipping Supabase ping."
+            echo "❌ SUPABASE_PROJECT_URL is not set. Skipping."
             exit 0
           fi
 
+          echo "🚀 Pinging Supabase..."
           if [ -n "$SUPABASE_ANON_KEY" ]; then
-            curl -fsS -m 20 \
+            # We hit the root REST endpoint to ensure the DB itself stays awake
+            curl -fL --connect-timeout 30 --max-time 60 \
               -H "apikey: $SUPABASE_ANON_KEY" \
               -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
-              "$SUPABASE_PROJECT_URL/auth/v1/health"
+              "$SUPABASE_PROJECT_URL/rest/v1/"
           else
-            curl -fsS -m 20 "$SUPABASE_PROJECT_URL/auth/v1/health"
+            curl -fL --connect-timeout 30 --max-time 60 \
+              "$SUPABASE_PROJECT_URL/auth/v1/health"
           fi
+          echo "✅ Supabase ping complete."
