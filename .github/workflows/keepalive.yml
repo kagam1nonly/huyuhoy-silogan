@@ -31,18 +31,16 @@ jobs:
               "$RENDER_KEEPALIVE_URL" || echo "⚠️ Render is taking a while to wake up..."
           fi
 
-      - name: Ping Supabase health endpoint
+      - name: Ping Supabase health
         env:
           SUPABASE_PROJECT_URL: ${{ secrets.SUPABASE_PROJECT_URL }}
         run: |
           if [ -z "$SUPABASE_PROJECT_URL" ]; then
-            echo "❌ SUPABASE_PROJECT_URL is not set. Skipping."
+            echo "Skipping Supabase."
             exit 0
           fi
 
-          echo "🚀 Pinging Supabase Health Check..."
-          # This endpoint is public and doesn't need keys, but still keeps the project active
+          # This checks the project status without needing the Anon Key
+          # It returns 200 OK if the project is "Active"
           curl -fL --connect-timeout 30 --max-time 60 \
             "$SUPABASE_PROJECT_URL/auth/v1/health"
-          
-          echo "✅ Supabase is alive."
