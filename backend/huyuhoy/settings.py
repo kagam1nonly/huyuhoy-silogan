@@ -76,14 +76,17 @@ else:
 
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', '').strip() or os.getenv('SECRET_KEY', '').strip()
 if not SECRET_KEY:
-    raise ImproperlyConfigured('DJANGO_SECRET_KEY is required.')
+    if DEBUG:
+        SECRET_KEY = 'django-insecure-dev-only-set-DJANGO_SECRET_KEY'
+    else:
+        raise ImproperlyConfigured('DJANGO_SECRET_KEY is required when DJANGO_DEBUG is False.')
 
 # Allowed Hosts
 allowed_hosts_env = os.getenv('DJANGO_ALLOWED_HOSTS', '').strip() or os.getenv('ALLOWED_HOSTS', '').strip()
 if allowed_hosts_env:
     ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_env.split(',') if host.strip()]
 elif DEBUG:
-    ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '[::1]', '*']
+    ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '[::1]']
 else:
     raise ImproperlyConfigured('DJANGO_ALLOWED_HOSTS is required when DJANGO_DEBUG is False.')
 
@@ -233,6 +236,10 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SECURE_HSTS_SECONDS = env_int('SECURE_HSTS_SECONDS', 0 if DEBUG else 31536000)
 SECURE_HSTS_INCLUDE_SUBDOMAINS = env_bool('SECURE_HSTS_INCLUDE_SUBDOMAINS', not DEBUG)
 SECURE_HSTS_PRELOAD = env_bool('SECURE_HSTS_PRELOAD', not DEBUG)
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = os.getenv('X_FRAME_OPTIONS', 'DENY')
+REFERRER_POLICY = os.getenv('REFERRER_POLICY', 'strict-origin-when-cross-origin')
+KEEPALIVE_TOKEN = os.getenv('KEEPALIVE_TOKEN', '').strip()
 
 # CORS
 frontend_urls = []
