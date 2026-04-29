@@ -34,22 +34,15 @@ jobs:
       - name: Ping Supabase health endpoint
         env:
           SUPABASE_PROJECT_URL: ${{ secrets.SUPABASE_PROJECT_URL }}
-          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
           if [ -z "$SUPABASE_PROJECT_URL" ]; then
             echo "❌ SUPABASE_PROJECT_URL is not set. Skipping."
             exit 0
           fi
 
-          echo "🚀 Pinging Supabase..."
-          if [ -n "$SUPABASE_ANON_KEY" ]; then
-            # We hit the root REST endpoint to ensure the DB itself stays awake
-            curl -fL --connect-timeout 30 --max-time 60 \
-              -H "apikey: $SUPABASE_ANON_KEY" \
-              -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
-              "$SUPABASE_PROJECT_URL/rest/v1/"
-          else
-            curl -fL --connect-timeout 30 --max-time 60 \
-              "$SUPABASE_PROJECT_URL/auth/v1/health"
-          fi
-          echo "✅ Supabase ping complete."
+          echo "🚀 Pinging Supabase Health Check..."
+          # This endpoint is public and doesn't need keys, but still keeps the project active
+          curl -fL --connect-timeout 30 --max-time 60 \
+            "$SUPABASE_PROJECT_URL/auth/v1/health"
+          
+          echo "✅ Supabase is alive."
