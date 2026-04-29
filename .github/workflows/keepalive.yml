@@ -31,16 +31,20 @@ jobs:
               "$RENDER_KEEPALIVE_URL" || echo "⚠️ Render is taking a while to wake up..."
           fi
 
-      - name: Ping Supabase health
+      - name: Ping Supabase health endpoint
         env:
           SUPABASE_PROJECT_URL: ${{ secrets.SUPABASE_PROJECT_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
           if [ -z "$SUPABASE_PROJECT_URL" ]; then
-            echo "Skipping Supabase."
+            echo "❌ SUPABASE_PROJECT_URL is not set. Skipping."
             exit 0
           fi
 
-          # This checks the project status without needing the Anon Key
-          # It returns 200 OK if the project is "Active"
+          echo "🚀 Pinging Supabase..."
+          # Adding the apikey header back to fix the 401 error
           curl -fL --connect-timeout 30 --max-time 60 \
+            -H "apikey: $SUPABASE_ANON_KEY" \
             "$SUPABASE_PROJECT_URL/auth/v1/health"
+          
+          echo "✅ Supabase is alive."
