@@ -139,7 +139,11 @@ function App() {
     }
 
     pollAdminOrders()
-    const intervalId = window.setInterval(pollAdminOrders, 5000)
+    const intervalId = window.setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        pollAdminOrders()
+      }
+    }, 15000)
 
     return () => {
       canceled = true
@@ -207,7 +211,11 @@ function App() {
     }
 
     pollUserOrders()
-    const intervalId = window.setInterval(pollUserOrders, 5000)
+    const intervalId = window.setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        pollUserOrders()
+      }
+    }, 15000)
 
     return () => {
       canceled = true

@@ -4,7 +4,7 @@ import { createOrder } from '../api/client'
 import { Button } from '../components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../components/ui/dialog'
 
-const FINALIZING_DELAY_MS = 4000
+const FINALIZING_DELAY_MS = 1000
 const PROGRESS_TICK_MS = 100
 
 function formatRiceOptionLabel(value) {
