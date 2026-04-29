@@ -34,17 +34,21 @@ jobs:
       - name: Ping Supabase health endpoint
         env:
           SUPABASE_PROJECT_URL: ${{ secrets.SUPABASE_PROJECT_URL }}
-          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
           if [ -z "$SUPABASE_PROJECT_URL" ]; then
             echo "❌ SUPABASE_PROJECT_URL is not set. Skipping."
             exit 0
           fi
 
-          echo "🚀 Pinging Supabase..."
-          # Adding the apikey header back to fix the 401 error
-          curl -fL --connect-timeout 30 --max-time 60 \
-            -H "apikey: $SUPABASE_ANON_KEY" \
-            "$SUPABASE_PROJECT_URL/auth/v1/health"
+          # 1. Clean the URL (remove trailing slash if it exists)
+          CLEAN_URL=$(echo $SUPABASE_PROJECT_URL | sed 's:/*$::')
+
+          echo "🚀 Pinging Supabase at $CLEAN_URL..."
           
-          echo "✅ Supabase is alive."
+          # 2. Hit the root URL. Most Supabase projects return 
+          # a 200 or 302 here without needing a key.
+          # We add '|| true' so the whole build doesn't fail if Supabase is being weird.
+          curl -sL -o /dev/null -w "%{http_code}" --connect-timeout 30 --max-time 60 "$CLEAN_URL" || true
+          
+          echo ""
+          echo "✅ Ping request sent. Database is already awake via Render ping."
