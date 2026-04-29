@@ -1,6 +1,7 @@
 from django.urls import path
 from .api_views import (
     health_check_view,
+    keepalive_view,
     CsrfTokenAPIView,
     SignupAPIView,
     LoginAPIView,
@@ -24,6 +25,7 @@ from .api_views import (
 
 urlpatterns = [
     path('health/', health_check_view, name='api-health'),
+    path('keepalive/', keepalive_view, name='api-keepalive'),
     path('auth/csrf/', CsrfTokenAPIView.as_view(), name='api-auth-csrf'),
     path('auth/signup/', SignupAPIView.as_view(), name='api-auth-signup'),
     path('auth/login/', LoginAPIView.as_view(), name='api-auth-login'),
