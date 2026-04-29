@@ -1,0 +1,45 @@
+name: Keep Services Awake
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render keepalive endpoint
+        env:
+          RENDER_KEEPALIVE_URL: ${{ secrets.RENDER_KEEPALIVE_URL }}
+          KEEPALIVE_TOKEN: ${{ secrets.KEEPALIVE_TOKEN }}
+        run: |
+          if [ -z "$RENDER_KEEPALIVE_URL" ]; then
+            echo "RENDER_KEEPALIVE_URL is not set. Skipping Render ping."
+            exit 0
+          fi
+
+          if [ -n "$KEEPALIVE_TOKEN" ]; then
+            curl -fsS -m 20 -H "X-Keepalive-Token: $KEEPALIVE_TOKEN" "$RENDER_KEEPALIVE_URL"
+          else
+            curl -fsS -m 20 "$RENDER_KEEPALIVE_URL"
+          fi
+
+      - name: Ping Supabase health endpoint
+        env:
+          SUPABASE_PROJECT_URL: ${{ secrets.SUPABASE_PROJECT_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$SUPABASE_PROJECT_URL" ]; then
+            echo "SUPABASE_PROJECT_URL is not set. Skipping Supabase ping."
+            exit 0
+          fi
+
+          if [ -n "$SUPABASE_ANON_KEY" ]; then
+            curl -fsS -m 20 \
+              -H "apikey: $SUPABASE_ANON_KEY" \
+              -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
+              "$SUPABASE_PROJECT_URL/auth/v1/health"
+          else
+            curl -fsS -m 20 "$SUPABASE_PROJECT_URL/auth/v1/health"
+          fi

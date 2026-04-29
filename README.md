@@ -69,6 +69,10 @@ Optional security overrides (already supported in settings.py):
 - SECURE_HSTS_INCLUDE_SUBDOMAINS
 - SECURE_HSTS_PRELOAD
 
+Optional keepalive protection:
+
+- KEEPALIVE_TOKEN (required if you want to restrict /api/keepalive/ calls)
+
 ## Deployment
 
 ### Render
@@ -122,6 +126,28 @@ For SPA routing, configure rewrite:
 ```powershell
 python manage.py migrate
 ```
+
+## Keepalive Automation (Render + Supabase)
+
+This repository includes [keepalive workflow](.github/workflows/keepalive.yml) that runs every 10 minutes and can ping:
+
+- your Render backend keepalive endpoint
+- your Supabase auth health endpoint
+
+Backend endpoint added:
+
+- GET /api/keepalive/
+
+If `KEEPALIVE_TOKEN` is set in backend env, callers must send header:
+
+- `X-Keepalive-Token: <token>`
+
+Configure these GitHub Actions repository secrets:
+
+- `RENDER_KEEPALIVE_URL` (example: `https://your-backend.onrender.com/api/keepalive/`)
+- `KEEPALIVE_TOKEN` (match backend env `KEEPALIVE_TOKEN`)
+- `SUPABASE_PROJECT_URL` (example: `https://xyzcompany.supabase.co`)
+- `SUPABASE_ANON_KEY` (optional but recommended)
 
 ## Safety Review Archive
 
