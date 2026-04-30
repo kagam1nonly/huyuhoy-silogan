@@ -161,3 +161,21 @@ You can review and remove this folder later once confirmed.
 
 - SQL reference files were reorganized to docs/notes/sql.
 - Local sqlite database file should not be committed.
+
+## Interviews 
+
+What to mention in interviews
+Migration story: took a vanilla JS app and migrated to React + Tailwind. Emphasize:
+Why React/Tailwind: component reusability, maintainability, faster styling workflow.
+How you kept API surface stable while migrating (i.e., backend API kept same endpoints so frontend could be migrated in phases).
+Testing & CI: mention Django unit tests (describe tests in tests.py), and that you run frontend builds in CI to detect regressions.
+DevOps/Deployment: mention Render/Heroku-style setup, Procfile, and use of env vars for secrets and DB config.
+Security: show you ran npm audit and are aware of vite/esbuild advisories and how you'd handle major upgrades (branch, test, roll out carefully).
+Performance: Vite build is already producing optimized bundles. Optionally describe caching or image CDN (Cloudinary option).
+Suggested talking points / quick answers
+Q: "How did you migrate the frontend?"
+A: "I ported views incrementally to React components, introduced Tailwind for utility-first styling, and kept the backend API unchanged to allow progressive migration."
+Q: "How do you handle media?"
+A: "Local filesystem for dev; Cloudinary for production via CLOUDINARY_URL. Media storage switches based on env var."
+Q: "How to run tests in CI?"
+A: "Install requirements, set DJANGO_DEBUG=True or provide test secrets, run migrations to an in-memory or ephemeral DB, run manage.py test."

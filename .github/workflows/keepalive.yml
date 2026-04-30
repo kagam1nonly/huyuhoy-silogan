@@ -1,0 +1,54 @@
+name: Keep Services Awake
+
+on:
+  schedule:
+    # Runs every 13 minutes
+    - cron: '*/13 * * * *'
+  workflow_dispatch: # Allows you to run it manually for testing
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render keepalive endpoint
+        env:
+          RENDER_KEEPALIVE_URL: ${{ secrets.RENDER_KEEPALIVE_URL }}
+          KEEPALIVE_TOKEN: ${{ secrets.KEEPALIVE_TOKEN }}
+        run: |
+          if [ -z "$RENDER_KEEPALIVE_URL" ]; then
+            echo "❌ RENDER_KEEPALIVE_URL is not set. Skipping."
+            exit 0
+          fi
+
+          echo "🚀 Pinging Render at $RENDER_KEEPALIVE_URL..."
+          # Increased max-time to 120s and connect-timeout to 60s to handle cold starts
+          if [ -n "$KEEPALIVE_TOKEN" ]; then
+            curl -fL --connect-timeout 60 --max-time 120 \
+              -H "X-Keepalive-Token: $KEEPALIVE_TOKEN" \
+              "$RENDER_KEEPALIVE_URL" || echo "⚠️ Render is taking a while to wake up..."
+          else
+            curl -fL --connect-timeout 60 --max-time 120 \
+              "$RENDER_KEEPALIVE_URL" || echo "⚠️ Render is taking a while to wake up..."
+          fi
+
+      - name: Ping Supabase health endpoint
+        env:
+          SUPABASE_PROJECT_URL: ${{ secrets.SUPABASE_PROJECT_URL }}
+        run: |
+          if [ -z "$SUPABASE_PROJECT_URL" ]; then
+            echo "❌ SUPABASE_PROJECT_URL is not set. Skipping."
+            exit 0
+          fi
+
+          # 1. Clean the URL (remove trailing slash if it exists)
+          CLEAN_URL=$(echo $SUPABASE_PROJECT_URL | sed 's:/*$::')
+
+          echo "🚀 Pinging Supabase at $CLEAN_URL..."
+          
+          # 2. Hit the root URL. Most Supabase projects return 
+          # a 200 or 302 here without needing a key.
+          # We add '|| true' so the whole build doesn't fail if Supabase is being weird.
+          curl -sL -o /dev/null -w "%{http_code}" --connect-timeout 30 --max-time 60 "$CLEAN_URL" || true
+          
+          echo ""
+          echo "✅ Ping request sent. Database is already awake via Render ping."
