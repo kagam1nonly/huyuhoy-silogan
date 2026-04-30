@@ -239,7 +239,7 @@ SECURE_HSTS_PRELOAD = env_bool('SECURE_HSTS_PRELOAD', not DEBUG)
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = os.getenv('X_FRAME_OPTIONS', 'DENY')
 REFERRER_POLICY = os.getenv('REFERRER_POLICY', 'strict-origin-when-cross-origin')
-KEEPALIVE_TOKEN = os.getenv('KEEPALIVE_TOKEN', '').strip()
+
 
 # CORS
 frontend_urls = []

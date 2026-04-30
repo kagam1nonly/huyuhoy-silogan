@@ -32,19 +32,7 @@ def health_check_view(request):
     return JsonResponse({'status': 'ok'})
 
 
-def keepalive_view(request):
-    expected_token = (getattr(settings, 'KEEPALIVE_TOKEN', '') or '').strip()
-    provided_token = (request.headers.get('X-Keepalive-Token', '') or request.GET.get('token', '')).strip()
 
-    if expected_token and provided_token != expected_token:
-        return JsonResponse({'detail': 'Invalid keepalive token.'}, status=401)
-
-    # Touch the active DB connection so managed Postgres instances remain warm.
-    with connection.cursor() as cursor:
-        cursor.execute('SELECT 1')
-        cursor.fetchone()
-
-    return JsonResponse({'status': 'ok', 'database': 'ok'})
 
 
 @method_decorator(ensure_csrf_cookie, name='dispatch')

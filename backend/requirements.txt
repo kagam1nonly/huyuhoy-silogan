@@ -1,6 +1,4 @@
 asgiref==3.11.1
-certifi==2023.7.22
-charset-normalizer==3.2.0
 dj-database-url==2.1.0
 Django==6.0.4
 django-cors-headers==4.2.0
@@ -9,17 +7,14 @@ django-heroku==0.3.1
 django-cloudinary-storage==0.3.0
 djangorestframework==3.14.0
 gunicorn==21.2.0
-idna==3.4
 mysql-connector==2.2.9
 mysqlclient>=2.2.1
 packaging==25.0
 Pillow>=12.1.1
 psycopg2==2.9.11
 pytz==2023.3
-requests==2.31.0
 cloudinary==1.44.1
 sqlparse==0.5.5
 typing_extensions==4.8.0
 tzdata==2023.3
-urllib3==2.0.4
 whitenoise==6.6.0
