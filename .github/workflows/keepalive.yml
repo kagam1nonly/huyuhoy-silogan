@@ -2,8 +2,8 @@ name: Keep Services Awake
 
 on:
   schedule:
-    # Runs every 10 minutes
-    - cron: '*/10 * * * *'
+    # Runs every 13 minutes
+    - cron: '*/13 * * * *'
   workflow_dispatch: # Allows you to run it manually for testing
 
 jobs:
