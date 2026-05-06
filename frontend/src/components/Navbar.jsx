@@ -345,18 +345,29 @@ export default function Navbar({
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b border-[#f4c23d]/20 bg-[#1b2132]/95 backdrop-blur supports-backdrop-filter:bg-[#1b2132]/90">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3">
-        <Link to="/" className="group relative inline-flex items-center">
-          <span data-text="Huyuhoy Silogan" className="brand-wordmark text-lg font-extrabold tracking-tight md:text-[1.35rem]">
-            Huyuhoy Silogan
-          </span>
-        </Link>
-        <div>
-          <p className="text-xs font-semibold text-white">Philippines: {philippinesDate}</p>
-          <p className="text-3xl font-black leading-none text-[#f4c23d]">{philippinesTime}</p>
+    <>
+    <header className="fixed top-0 left-0 right-0 z-40 border-b border-[#f4c23d]/20 bg-[#1b2132]/95 backdrop-blur supports-backdrop-filter:bg-[#1b2132]/90">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-3 py-2 md:px-4 md:py-3">
+        {/* Brand */}
+        <div className="flex items-center">
+          <Link to="/" className="group relative inline-flex items-center">
+            <span data-text="Huyuhoy Silogan" className="brand-wordmark text-lg font-extrabold tracking-tight md:text-[1.35rem]">
+              Huyuhoy Silogan
+            </span>
+          </Link>
         </div>
-        <nav className="flex items-center gap-2">
+
+        {/* Date & time – Centered on Desktop, Hidden on Mobile */}
+        <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 text-center md:block">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Philippines</p>
+          <div className="flex items-baseline gap-2">
+            <p className="text-2xl font-black leading-none text-[#f4c23d]">{philippinesTime}</p>
+            <p className="text-xs font-semibold text-white/80">{philippinesDate}</p>
+          </div>
+        </div>
+
+        {/* Nav icons */}
+        <nav className="flex items-center gap-1 md:gap-2">
             <Button asChild variant="ghost" size="icon" aria-label="Home" className="text-[#f4c23d] hover:bg-white/10 hover:text-[#ffd560]">
               <Link to="/">
                 <Home className="h-5 w-5" />
@@ -380,25 +391,6 @@ export default function Navbar({
                 ) : null}
               </Button>
 
-              <div
-                className={`fixed right-2 top-18.5 z-50 w-64 max-w-[90vw] rounded-lg border border-[#f4c23d]/30 bg-[#1b2132]/95 px-3 pb-3 pt-2 text-white shadow-xl transition-all duration-200 ${
-                  showOrderHint ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none -translate-y-1 opacity-0'
-                }`}
-                onMouseEnter={handleOrderHintHover}
-              >
-                <button
-                  type="button"
-                  onClick={() => setShowOrderHint(false)}
-                  className="absolute right-2 top-1.5 rounded-sm p-0.5 text-slate-300 transition-colors hover:text-white"
-                  aria-label="Close proceed hint"
-                >
-                  <X className="h-3.5 w-3.5" />
-                </button>
-                <p className="pr-6 text-[13px] leading-snug text-slate-200">{orderHintMessage}</p>
-                <Button type="button" size="sm" className="mt-2.5 h-8 w-full bg-[#f4c23d] text-slate-900 text-[11px] uppercase tracking-[0.08em] hover:bg-[#ffd560]" onClick={proceedToOrder}>
-                  Proceed to Order
-                </Button>
-              </div>
 
               <div
                 className={`fixed right-1.25 top-18.5 z-50 w-[min(24rem,95vw)] origin-top-right rounded-xl border border-slate-200 bg-white p-4 shadow-xl transition duration-200 ${
@@ -691,5 +683,37 @@ export default function Navbar({
           </nav>
       </div>
     </header>
+    {/* Spacer to offset the fixed navbar height */}
+    <div className="h-12 md:h-14" aria-hidden="true" />
+
+      {/* Order Hint — rendered outside the header to escape its stacking context */}
+      <div
+        className={`fixed bottom-5 right-4 z-[9999] w-[min(22rem,calc(100vw-2rem))] rounded-2xl bg-[#1b2132]/95 p-5 text-white shadow-2xl backdrop-blur transition-all duration-300 md:bottom-8 md:right-8 ${
+          showOrderHint ? 'translate-y-0 scale-100 opacity-100' : 'pointer-events-none translate-y-3 scale-95 opacity-0'
+        }`}
+        onMouseEnter={handleOrderHintHover}
+      >
+        <button
+          type="button"
+          onClick={() => setShowOrderHint(false)}
+          className="absolute right-3 top-3 cursor-pointer rounded-sm p-1 text-slate-300 transition-colors hover:text-white"
+          aria-label="Close proceed hint"
+        >
+          <X className="h-4 w-4" />
+        </button>
+
+        <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.1em] text-[#f4c23d]">Your cart</p>
+        <p className="pr-6 text-[15px] font-semibold leading-snug text-white">{orderHintMessage}</p>
+
+        <Button
+          type="button"
+          className="mt-4 h-10 w-full justify-between bg-[#f4c23d] text-[13px] font-bold uppercase tracking-[0.08em] text-slate-900 hover:bg-[#ffd560]"
+          onClick={proceedToOrder}
+        >
+          Proceed to Order
+          <ArrowRight className="h-4 w-4" />
+        </Button>
+      </div>
+    </>
   )
 }
