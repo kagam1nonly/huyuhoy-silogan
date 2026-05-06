@@ -368,7 +368,7 @@ export default function Navbar({
 
         {/* Nav icons */}
         <nav className="flex items-center gap-1 md:gap-2">
-            <Button asChild variant="ghost" size="icon" aria-label="Home" className="text-[#f4c23d] hover:bg-white/10 hover:text-[#ffd560]">
+            <Button asChild variant="ghost" size="icon" aria-label="Home" className="text-[#f4c23d] hover:bg-white/10 hover:text-[#ffd560]" onClick={() => setShowOrderHint(false)}>
               <Link to="/">
                 <Home className="h-5 w-5" />
               </Link>
@@ -474,7 +474,7 @@ export default function Navbar({
                   variant="ghost"
                   size="icon"
                   aria-label={isAdmin ? 'Admin notifications' : 'Order notifications'}
-                  onClick={() => setNotificationOpen((previous) => !previous)}
+                  onClick={() => { setNotificationOpen((previous) => !previous); setShowOrderHint(false); }}
                   className="relative cursor-pointer text-[#f4c23d] transition-transform duration-200 hover:scale-105 hover:bg-white/10 hover:text-[#ffd560]"
                 >
                   <Bell className="h-5 w-5" />
@@ -620,7 +620,7 @@ export default function Navbar({
                 variant="ghost"
                 size="icon"
                 aria-label="Open menu"
-                onClick={() => setMenuOpen((prev) => !prev)}
+                onClick={() => { setMenuOpen((prev) => !prev); setShowOrderHint(false); }}
                 className="cursor-pointer text-[#f4c23d] hover:bg-white/10 hover:text-[#ffd560]"
               >
                 <Menu className="h-5 w-5" />
@@ -686,10 +686,10 @@ export default function Navbar({
     {/* Spacer to offset the fixed navbar height */}
     <div className="h-12 md:h-14" aria-hidden="true" />
 
-      {/* Order Hint — rendered outside the header to escape its stacking context */}
+      {/* Order Hint — same position as the cart dropdown */}
       <div
-        className={`fixed bottom-5 right-4 z-[9999] w-[min(22rem,calc(100vw-2rem))] rounded-2xl bg-[#1b2132]/95 p-5 text-white shadow-2xl backdrop-blur transition-all duration-300 md:bottom-8 md:right-8 ${
-          showOrderHint ? 'translate-y-0 scale-100 opacity-100' : 'pointer-events-none translate-y-3 scale-95 opacity-0'
+        className={`fixed right-1.25 top-18.5 z-[9999] w-[min(22rem,95vw)] origin-top-right rounded-2xl bg-[#1b2132]/95 p-5 text-white shadow-2xl backdrop-blur transition-all duration-200 ${
+          showOrderHint ? 'translate-y-0 scale-100 opacity-100' : 'pointer-events-none -translate-y-1 scale-95 opacity-0'
         }`}
         onMouseEnter={handleOrderHintHover}
       >
