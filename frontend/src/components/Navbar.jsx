@@ -703,11 +703,11 @@ export default function Navbar({
         </button>
 
         <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.1em] text-[#f4c23d]">Your cart</p>
-        <p className="pr-6 text-[15px] font-semibold leading-snug text-white">{orderHintMessage}</p>
+        <p className="pr-6 text-sm font-semibold leading-snug text-white">{orderHintMessage}</p>
 
         <Button
           type="button"
-          className="mt-4 h-10 w-full justify-between bg-[#f4c23d] text-[13px] font-bold uppercase tracking-[0.08em] text-slate-900 hover:bg-[#ffd560]"
+          className="mt-4 h-9 w-full justify-between bg-[#f4c23d] text-xs font-bold uppercase tracking-[0.08em] text-slate-900 hover:bg-[#ffd560]"
           onClick={proceedToOrder}
         >
           Proceed to Order
