@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import {
@@ -85,11 +85,6 @@ export default function AdminMealsPage({ user }) {
       URL.revokeObjectURL(objectUrl)
     }
   }, [form.image])
-
-  const totalMenuValue = useMemo(
-    () => meals.reduce((sum, meal) => sum + Number(meal.withUnliRice || 0), 0),
-    [meals],
-  )
 
   function resetForm() {
     setSelectedMeal(null)
